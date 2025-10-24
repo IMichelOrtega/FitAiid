@@ -97,3 +97,13 @@ console.log('   👤 GET /api/auth/profile - Ver perfil');
 console.log('   ✏️ PUT /api/auth/profile - Actualizar perfil');
 
 module.exports = router;
+
+/**
+ * @route   POST /api/auth/google
+ * @desc    Login o registro con Google
+ * @access  Público
+ * @body    { firstName, lastName, email }
+ */
+console.log("👉 authController.googleLogin =", authController.googleLogin);
+
+router.post('/google', authController.googleLogin);

@@ -18,8 +18,12 @@ body::before {
   position: absolute;
   width: 150%;
   height: 150%;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 0, 0, 0.25), transparent 60%),
-              radial-gradient(circle at 70% 70%, rgba(255, 0, 0, 0.2), transparent 60%);
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), /* capa oscura encima */
+    url("https://img.freepik.com/fotos-premium/gimnasio-luces-rojas-luz-roja-techo_1177960-12802.jpg");
+  background-size: cover; /* cambia contain → cover para cubrir toda la pantalla */
+  background-position: center center;
+  background-blend-mode: darken; /* mezcla la capa negra con la imagen */
   animation: moveWaves 8s infinite alternate ease-in-out;
   z-index: 0;
   filter: blur(50px);
@@ -64,7 +68,7 @@ body::before {
   padding: 0.75rem;
   border: 1px solid #000000;
   border-radius: 6px;
-  background: #1a0606;
+  background: #353333;
   color: #ddd;
   outline: none;
   font-size: 0.95rem;
@@ -159,4 +163,34 @@ body::before {
 
 .eye-icon:hover {
   color: #fff;
+}
+
+/* Botón cerrar si lo agregas */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: red;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 28px;
+  color: white;
+  font-size: 30px; /* 🔹 Aumenta el tamaño aquí (antes estaba en 20-24px aprox) */
+  cursor: pointer;
+  transition: color 0.3s, transform 0.2s;
+}
+
+.close-btn:hover {
+  color: red;
+  transform: scale(1.1); /* 🔹 Un pequeño efecto al pasar el mouse */
 }

@@ -1,0 +1,35 @@
+/* Fondo general */
+body {
+  background-color: #0b0d17;
+  font-family: 'Poppins', sans-serif;
+  
+}
+
+/* Texto con gradiente rojo-naranja */
+.gradient-text {
+  background: linear-gradient(90deg, #ff0000 0%, #ff7a00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Suaviza los bordes de los elementos */
+button, a {
+  transition: all 0.3s ease;
+}
+
+/* Ajustes responsivos extra */
+@media (max-width: 640px) {
+  header {
+    padding: 1rem 1.5rem;
+  }
+
+  h1 span {
+    font-size: 1.8rem !important;
+  }
+}
+.titulo-fitaiid {
+  font-family: 'Gagalin', sans-serif;
+  color: #ef4444; /* opcional: un rojo estilo FitAiid */
+  font-size: 3rem; /* tamaño opcional */
+}
+

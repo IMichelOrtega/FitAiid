@@ -13,17 +13,35 @@
 
 <body>
   <div class="register-container">
+    <!-- 🔹 Botón cerrar (sin script, solo HTML) -->
+    <a href="index.html" class="close-btn" aria-label="Cerrar">×</a>
+
     <h2>REGÍSTRATE</h2>
+    
     <form id="registerForm">
-      <input type="text" id="firstName" placeholder="Nombre" required>
-      <input type="text" id="lastName" placeholder="Apellido" required>
-      <input type="text" id="phone" placeholder="Número" required>
-      <input type="email" id="email" placeholder="Correo electrónico" required>
+      
+<input type="text" id="firstName" placeholder="Nombre" 
+       required pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]{2,50}" 
+       title="El nombre debe tener solo letras">
+
+<input type="text" id="lastName" placeholder="Apellido" 
+       required pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]{2,50}" 
+       title="El apellido debe tener solo letras">
+
+<input type="tel" id="phone" placeholder="Número de teléfono" 
+       required pattern="^\d{10}$" 
+       title="El número debe tener exactamente 10 dígitos">
+
+<input type="email" id="email" placeholder="Correo electrónico" 
+       required 
+       title="Ingresa un correo válido, como ejemplo@correo.com">
+
 
       <!-- Campo de contraseña con botón para mostrar/ocultar -->
     <div class="password-container">
   <input type="password" id="password" placeholder="Contraseña" required>
   <i id="togglePassword" class="fa-solid fa-eye eye-icon"></i>
+  
 </div>
       <!-- Confirmar contraseña (siempre oculta) -->
       <div class="password-container">

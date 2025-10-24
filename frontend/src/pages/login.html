@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FitAiid - Inicia Sesión</title>
   <link rel="stylesheet" href="../styles/login.css">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-  <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 </head>
+
 <body>
   <div class="container">
     <div class="form-box">
-      <span class="close-btn">×</span>
+    
+       <a href="index.html" class="close-btn">×</a>
+        
+
 
       <h2>Inicia Sesión</h2>
 
@@ -28,67 +33,26 @@
             <input type="password" id="password" placeholder="••••••••">
             <i class="fa-solid fa-eye toggle-password"></i>
           </div>
-      </div>
+        </div>
         <button type="submit" class="btn">Iniciar Sesión</button>
-        <p class="register-text">¿No tienes cuenta? 
+        <p class="register-text">¿No tienes cuenta?
           <a href="register.html">Regístrate aquí</a>
         </p>
       </form>
     </div>
   </div>
+  <script src="../scripts/login.js"></script>
   <script>
-const form = document.querySelector("#loginForm");
-const togglePassword = document.querySelector(".toggle-password");
-const passwordInput = document.querySelector("#password");
+    const togglePassword = document.querySelector('.toggle-password');
+    const passwordInput = document.querySelector('#password');
 
-// Mostrar/Ocultar contraseña
-togglePassword.addEventListener("click", () => {
-  const isPassword = passwordInput.type === "password";
-  passwordInput.type = isPassword ? "text" : "password";
-  togglePassword.classList.toggle("fa-eye-slash");
-});
-
-// Enviar formulario al backend
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const email = document.querySelector("#email").value.trim();
-  const password = document.querySelector("#password").value.trim();
-
-  if (!email || !password) {
-    alert("Por favor, ingresa tu correo y contraseña");
-    return;
-  }
-
-  try {
-    const response = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
+    togglePassword.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      togglePassword.textContent = isPassword ? '' : '';
     });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      alert("✅ Inicio de sesión exitoso");
-
-      // Guarda el token y datos del usuario en localStorage
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("usuario", JSON.stringify(data.user));
-
-      // Redirige al usuario a otra página (ajústalo a tu proyecto)
-      window.location.href = "inicio.html";
-    } else {
-      alert(`❌ ${data.message || "Credenciales incorrectas"}`);
-    }
-  } catch (error) {
-    console.error("Error de conexión:", error);
-    alert("⚠️ Error al conectar con el servidor. Verifica si está encendido.");
-  }
-});
-</script>
+  </script>
 
 </body>
+
 </html>

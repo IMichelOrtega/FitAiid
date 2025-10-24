@@ -40,14 +40,10 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
 // ==============================
 // LOGIN CON GOOGLE (FUNCIONANDO)
 // ==============================
-
-// Asegúrate de tener en tu HTML:
-// <img src="..." alt="Google" class="google-icon">
-
 document.querySelector(".icons img[alt='Google']").addEventListener("click", async () => {
   try {
     const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: "select_account" }); // 🔹 fuerza selección de cuenta
+    provider.setCustomParameters({ prompt: "select_account" });
 
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
@@ -55,28 +51,22 @@ document.querySelector(".icons img[alt='Google']").addEventListener("click", asy
     const userData = {
       firstName: user.displayName?.split(" ")[0] || "",
       lastName: user.displayName?.split(" ")[1] || "",
-      email: user.email,
-      password: "google_oauth",
-      role: "customer"
+      email: user.email
     };
 
-    console.log("🟢 Usuario autenticado con Google:", userData);
-
-    // Enviar al backend (MongoDB)
-    const response = await fetch("http://localhost:5000/api/auth/register", {
+    const response = await fetch("http://localhost:5000/api/auth/google", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData)
     });
 
     const resultData = await response.json();
+    console.log("📦 Respuesta backend:", resultData);
 
     if (response.ok) {
-      alert("✅ Inicio de sesión con Google exitoso (registrado o existente)");
-      console.log("📦 Respuesta del backend:", resultData);
+      alert("✅ Inicio de sesión con Google exitoso");
     } else {
-      console.warn("⚠️ Error backend:", resultData);
-      alert(resultData.message || "Error al registrar usuario con Google");
+      alert(`⚠️ Error: ${resultData.message || "No se pudo registrar"}`);
     }
   } catch (error) {
     console.error("❌ Error al iniciar sesión con Google:", error);

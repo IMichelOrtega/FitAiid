@@ -1,116 +1,261 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FitAiid - Página de inicio</title>
-  
-  <!-- Tailwind CDN -->
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Tu CSS personalizado -->
-  <link rel="stylesheet" href="index.css">
+  <!-- Fuente y CSS externo -->
+  <link rel="stylesheet" href="../styles/index.css" />
 </head>
 
-<body class="bg-neutral-950 text-white font-sans">
+<body class="bg-[#0b0d17] text-white overflow-x-hidden">
 
   <!-- NAVBAR -->
-  <header class="navbar flex justify-between items-center px-6 md:px-12 py-4">
-    <h1 class="text-2xl font-extrabold text-red-500">FitAiid</h1>
+  <header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 sm:px-10 lg:px-16 py-4 bg-[#0b0d17]/80 backdrop-blur-md">
+    <!-- Logo -->
+    <div class="flex items-center gap-2">
+      <img src="../img/logo.png" alt="FitAiid" class="w-10 sm:w-11 h-10 sm:h-11" />
+      <div>
+        <h1 class="text-xl sm:text-2xl font-bold text-red-600">FitAiid</h1>
+        <p class="text-[10px] sm:text-xs text-gray-300 -mt-1">Transforma Tu Cuerpo</p>
+      </div>
+    </div>
 
-    <!-- Menú de escritorio -->
-    <nav class="hidden md:flex gap-8 text-sm font-semibold">
-      <a href="#" class="hover:text-red-500 transition">Inicio</a>
+    <!-- Menú escritorio -->
+    <nav class="hidden md:flex gap-8 text-sm lg:text-base font-semibold">
+      <a href="#" class="text-red-600 border-b-2 border-red-600 pb-1">Inicio</a>
       <a href="#" class="hover:text-red-500 transition">Servicios</a>
       <a href="#" class="hover:text-red-500 transition">Coach Virtual</a>
       <a href="#" class="hover:text-red-500 transition">Sobre Nosotros</a>
     </nav>
 
     <!-- Botones escritorio -->
-    <div class="hidden md:flex gap-4">
-      <a href="login.html" class="btn-outline">Iniciar sesión</a>
-      <a href="register.html" class="btn-primary">Registrarse</a>
+    <div class="hidden md:flex gap-3">
+      <a href="login.html" class="border border-orange-500 text-orange-400 px-4 py-2 rounded-full hover:bg-gradient-to-r from-red-600 to-orange-500 hover:text-white transition">Iniciar Sesión</a>
+      <a href="register.html" class="bg-gradient-to-r from-red-600 to-orange-500 px-4 py-2 rounded-full hover:opacity-90 transition text-white">Registrarse</a>
     </div>
 
     <!-- Botón menú móvil -->
-    <button id="menu-btn" class="text-3xl md:hidden focus:outline-none">☰</button>
+    <button id="menu-btn" class="text-3xl md:hidden text-red-500">☰</button>
   </header>
 
   <!-- Menú móvil -->
-  <div id="menu" class="menu-movil hidden flex-col items-center gap-4 bg-neutral-900 py-6 text-sm font-semibold">
-    <a href="#" class="hover:text-red-500 transition">Inicio</a>
-    <a href="#" class="hover:text-red-500 transition">Servicios</a>
-    <a href="#" class="hover:text-red-500 transition">Coach Virtual</a>
-    <a href="#" class="hover:text-red-500 transition">Sobre Nosotros</a>
-    <button class="btn-outline">Iniciar sesión</button>
-    <button class="btn-primary">Registrarse</button>
+  <div id="menu" class="hidden fixed top-[70px] left-0 w-full bg-[#0b0d17]/95 flex-col items-center gap-5 py-6 text-sm font-semibold md:hidden z-40">
+    <a href="#" class="hover:text-red-500">Inicio</a>
+    <a href="#" class="hover:text-red-500">Servicios</a>
+    <a href="#" class="hover:text-red-500">Coach Virtual</a>
+    <a href="#" class="hover:text-red-500">Sobre Nosotros</a>
+    <a href="login.html" class="border border-orange-500 text-orange-400 px-4 py-2 rounded-full hover:bg-gradient-to-r from-red-600 to-orange-500 hover:text-white transition">Iniciar sesión</a>
+    <a href="register.html" class="bg-gradient-to-r from-red-600 to-orange-500 px-4 py-2 rounded-full hover:opacity-90 transition">Registrarse</a>
   </div>
 
   <!-- HERO -->
-  <section class="flex flex-col-reverse md:flex-row items-center md:items-center justify-center md:justify-between px-6 md:px-20 pt-8 md:pt-12 pb-0 md:pb-8 bg-[#0b0d17]">
-  
-  <!-- Texto -->
-  <div class="text-center md:text-left md:w-1/2">
-    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">
-      Transforma tu cuerpo con <span class="text-red-600">FitAiid</span>
+ <!-- HERO -->
+<!-- HERO -->
+<section class="relative flex flex-col lg:flex-row items-center justify-between px-6 sm:px-10 lg:px-20 pt-40 lg:pt-52 pb-24 gap-10 lg:gap-24 overflow-hidden min-h-[80vh]">
+
+  <!-- Fondo degradado principal (mantén right igual al de la imagen) -->
+  <div class="absolute top-0 right-0 w-full h-full overflow-hidden z-0 bg-[#0a0a0a]">
+    <!-- Círculo degradado (posición exacta: right-[10%]) -->
+    <div class="absolute right-[10%] top-1/2 -translate-y-1/2
+                w-[34rem] h-[34rem] rounded-full
+                bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0%,rgba(0,0,0,0)_100%)]
+                before:content-[''] before:absolute before:inset-0 before:rounded-full
+                before:bg-[linear-gradient(to_right,rgba(255,120,30,0.9)_0%,rgba(255,30,0,0.9)_100%)]
+                before:blur-[90px] before:opacity-90"></div>
+
+    <!-- Halo exterior rojo -->
+    <div class="absolute right-[5%] top-1/2 -translate-y-1/2
+                w-[40rem] md:w-[50rem] lg:w-[60rem] h-[40rem] md:h-[50rem] lg:h-[60rem]
+                rounded-full bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.2)_0%,transparent_80%)]
+                blur-[140px] opacity-40"></div>
+
+    <!-- Luz naranja secundaria -->
+    <div class="absolute bottom-[20%] left-[10%] w-[10rem] h-[10rem] rounded-full bg-[rgba(255,120,0,0.25)] blur-[110px] opacity-60"></div>
+
+    <!-- Luz roja suave -->
+    <div class="absolute bottom-[8%] right-[20%] w-[6rem] h-[6rem] rounded-full bg-[rgba(255,0,0,0.25)] blur-[90px] opacity-50"></div>
+  </div>
+
+  <!-- TEXTO (izquierda) -->
+  <div class="lg:w-1/2 text-center lg:text-left space-y-6 z-10">
+    <h1 class="font-extrabold leading-tight">
+      <span class="block text-4xl sm:text-5xl lg:text-6xl text-white">Alcanza Tus</span>
+      <span class="block text-4xl sm:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-500">
+        OBJETIVOS FITNESS
+      </span>
+      <span class="block text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white">Con FitAiid</span>
     </h1>
-    <p class="text-gray-300 text-base max-w-md mx-auto md:mx-0 mb-6">
-      Tu asistente fitness inteligente. Entrena, mide tu progreso y alcanza tus metas con ayuda de la inteligencia artificial 💪
+
+    <p class="text-gray-400 text-sm sm:text-base leading-relaxed max-w-md mx-auto lg:mx-0">
+      Únete a la comunidad FitAiid y transforma tu camino hacia el fitness. Nuestros programas personalizados están diseñados para ayudarte a alcanzar tus metas y superar tus expectativas. ¿Listo para un cambio?
     </p>
-    <div class="flex flex-col md:flex-row items-center gap-4 justify-center md:justify-start">
-      <button class="bg-red-600 text-white font-semibold px-6 py-3 rounded-full hover:bg-red-700 transition">
-        Empezar rutina
+
+    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+      <button class="bg-gradient-to-r from-red-600 to-orange-500 text-white font-semibold px-8 py-3 rounded-full hover:opacity-90 transition w-full sm:w-auto">
+        Empieza tu rutina
       </button>
-      <button class="border border-red-500 text-red-500 font-semibold px-6 py-3 rounded-full hover:bg-red-600 hover:text-white transition">
+      <button class="border border-orange-400 text-orange-400 font-semibold px-8 py-3 rounded-full hover:bg-orange-500 hover:text-white transition w-full sm:w-auto">
         Explorar servicios
       </button>
     </div>
   </div>
 
-  <!-- Imagen -->
-  <!-- Imagen con fondo degradado -->
-<div class="md:w-1/2 flex justify-center md:justify-end relative mt-10 md:mt-0">
-  <!-- Círculo degradado detrás -->
-  <div class="absolute inset-0 flex justify-center md:justify-end">
-    <div class="w-[22rem] h-[22rem] md:w-[28rem] md:h-[28rem] rounded-full bg-gradient-radial from-red-700/70 via-red-900/40 to-transparent blur-3xl"></div>
+  <!-- IMAGEN PRINCIPAL (alineada con el degradado a la derecha) -->
+  <div class="relative w-full lg:w-1/2 z-10">
+    <!-- usar posición absoluta SOLO en pantallas lg+ para alinear exactamente con el circle -->
+    <img src="../img/SIN FONDO.png" alt="Deportista"
+         class="mx-auto relative w-[90%] sm:w-[28rem] md:w-[34rem] lg:w-[42rem] xl:w-[42rem] h-auto object-contain
+                lg:absolute lg:right-[10%] lg:top-1/2 lg:-translate-y-1/2" />
+
+    <!-- Etiquetas flotantes: mantenidas relativas a la caja -->
+    <span class="absolute top-4 sm:top-8 right-8 bg-black/50 border border-red-500 px-3 sm:px-4 py-1 sm:py-2 rounded-full text-[10px] sm:text-sm whitespace-nowrap">
+      +130 Reseñas Positivas
+    </span>
+    <span class="absolute bottom-4 sm:bottom-8 left-6 bg-black/50 border border-red-500 px-3 sm:px-4 py-1 sm:py-2 rounded-full text-[10px] sm:text-sm whitespace-nowrap">
+      +100 Videos De Entrenamiento
+    </span>
   </div>
-
-  <!-- Imagen principal -->
-  <img src="img/fitness-model.png" alt="Deportista" class="relative w-72 md:w-[26rem] lg:w-[30rem] h-auto z-10" />
-
-  <!-- Etiqueta 100% IA -->
-  <span class="absolute top-3 right-8 bg-black/60 border border-red-500 text-red-400 text-sm px-3 py-1 rounded-full z-20">
-    100% IA
-  </span>
-</div>
-
-
-
 </section>
 
 
   <!-- STATS -->
-  <section class="grid grid-cols-2 md:grid-cols-4 text-center py-12 md:py-16 border-t border-white/10">
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center py-12 border-t border-white/10 px-6 sm:px-10 lg:px-20">
     <div>
-      <h3 class="text-2xl md:text-3xl font-bold">10K+</h3>
-      <p class="text-gray-400 text-sm">Usuarios activos</p>
+      <h3 class="text-3xl font-bold text-red-500">96%</h3>
+      <p class="font-semibold text-lg">Satisfacción Del Cliente</p>
+      <p class="text-gray-400 text-sm mt-1">A nuestros miembros les encantan sus resultados y experiencia.</p>
     </div>
     <div>
-      <h3 class="text-2xl md:text-3xl font-bold">500+</h3>
-      <p class="text-gray-400 text-sm">Rutinas creadas</p>
+      <h3 class="text-3xl font-bold text-orange-400">Confía En Nuestra Experiencia</h3>
+      <p class="text-gray-400 text-sm mt-1">Confié en nuestro historial comprobado de transformación.</p>
     </div>
     <div>
-      <h3 class="text-2xl md:text-3xl font-bold">98%</h3>
-      <p class="text-gray-400 text-sm">Satisfacción</p>
+      <h3 class="text-3xl font-bold text-red-500">+200</h3>
+      <p class="font-semibold text-lg">Miembros Activos</p>
+      <p class="text-gray-400 text-sm mt-1">Únete a nuestra próspera comunidad de fitness.</p>
     </div>
     <div>
-      <h3 class="text-2xl md:text-3xl font-bold">24/7</h3>
-      <p class="text-gray-400 text-sm">Asistencia AI</p>
+      <h3 class="text-3xl font-bold text-orange-400">24/7</h3>
+      <p class="font-semibold text-lg">Soporte Disponible</p>
+      <p class="text-gray-400 text-sm mt-1">Asistencia siempre que la necesites.</p>
     </div>
   </section>
+  <!-- SECCIÓN: NUESTROS SERVICIOS -->
+<section id="servicios" class="py-20 bg-gradient-to-b from-black via-gray-900 to-black text-white">
+  <div class="container mx-auto px-6 md:px-12 lg:px-20 text-center">
+    
+    <!-- Título -->
+    <h2 class="text-4xl font-extrabold text-gray-100 mb-3">
+      Nuestros <span class="text-red-600">Servicios</span>
+    </h2>
+    <p class="max-w-2xl mx-auto text-gray-300 mb-14 text-lg">
+      En esta parte puedes acceder fácilmente a todos nuestros servicios. Échales un vistazo y elige el que quieras.
+    </p>
 
+    <!-- Tarjetas -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center">
+      
+      <!-- Servicio 1 -->
+      <div class="relative w-[270px] h-[300px] rounded-2xl overflow-hidden shadow-xl group">
+        <img src="../img/servicios/entrenamiento de gimnasio.png" alt="Entrenamiento de gimnasio" 
+             class="absolute inset-0 w-full h-full object-cover brightness-100 group-hover:brightness-50 transition-all duration-300">
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+          <h3 class="text-white text-lg font-extrabold mb-2 tracking-wide">ENTRENAMIENTO<br>DE GIMNASIO</h3>
+        </div>
+      </div>
+
+      <!-- Servicio 2 -->
+      <div class="relative w-[270px] h-[300px] rounded-2xl overflow-hidden shadow-xl group">
+        <img src="../img/servicios/rutina personalizada.png" alt="Rutinas personalizadas" 
+             class="absolute inset-0 w-full h-full object-cover brightness-100 group-hover:brightness-50 transition-all duration-300">
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+          <h3 class="text-white text-lg font-extrabold mb-2 tracking-wide">RUTINAS<br>PERSONALIZADAS</h3>
+        </div>
+      </div>
+
+      <!-- Servicio 3 -->
+      <div class="relative w-[270px] h-[300px] rounded-2xl overflow-hidden shadow-xl group">
+        <img src="../img/servicios/entrenamiento en casa (7).png" alt="Entrenamiento en casa" 
+             class="absolute inset-0 w-full h-full object-cover brightness-100 group-hover:brightness-50 transition-all duration-300">
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+          <h3 class="text-white text-lg font-extrabold mb-2 tracking-wide">ENTRENAMIENTO<br>EN CASA</h3>
+        </div>
+      </div>
+
+      <!-- Servicio 4 -->
+      <div class="relative w-[270px] h-[300px] rounded-2xl overflow-hidden shadow-xl group">
+        <img src="../img/servicios/plan nutricional.png" alt="Plan nutricional personalizado" 
+             class="absolute inset-0 w-full h-full object-cover brightness-90 group-hover:brightness-50 transition-all duration-300">
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+          <h3 class="text-white text-lg font-extrabold mb-2 tracking-wide">PLAN NUTRICIONAL<br>PERSONALIZADO</h3>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+    </div>
+  </div>
+  <!-- SECCIÓN: NUESTRO PLAN -->
+<section id="plan" class="py-20 bg-gradient-to-b from-black via-gray-900 to-black text-white">
+  <div class="container mx-auto px-8 md:px-12 lg:px-20 text-center">
+    
+    <!-- Título -->
+    <h2 class="text-4xl font-extrabold mb-10">
+      Nuestro <span class="text-red-600">Plan</span>
+    </h2>
+
+    <!-- Selector mensual / anual -->
+    <div class="flex justify-center mb-10">
+      <div class="bg-gray-800 rounded-full p-1 flex">
+        <button class="bg-red-600 text-white px-8 py-2 rounded-full font-semibold">Mensual</button>
+        <button class="text-gray-300 px-8 py-2 rounded-full font-semibold hover:text-white transition-all">Anual</button>
+      </div>
+    </div>
+
+    <!-- Tarjeta del plan -->
+    <div class="relative border-2 border-red-600 rounded-2xl p-10 max-w-3xl mx-auto bg-gradient-to-br from-red-950/40 via-gray-900/60 to-black/80 shadow-2xl">
+      <h3 class="text-2xl gagalin font-extrabold mb-6">PLAN PRO</h3>
+
+      <!-- Descripción -->
+      <div class="text-gray-300 mb-6">
+        <span class="text-red-600 font-semibold block mb-1">Descripción</span>
+        Nuestro Plan Pro ofrece entrenamientos avanzados y asesoramiento nutricional personalizado 
+        para ayudarte a alcanzar tus objetivos más rápido. ¡Regístrate ahora!
+      </div>
+
+      <!-- Características -->
+      <div class="text-left mx-auto max-w-md text-gray-200 mb-10">
+        <span class="text-red-600 font-semibold block mb-2 text-center">Características</span>
+        <ul class="list-disc list-inside space-y-2">
+          <li>Seguimiento del progreso</li>
+          <li>Planes de entrenamiento avanzados y personalizados</li>
+          <li>Asesoramiento nutricional</li>
+          <li>Acceso a programas de entrenamiento avanzados</li>
+          <li>Análisis de la composición corporal</li>
+          <li>Acceso a todos nuestros videos de ejercicios</li>
+        </ul>
+      </div>
+
+      <!-- Precio (sin X) -->
+      <div class="text-center mb-10">
+        <p class="text-3xl font-extrabold text-white">$34.900<span class="text-gray-400 text-lg">/COP</span></p>
+      </div>
+
+      <!-- Botón -->
+      <a href="../pages/register.html" class="w-full bg-red-600 hover:bg-red-800 text-white font-bold py-3 rounded-full text-lg transition-all text-center block">
+      Inicia Tu Prueba Gratis Por Un Mes
+</a>
+    </div>
+  </div>
+</section>
+
+</section>
   <!-- FOOTER -->
-  <footer class="border-t border-white/10 text-center text-gray-500 py-6 text-sm">
+  <footer class="border-t border-white/10 text-center text-gray-500 py-6 text-xs sm:text-sm">
     © 2025 FitAiid. Todos los derechos reservados.
   </footer>
 
@@ -118,9 +263,8 @@
   <script>
     const menuBtn = document.getElementById("menu-btn");
     const menu = document.getElementById("menu");
-    menuBtn.addEventListener("click", () => {
-      menu.classList.toggle("hidden");
-    });
+    menuBtn.addEventListener("click", () => menu.classList.toggle("hidden"));
   </script>
+
 </body>
 </html>

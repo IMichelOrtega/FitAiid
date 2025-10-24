@@ -389,3 +389,51 @@ console.log('   • getProfile - Obtener perfil');
 console.log('   • updateProfile - Actualizar perfil');
 
 
+// =============================================
+// LOGIN / REGISTRO CON GOOGLE
+// =============================================
+const googleLogin = async (req, res) => {
+  try {
+    const { firstName, lastName, email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "El email es obligatorio" });
+    }
+
+    // Buscar si ya existe
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // Crear uno nuevo (contraseña dummy válida)
+      user = await User.create({
+        firstName: firstName || "Usuario",
+        lastName: lastName || "Google",
+        email,
+        password: "GoogleAuth123", // cumple tu regex
+        role: "customer",
+        isEmailVerified: true,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Inicio de sesión con Google exitoso",
+      user: {
+        id: user._id,
+        name: `${user.firstName} ${user.lastName}`,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (err) {
+    console.error("❌ Error en googleLogin:", err);
+    res.status(500).json({ message: "Error al iniciar sesión con Google" });
+  }
+};
+module.exports = {
+    register,
+    login,
+    getProfile,
+    updateProfile,
+    googleLogin
+};
