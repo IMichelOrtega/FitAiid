@@ -214,3 +214,182 @@ input:focus {
   border-left: 4px solid #006600;
 }
 
+/* =============================================
+   ESTILOS ADICIONALES PARA RECUPERACIÓN DE CONTRASEÑA
+   ============================================= */
+
+/* Link de olvidaste contraseña */
+.forgot-password-link {
+  text-align: right;
+  margin: -10px 0 0px 0;
+}
+
+.forgot-password-link a {
+  color: #cfc9c9;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.forgot-password-link a:hover {
+  color: #c00707;
+  text-decoration: underline;
+}
+
+/* Subtítulo en formularios */
+.subtitle {
+  text-align: center;
+  color: #cdcccc;
+  font-size: 14px;
+  margin: -10px 0 25px 0;
+  line-height: 1.5;
+}
+
+/* Display del email */
+.email-display {
+  text-align: center;
+  color: #c5c4c4;
+  font-weight: 600;
+  font-size: 14px;
+  margin: -5px 0 20px 0;
+  padding: 10px;
+  background: #7b707030;
+  border-radius: 5px;
+}
+
+/* Input hint (texto pequeño debajo de inputs) */
+.input-hint {
+  display: block;
+  color: #999;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* Mensajes de éxito y error */
+.message {
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+  animation: slideDown 0.3s ease;
+}
+
+.message.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estados de loading en botones */
+.btn-loading {
+  display: none;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Link para volver atrás */
+.back-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.back-link a {
+  color: #cfc9c9;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.back-link a:hover {
+  color: #b00505;
+}
+
+.back-link i {
+  font-size: 12px;
+}
+
+/* Sección para reenviar código */
+.resend-code {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.resend-code p {
+  color: #c9c7c7;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #ff0303;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.3s;
+  text-decoration: underline;
+}
+
+.link-btn:hover {
+  color: #7a0808;
+}
+
+.link-btn:disabled {
+  color: #999;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+/* Estilos para input de código */
+input[type="text"]#code {
+  text-align: center;
+  letter-spacing: 8px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #667eea;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .subtitle {
+    font-size: 13px;
+  }
+  
+  .email-display {
+    font-size: 13px;
+  }
+  
+  input[type="text"]#code {
+    letter-spacing: 5px;
+    font-size: 20px;
+  }
+}

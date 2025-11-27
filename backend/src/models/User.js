@@ -255,16 +255,16 @@ const userSchema = new mongoose.Schema({
         default: false                                // Por defecto no verificado
     },
     
-    // Tokens para recuperación de contraseña
-    passwordResetToken: {
-        type: String,
-        select: false                                 // Tampoco mostrar este token sensible
-    },
-    
-    passwordResetExpires: {
-        type: Date,
-        select: false                                 // Ni la fecha de expiración
-    },
+    // Código de recuperación de contraseña (6 dígitos)
+resetPasswordCode: {
+    type: String,
+    select: false                                 // No mostrar código en consultas
+},
+
+resetPasswordExpire: {
+    type: Date,
+    select: false                                 // Fecha de expiración del código
+},
 /*
  * customer (cliente normal):
  * - Ver productos ✅
@@ -377,8 +377,8 @@ const userSchema = new mongoose.Schema({
             delete ret._id;
             delete ret.__v;
             delete ret.password;                      // ¡CRÍTICO! NUNCA enviar contraseña
-            delete ret.passwordResetToken;            // Ni tokens sensibles
-            delete ret.passwordResetExpires;
+            delete ret.resetPasswordCode;             // Ni códigos de recuperación
+            delete ret.resetPasswordExpire;
             delete ret.loginAttempts;                 // Ni información de seguridad
             delete ret.lockUntil;
             return ret;

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitAiid - Verificar Código</title>
+  <link rel="stylesheet" href="../styles/login.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="form-box">
+      <a href="login.html" class="close-btn">×</a>
+      <h2>Verificar Código</h2>
+      <p class="subtitle">Ingresa el código de 6 dígitos que enviamos a tu correo</p>
+      <p class="email-display" id="emailDisplay"></p>
+      
+      <div id="message" class="message" style="display:none;"></div>
+      
+      <form id="verifyCodeForm">
+        <div class="input-group">
+          <label for="code">Código de Verificación</label>
+          <input 
+            type="text" 
+            id="code" 
+            name="code" 
+            placeholder="000000" 
+            maxlength="6"
+            pattern="[0-9]{6}"
+            required
+            autocomplete="off"
+          >
+          <small class="input-hint">Ingresa el código de 6 dígitos</small>
+        </div>
+        
+        <button type="submit" class="btn" id="submitBtn">
+          <span class="btn-text">Verificar Código</span>
+          <span class="btn-loading" style="display:none;">
+            <i class="fas fa-spinner fa-spin"></i> Verificando...
+          </span>
+        </button>
+        
+        <div class="resend-code">
+          <p>¿No recibiste el código?</p>
+          <button type="button" class="link-btn" id="resendBtn">
+            Reenviar código
+          </button>
+        </div>
+        
+        <div class="back-link">
+          <a href="forgot-password.html">
+            <i class="fas fa-arrow-left"></i> Volver atrás
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script src="../scripts/verify-code.js"></script>
+</body>
+
+</html>

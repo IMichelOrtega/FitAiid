@@ -93,7 +93,9 @@ console.log('   📝 POST /api/auth/register - Crear cuenta');
 console.log('   🔐 POST /api/auth/login - Iniciar sesión');
 console.log('   👤 GET /api/auth/profile - Ver perfil');
 console.log('   ✏️ PUT /api/auth/profile - Actualizar perfil');
-
+console.log('   🔑 POST /api/auth/forgot-password - Solicitar código');
+console.log('   ✅ POST /api/auth/verify-code - Verificar código');
+console.log('   🔐 POST /api/auth/reset-password - Nueva contraseña');
 module.exports = router;
 
 /**
@@ -108,3 +110,39 @@ router.post('/google', authController.googleLogin);
 
 router.get('/verify-email', authController.verifyEmail);
 
+// =============================================
+// RUTAS DE RECUPERACIÓN DE CONTRASEÑA
+// =============================================
+
+/**
+ * @route   POST /api/auth/forgot-password
+ * @desc    Enviar código de recuperación al email
+ * @access  Público
+ * @body    { email }
+ */
+router.post('/forgot-password', 
+    authLimiter,
+    authController.forgotPassword
+);
+
+/**
+ * @route   POST /api/auth/verify-code
+ * @desc    Verificar código de recuperación
+ * @access  Público
+ * @body    { email, code }
+ */
+router.post('/verify-code',
+    authLimiter,
+    authController.verifyResetCode
+);
+
+/**
+ * @route   POST /api/auth/reset-password
+ * @desc    Restablecer contraseña con código válido
+ * @access  Público
+ * @body    { email, code, password }
+ */
+router.post('/reset-password',
+    authLimiter,
+    authController.resetPassword
+);

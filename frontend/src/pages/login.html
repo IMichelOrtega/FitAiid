@@ -28,6 +28,12 @@
             <i class="fa-solid fa-eye toggle-password"></i>
           </div>
         </div>
+        
+        <!-- ✨ NUEVO: Link de recuperación de contraseña -->
+        <div class="forgot-password-link">
+          <a href="forgot-password.html">¿Olvidaste tu contraseña?</a>
+        </div>
+        
         <button type="submit" class="btn">Iniciar Sesión</button>
         <p class="register-text">¿No tienes cuenta?
           <a href="register.html">Regístrate aquí</a>
@@ -43,7 +49,7 @@
     togglePassword.addEventListener('click', () => {
       const isPassword = passwordInput.type === 'password';
       passwordInput.type = isPassword ? 'text' : 'password';
-      togglePassword.textContent = isPassword ? '' : '';
+      togglePassword.textContent = isPassword ? '👁️' : '👁️';
     });
   </script>
 

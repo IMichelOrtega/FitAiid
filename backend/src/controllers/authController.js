@@ -490,12 +490,238 @@ const verifyEmail = async (req, res) => {
     res.status(500).send("Error al verificar el correo.");
   }
 };
+// =============================================
+// RECUPERACIÓN DE CONTRASEÑA
+// =============================================
 
+/**
+ * @desc    Solicitar código de recuperación
+ * @route   POST /api/auth/forgot-password
+ * @access  Público
+ */
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'El email es requerido'
+      });
+    }
+
+    console.log(`🔑 Solicitud de recuperación para: ${email}`);
+
+    // Buscar usuario
+    const user = await User.findOne({ email: email.toLowerCase() });
+
+    // Por seguridad, siempre responder lo mismo (aunque el usuario no exista)
+    if (!user) {
+      console.log(`⚠️ Usuario no encontrado: ${email}`);
+      return res.status(200).json({
+        success: true,
+        message: 'Si el email existe, recibirás un código de verificación'
+      });
+    }
+
+    // Generar código de 6 dígitos
+    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log(`📱 Código generado: ${resetCode}`);
+
+    // Hashear el código antes de guardarlo
+    const resetCodeHash = crypto
+      .createHash('sha256')
+      .update(resetCode)
+      .digest('hex');
+
+    // Guardar código hasheado y expiración (15 minutos)
+    user.resetPasswordCode = resetCodeHash;
+    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 minutos
+    await user.save();
+
+    // Configurar email
+    const mailOptions = {
+      from: `"FitAiid 💪" <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: 'Código de Recuperación de Contraseña',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h2 style="color: #333;">Código de Recuperación de Contraseña</h2>
+          <p>Hola ${user.firstName},</p>
+          <p>Has solicitado restablecer tu contraseña. Tu código de verificación es:</p>
+          <div style="background-color: #f4f4f4; padding: 20px; text-align: center; border-radius: 5px; margin: 20px 0;">
+            <h1 style="color: #667eea; font-size: 36px; letter-spacing: 5px; margin: 0;">
+              ${resetCode}
+            </h1>
+          </div>
+          <p>Este código expirará en <strong>15 minutos</strong>.</p>
+          <p style="color: #999; font-size: 14px;">Si no solicitaste este cambio, ignora este correo.</p>
+        </div>
+      `
+    };
+
+    // Enviar email
+    await transporter.sendMail(mailOptions);
+    console.log(`✅ Código enviado a: ${email}`);
+
+    logger.audit('PASSWORD_RESET_REQUESTED', {
+      userId: user._id,
+      email: user.email,
+      ip: req.ip
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Código enviado al correo electrónico'
+    });
+
+  } catch (error) {
+    console.error(`❌ Error en forgotPassword: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      message: 'Error al procesar la solicitud'
+    });
+  }
+};
+
+/**
+ * @desc    Verificar código de recuperación
+ * @route   POST /api/auth/verify-code
+ * @access  Público
+ */
+const verifyResetCode = async (req, res) => {
+  try {
+    const { email, code } = req.body;
+
+    if (!email || !code) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email y código son requeridos'
+      });
+    }
+
+    console.log(`🔍 Verificando código para: ${email}`);
+
+    // Hash del código recibido
+    const codeHash = crypto
+      .createHash('sha256')
+      .update(code)
+      .digest('hex');
+
+    // Buscar usuario con código válido y no expirado
+    const user = await User.findOne({
+      email: email.toLowerCase(),
+      resetPasswordCode: codeHash,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      console.log(`❌ Código inválido o expirado para: ${email}`);
+      return res.status(400).json({
+        success: false,
+        message: 'Código inválido o expirado'
+      });
+    }
+
+    console.log(`✅ Código verificado para: ${email}`);
+
+    res.status(200).json({
+      success: true,
+      message: 'Código verificado correctamente'
+    });
+
+  } catch (error) {
+    console.error(`❌ Error en verifyResetCode: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      message: 'Error al verificar el código'
+    });
+  }
+};
+
+/**
+ * @desc    Restablecer contraseña con código
+ * @route   POST /api/auth/reset-password
+ * @access  Público
+ */
+const resetPassword = async (req, res) => {
+  try {
+    const { email, code, password } = req.body;
+
+    // Validar datos
+    if (!email || !code || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email, código y contraseña son requeridos'
+      });
+    }
+
+    // Validar contraseña
+    if (password.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: 'La contraseña debe tener al menos 8 caracteres'
+      });
+    }
+
+    console.log(`🔐 Restableciendo contraseña para: ${email}`);
+
+    // Hash del código recibido
+    const codeHash = crypto
+      .createHash('sha256')
+      .update(code)
+      .digest('hex');
+
+    // Buscar usuario con código válido y no expirado
+    const user = await User.findOne({
+      email: email.toLowerCase(),
+      resetPasswordCode: codeHash,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      console.log(`❌ Código inválido o expirado para: ${email}`);
+      return res.status(400).json({
+        success: false,
+        message: 'Código inválido o expirado'
+      });
+    }
+
+    // Actualizar contraseña (el middleware de User.js la encriptará automáticamente)
+    user.password = password;
+    user.resetPasswordCode = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    console.log(`✅ Contraseña actualizada para: ${email}`);
+
+    logger.audit('PASSWORD_RESET_COMPLETED', {
+      userId: user._id,
+      email: user.email,
+      ip: req.ip
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Contraseña actualizada correctamente'
+    });
+
+  } catch (error) {
+    console.error(`❌ Error en resetPassword: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      message: 'Error al restablecer la contraseña'
+    });
+  }
+};
 module.exports = {
     register,
     login,
     getProfile,
     updateProfile,
     googleLogin,
-    verifyEmail
+    verifyEmail,
+    forgotPassword,
+    verifyResetCode,
+    resetPassword
 };
