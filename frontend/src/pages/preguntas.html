@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head> 
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cuestionario FitAiid</title>
+  <!-- Fuente y hoja de estilos -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles/preguntas.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="logo-container">
+      <div class="top-line"></div>
+      <img src="../img/logo.png" alt="FitAiid Logo">
+    </div>
+    <div class="question active" id="q1">
+      <h1>ALCANZA TUS METAS FITNESS CON FITAIID</h1>
+      <h3>Elige tu género para iniciar</h3>
+      <div class="option hombre" onclick="nextQuestion('q2')"><span>Hombre</span></div>
+      <div class="option mujer" onclick="nextQuestion('q2')"><span>Mujer</span></div>
+    </div>
+    <div class="question" id="q2">
+      <h2>¿Cuál es tu edad?</h2>
+      <input type="number" id="edad" placeholder="Ingresa tu edad (14 - 100)" min="14" max="90" maxlength="2"/>
+      <!-- Mensaje de error dentro de la página -->
+      <p id="errorEdad" class="error-msg"></p>
+      <button onclick="validarEdad()">Siguiente →</button>
+    </div>
+    <div class="question" id="q3">
+      <h2>¿Cuál es tu altura (cm)?</h2>
+      <input type="number" placeholder="Ej: 165" id="altura" min="130" max="220"/>
+      <p id="errorAltura" class="error-msg"></p>
+      <button onclick="validarAltura()">Siguiente →</button>
+    </div>
+    <div class="question" id="q4">
+      <h2>¿Cuál es tu peso (kg)?</h2>
+      <input type="number" placeholder="Ej: 65" id="peso" min="30" max="300"/>
+      <p id="errorPeso" class="error-msg"></p>
+      <button onclick="validarPeso()">Siguiente →</button>
+    </div>
+    <div class="question" id="q5">
+      <h2>¿Cuál es tu nivel de experiencia?</h2>
+      <div class="option" onclick="nextQuestion('q6')">Principiante</div>
+      <div class="option" onclick="nextQuestion('q6')">Intermedio</div>
+      <div class="option" onclick="nextQuestion('q6')">Avanzado</div>
+    </div>
+    <div class="question" id="q6">
+      <h2>¿Cuál es tu objetivo principal?</h2>
+      <div class="option" onclick="nextQuestion('q7')">Tonificar</div>
+      <div class="option" onclick="nextQuestion('q7')">Ganar masa muscular</div>
+      <div class="option" onclick="nextQuestion('q7')">Bajar de peso</div>
+    </div>
+    <div class="question" id="q7">
+      <h2>¿Tienes alguna lesión o condición médica?</h2>
+      <input type="text" id="condicion" placeholder="Escribe tu respuesta..." />
+      <p id="errorCondicion" class="error-msg"></p>
+      <button onclick="validarCondicion()">Siguiente →</button>
+    </div>
+    <div class="question" id="q8">
+      <h2>¿Dónde prefieres entrenar?</h2>
+      <div class="option" onclick="nextQuestion('q9')">Casa</div>
+      <div class="option" onclick="nextQuestion('q9')">Gym</div>
+    </div>
+    <div class="question" id="q9">
+      <h2>¿Cuántos días a la semana puedes entrenar?</h2>
+      <div class="option" onclick="nextQuestion('q10')">1</div>
+      <div class="option" onclick="nextQuestion('q10')">2</div>
+      <div class="option" onclick="nextQuestion('q10')">3</div>
+      <div class="option" onclick="nextQuestion('q10')">4</div>
+      <div class="option" onclick="nextQuestion('q10')">5</div>
+    </div>
+    <div class="question" id="q10">
+      <h2>¿Cuánto tiempo por sesión?</h2>
+      <div class="option" onclick="finish()">30 min</div>
+      <div class="option" onclick="finish()">45 min</div>
+      <div class="option" onclick="finish()">1 hr</div>
+      <div class="option" onclick="finish()">+1 hr</div>
+    </div>
+    <div class="question" id="finish">
+      <h2>¡Gracias! 💪</h2>
+      <p>Has completado el cuestionario FitAiid.</p>
+    </div>
+  </div>
+<script>
+  function nextQuestion(nextId, requiresInput = false, inputId = null) {
+  const current = document.querySelector(".question.active");
+  if (requiresInput && inputId) {
+    const value = document.getElementById(inputId).value.trim();
+    if (!value) {
+      alert("Por favor, responde antes de continuar.");
+      return;
+    }
+  }
+  current.classList.remove("active");
+  document.getElementById(nextId).classList.add("active");
+  updateLogoPosition(nextId);
+}
+</script>
+<script>
+  function updateLogoPosition(nextId) {
+  const logo = document.querySelector(".logo-container");
+  if (nextId !== "q1") {
+    logo.classList.add("logo-centered");
+  } else {
+    logo.classList.remove("logo-centered");
+  }
+}
+</script>
+<!-- Validar edad-->
+<script>
+function validarEdad() {
+  const edad = document.getElementById("edad").value;
+  if (!edad) {
+    alert("Por favor ingresa tu edad.");
+    return;
+  }
+  if (edad < 14) {
+    alert("La edad mínima es 14 años.");
+    return;
+  }
+  if (edad > 100) {
+    alert("La edad máxima es 100 años.");
+    return;
+  }
+  // Si todo está bien, avanza a la siguiente pregunta
+  nextQuestion("q3");
+}
+</script>
+<script>
+// Evitar más de 2 dígitos
+document.getElementById("edad").addEventListener("input", function () {
+  if (this.value.length > 2) {
+    this.value = this.value.slice(0, 2); 
+  }
+});
+function validarEdad() {
+  const edad = document.getElementById("edad");
+  const error = document.getElementById("errorEdad");
+  const valor = parseInt(edad.value);
+  // Reset
+  edad.classList.remove("invalid", "valid");
+  error.textContent = "";
+  if (!valor) {
+    error.textContent = "Por favor ingresa tu edad.";
+    edad.classList.add("invalid");
+    return;
+  }
+  if (valor < 14 || valor > 100) {
+    error.textContent = "La edad no es válida. Debe estar entre 14 y 100.";
+    edad.classList.add("invalid");
+    return;
+  }
+  // Si es válido
+  edad.classList.add("valid");
+  nextQuestion("q3");
+}
+</script>
+<!-- Validar campos-->
+ <script>
+function validarAltura() {
+  const altura = document.getElementById("altura");
+  const error = document.getElementById("errorAltura");
+  const valor = parseInt(altura.value);
+  altura.classList.remove("invalid", "valid");
+  error.textContent = "";
+  if (!valor) {
+    error.textContent = "Por favor ingresa tu altura.";
+    altura.classList.add("invalid");
+    return;
+  }
+  if (valor < 100 || valor > 250) {
+    error.textContent = "La altura debe estar entre 100 y 250 cm.";
+    altura.classList.add("invalid");
+    return;
+  }
+  altura.classList.add("valid");
+  nextQuestion("q4");
+}
+</script>
+<script>
+function validarPeso() {
+  const peso = document.getElementById("peso");
+  const error = document.getElementById("errorPeso");
+  const valor = parseInt(peso.value);
+  peso.classList.remove("invalid", "valid");
+  error.textContent = "";
+  if (!valor) {
+    error.textContent = "Por favor ingresa tu peso.";
+    peso.classList.add("invalid");
+    return;
+  }
+  if (valor < 30 || valor > 300) {
+    error.textContent = "El peso debe estar entre 30 y 300 kg.";
+    peso.classList.add("invalid");
+    return;
+  }
+  peso.classList.add("valid");
+  nextQuestion("q5");
+}
+</script>
+<script>
+function validarCondicion() {
+  const condicion = document.getElementById("condicion");
+  const error = document.getElementById("errorCondicion");
+  const valor = condicion.value.trim();
+  condicion.classList.remove("invalid", "valid");
+  error.textContent = "";
+  if (!valor) {
+    error.textContent = "Debes escribir una respuesta.";
+    condicion.classList.add("invalid");
+    return;
+  }
+  condicion.classList.add("valid");
+  nextQuestion("q8");
+}
+</script>
+<!--Finalizar cuestionario --> 
+<script>
+function finish() {
+  const current = document.querySelector(".question.active");
+  current.classList.remove("active");
+
+  // Mostrar pantalla final
+  document.getElementById("finish").classList.add("active");
+
+  // Centrar logo si lo necesitas
+  updateLogoPosition("finish");
+}
+</script>
+<script>
+// ---------------------
+// LIMITE DE DÍGITOS
+// ---------------------
+function limitarDigitosPorPregunta(preguntaId) {
+  const pregunta = document.getElementById(preguntaId);
+  if (!pregunta) return;
+
+  const input = pregunta.querySelector("input");
+
+  input.addEventListener("input", () => {
+    let maxDigitos = preguntaId === "q3" ? 3 : 2;
+
+    if (input.value.length > maxDigitos) {
+      input.value = input.value.slice(0, maxDigitos);
+    }
+  });
+}
+
+limitarDigitosPorPregunta("q3");
+function limitarDigitosPorPregunta(preguntaId) {
+  const pregunta = document.getElementById(preguntaId);
+  if (!pregunta) return;
+
+  const input = pregunta.querySelector("input");
+
+  input.addEventListener("input", () => {
+    // ALTURA (q3) y PESO (q4) → 3 dígitos
+    let maxDigitos = preguntaId === "q3" || preguntaId === "q4" ? 3 : 2;
+
+    if (input.value.length > maxDigitos) {
+      input.value = input.value.slice(0, maxDigitos);
+    }
+  });
+}
+
+limitarDigitosPorPregunta("q3");
+limitarDigitosPorPregunta("q4");
+
+// ---------------------
+// VALIDAR ALTURA (q3)
+// ---------------------
+function validarAltura() {
+  const alturaInput = document.querySelector("#q3 input");
+  const errorAltura = document.getElementById("errorAltura");
+  const valor = parseInt(alturaInput.value);
+
+  errorAltura.textContent = "";
+  alturaInput.style.border = "2px solid #ccc";
+
+  if (!valor) {
+    errorAltura.textContent = "Por favor ingresa tu altura.";
+    alturaInput.style.border = "2px solid red";
+    return false;
+  }
+
+  if (valor < 50 || valor > 250) {
+    errorAltura.textContent = "La altura no es válida.";
+    alturaInput.style.border = "2px solid red";
+    return false;
+  }
+
+  alturaInput.style.border = "2px solid green";
+
+  // Cambia a la siguiente pregunta
+  mostrarPregunta("q4");
+}
+
+
+// ---------------------
+// VALIDAR PESO O EDAD (q4)
+// ---------------------
+function validarQ4() {
+  const input = document.querySelector("#q4 input");
+  const error = document.getElementById("errorQ4");
+  const valor = parseInt(input.value);
+
+  error.textContent = "";
+  input.style.border = "2px solid #ccc";
+
+  if (!valor) {
+    error.textContent = "Este campo es obligatorio.";
+    input.style.border = "2px solid red";
+    return false;
+  }
+
+  // Cambia el rango según lo que sea q4 (elige tu opción):
+
+  // Opción A: si q4 es PESO (30–99 kg)
+  if (valor < 30 || valor > 99) {
+    error.textContent = "El valor no es válido.";
+    input.style.border = "2px solid red";
+    return false;
+  }
+
+  // Opción B: si q4 es EDAD (14–99 años)
+  // if (valor < 14 || valor > 99) {
+  //   error.textContent = "La edad no es válida.";
+  //   input.style.border = "2px solid red";
+  //   return false;
+  // }
+
+  input.style.border = "2px solid green";
+
+  // Siguiente pregunta
+  mostrarPregunta("q5");
+}
+</script>
+<script>
+function mostrarPregunta(id) {
+  const todas = document.querySelectorAll(".question");
+  
+  todas.forEach(q => q.classList.remove("active"));
+  
+  document.getElementById(id).classList.add("active");
+}
+</script>
+
+
+
+
+</body>
+</html>

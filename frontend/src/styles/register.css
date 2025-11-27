@@ -1,0 +1,319 @@
+/* ======== ESTILO GENERAL ======== */
+body {
+  margin: 0;
+  font-family: "Oswald", sans-serif;
+  font-weight: 400;
+  background: #000;
+  color: white;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* ======== FONDO CON ONDAS ROJAS ======== */
+body::before {
+  content: "";
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), /* capa oscura encima */
+    url("https://img.freepik.com/fotos-premium/gimnasio-luces-rojas-luz-roja-techo_1177960-12802.jpg");
+  background-size: cover; /* cambia contain → cover para cubrir toda la pantalla */
+  background-position: center center;
+  background-blend-mode: darken; /* mezcla la capa negra con la imagen */
+  animation: moveWaves 8s infinite alternate ease-in-out;
+  z-index: 0;
+  filter: blur(50px);
+}
+
+@keyframes moveWaves {
+  0% { transform: translate(-20px, -20px) scale(1); }
+  100% { transform: translate(20px, 20px) scale(1.1); }
+}
+
+/* ======== CONTENEDOR ======== */
+.register-container {
+  position: relative;
+  z-index: 1;
+  
+  padding: 2.5rem;
+  border-radius: 0px;
+  width: 360px;
+  box-shadow: 0 0 40px rgba(255, 0, 0, 0.4);
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+  border: 2px solid #ff0000;
+}
+
+.register-container:hover {
+  box-shadow: 0 0 60px rgba(255, 0, 0, 0.6);
+}
+
+/* ======== TÍTULO ======== */
+.register-container h2 {
+  margin-bottom: 1.5rem;
+  color: white;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* ======== CAMPOS ======== */
+.register-container input,
+.register-container select {
+  width: 93%;
+  margin-bottom: 0.9rem;
+  padding: 0.75rem;
+  border: 1px solid #000000;
+  border-radius: 6px;
+  background: #353333;
+  color: #ddd;
+  outline: none;
+  font-size: 0.95rem;
+  transition: all 0.3s;
+  
+}
+
+.register-container input:focus,
+.register-container select:focus {
+  border-color: #e50914;
+  box-shadow: 0 0 8px #e50914;
+}
+
+/* ======== BOTÓN ======== */
+.register-container button {
+  width: 100%;
+  padding: 0.85rem;
+  border: none;
+  border-radius: 6px;
+  background: #e50914;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.register-container button:hover {
+  background: #ff2626;
+  box-shadow: 0 0 12px #ff2626;
+}
+
+/* ======== TEXTO Y REDES ======== */
+.social-login {
+  margin-top: 1.2rem;
+}
+
+.social-login p {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: #ccc;
+}
+
+.icons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.icons img {
+  width: 30px;
+  filter: brightness(0.9);
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.icons img:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+.Apple {
+  width: 80px;
+  height: 50px;
+}
+.login-link {
+  color: red;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.password-container {
+  position: relative;
+  width: 99%;
+}
+
+.password-container input {
+  width: 101%;
+  padding: 0.75rem;
+  padding-right: 45px; /* espacio para el ojo */
+  border: 1px solid #000000;
+  border-radius: 6px;
+  background: #353333;
+  color: #ddd;
+  outline: none;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 15px;
+  top: 40%;
+  transform: translateY(-50%);
+  color: #bfbfbf;
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.eye-icon:hover {
+  color: #fff;
+}
+
+/* Botón cerrar si lo agregas */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: red;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 28px;
+  color: white;
+  font-size: 30px; /* 🔹 Aumenta el tamaño aquí (antes estaba en 20-24px aprox) */
+  cursor: pointer;
+  transition: color 0.3s, transform 0.2s;
+}
+
+.close-btn:hover {
+  color: red;
+  transform: scale(1.1); /* 🔹 Un pequeño efecto al pasar el mouse */
+}
+/* ======== LINEA DE SEGURIDAD ======== */
+
+  .strength-bar {
+    width: 100%;
+    height: 3px;
+    background: rgb(89, 89, 88);;
+    border-radius: 5px;
+    margin-top: 5px;
+  }
+  #strength-fill {
+    height: 100%;
+    width: 0%;
+    background: red;
+    border-radius: 5px;
+    transition: 0.3s;
+  }
+  #strength-text {
+    margin-top: 5px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+/* ======== REGLAS DE CONTRASEÑA ======== */
+
+#password-strength,
+#strength-text,
+#password-rules {
+  display: none;
+}
+
+  #password-rules {
+  color: rgb(187, 187, 180);
+  text-align: left;        /* Alinear a la izquierda */
+  font-family: 'Inter', sans-serif;  /* Cambiar tipografía */
+  font-size: 15px;
+  margin-top: 9px;
+  line-height: 1.4;
+}
+
+#password-rules li {
+  margin-bottom: 4px;
+}
+
+
+
+/* ==== MENSAJE PERSONALIZADO FITAIID ==== */
+#customMessage {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #1a0000, #330000);
+  border: 2px solid #ff3b3b;
+  color: white;
+  padding: 16px 22px;
+  border-radius: 10px;
+  font-family: "Oswald", sans-serif;
+  font-size: 18px;
+  z-index: 2000;
+  box-shadow: 0 0 15px rgba(255, 60, 0, 0.6);
+  opacity: 0;
+  transition: opacity .4s ease, transform .4s ease;
+}
+
+#customMessage.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(10px);
+}
+
+#customMessage.hidden {
+  display: none;
+}
+
+.toast-msg {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #0f0f0f;
+    color: #00ff88;
+    padding: 15px 20px;
+    font-family: Poppins, sans-serif;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 255, 150, 0.5);
+    font-size: 15px;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity .4s ease;
+  }
+
+  .toast-show {
+    display: block;
+    opacity: 1;
+  }
+
+  .msg-box {
+  display: none;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  text-align: center;
+  transition: opacity 0.4s ease;
+}
+
+/* Éxito */
+.msg-success {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+
+/* Error */
+.msg-error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #dc2626;
+}

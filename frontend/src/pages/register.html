@@ -1,0 +1,205 @@
+<!--register.html con Firebase:-->
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro de Usuario - FitAiid</title>
+    <!-- Fuente Oswald -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="../styles/register.css" />
+  </head>
+
+  <body>
+    <div class="register-container">
+      <!-- 🔹 Botón cerrar (sin script, solo HTML) -->
+      <a href="index.html" class="close-btn" aria-label="Cerrar">×</a>
+
+      <h2>REGÍSTRATE</h2>
+
+      <!-- Mensaje -->
+      <div id="msgBox" class="msg-box"></div>
+
+      <form id="registerForm">
+        <input
+          type="text"
+          id="firstName"
+          placeholder="Nombre"
+          required
+          pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]{2,50}"
+          title="El nombre debe tener solo letras"
+        />
+
+        <input
+          type="text"
+          id="lastName"
+          placeholder="Apellido"
+          required
+          pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]{2,50}"
+          title="El apellido debe tener solo letras"
+        />
+
+        <input
+          type="number"
+          id="phone"
+          placeholder="Número de teléfono"
+          required
+          pattern="^\d{10}$"
+          title="El número debe tener exactamente 10 dígitos"
+        />
+
+        <input
+          type="email"
+          id="email"
+          placeholder="Correo electrónico"
+          required
+          title="Ingresa un correo válido, como ejemplo@correo.com"
+        />
+        <!-- Campo de contraseña con botón para mostrar/ocultar -->
+        <div class="password-container">
+          <input
+            type="password"
+            id="password"
+            placeholder="Contraseña"
+            required
+          />
+          <i id="togglePassword" class="fa-solid fa-eye eye-icon"></i>
+        </div>
+        <!-- Confirmar contraseña (siempre oculta) -->
+        <div class="password-container">
+          <input
+            type="password"
+            id="confirmPassword"
+            placeholder="Confirmar contraseña"
+            required
+          />
+          <i id="toggleConfirmPassword" class="fa-solid fa-eye eye-icon"></i>
+        </div>
+
+        <div id="password-strength" class="strength-bar">
+          <div id="strength-fill"></div>
+        </div>
+        <p id="strength-text"></p>
+        <ul id="password-rules">
+          <li id="rule-length">Mínimo 6 caracteres</li>
+          <li id="rule-uppercase">Una letra mayúscula (A-Z)</li>
+          <li id="rule-uppercase">Una letra minúscula (a-z)</li>
+          <li id="rule-number">Un número (0-9)</li>
+          <li id="rule-symbol">Un símbolo (!@#$%&*.)</li>
+        </ul>
+        <p>
+          ¿Ya Tienes Cuenta? -
+          <a href="login.html" class="login-link">Inicia Sesión</a>
+        </p>
+        <button type="submit">Continuar</button>
+
+        <div class="social-login">
+          <p>O regístrate con</p>
+          <div class="icons">
+            <img
+              src="https://png.pngtree.com/png-vector/20230817/ourmid/pngtree-google-internet-icon-vector-png-image_9183287.png"
+              alt="Google"
+            />
+            <img
+              src="https://static.xx.fbcdn.net/rsrc.php/v4/yG/r/pENh3y_2Pnw.png"
+              alt="Facebook"
+            />
+            <img
+              id="Apple"
+              src="https://img.icons8.com/ios_filled/512/FFFFFF/mac-os.png"
+              alt="Apple"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- 🔹 Script para mostrar/ocultar contraseña -->
+    <script>
+      const passwordInput = document.getElementById("password");
+      const confirmPasswordInput = document.getElementById("confirmPassword");
+      const togglePassword = document.getElementById("togglePassword");
+      const toggleConfirmPassword = document.getElementById(
+        "toggleConfirmPassword"
+      );
+
+      togglePassword.addEventListener("click", () => {
+        const isPassword = passwordInput.type === "password";
+        passwordInput.type = isPassword ? "text" : "password";
+        togglePassword.classList.toggle("fa-eye");
+        togglePassword.classList.toggle("fa-eye-slash");
+      });
+
+      toggleConfirmPassword.addEventListener("click", () => {
+        const isPassword = confirmPasswordInput.type === "password";
+        confirmPasswordInput.type = isPassword ? "text" : "password";
+        toggleConfirmPassword.classList.toggle("fa-eye");
+        toggleConfirmPassword.classList.toggle("fa-eye-slash");
+      });
+    </script>
+
+    <!-- 🔹 Firebase y autenticación social -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+      import {
+        getAuth,
+        signInWithPopup,
+        GoogleAuthProvider,
+        FacebookAuthProvider,
+      } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBzpmKxgVzx6qHgEAsz82xSHM8ANjF8HTI",
+        authDomain: "fitaiid-9c617.firebaseapp.com",
+        projectId: "fitaiid-9c617",
+        storageBucket: "fitaiid-9c617.firebasestorage.app",
+        messagingSenderId: "698827830015",
+        appId: "1:698827830015:web:ad141d6f1b8803edadd2ca",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      const googleProvider = new GoogleAuthProvider();
+      const facebookProvider = new FacebookAuthProvider();
+
+      // Google
+      document
+        .querySelector('.icons img[alt="Google"]')
+        .addEventListener("click", async () => {
+          try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const user = result.user;
+            alert(`Bienvenido ${user.displayName}`);
+          } catch (error) {
+            alert("Error al iniciar sesión con Google.");
+            console.error(error);
+          }
+        });
+
+      // Facebook
+      document
+        .querySelector('.icons img[alt="Facebook"]')
+        .addEventListener("click", async () => {
+          try {
+            const result = await signInWithPopup(auth, facebookProvider);
+            const user = result.user;
+            alert(`Bienvenido ${user.displayName}`);
+          } catch (error) {
+            alert("Error al iniciar sesión con Facebook.");
+            console.error(error);
+          }
+        });
+    </script>
+
+    <script type="module" src="../scripts/register.js"></script>
+  </body>
+</html>

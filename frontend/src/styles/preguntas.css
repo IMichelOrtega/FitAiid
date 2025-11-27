@@ -1,0 +1,254 @@
+/* ==== ESTILO GLOBAL ==== */
+body {
+  margin: 0;
+  font-family: 'Oswald', sans-serif;
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+/* ==== LOGO EN LA ESQUINA DEL CONTENEDOR ==== */
+.logo-container {
+  position: absolute;
+  top: 20px;
+  left: 25px;
+}
+
+.logo-container img {
+  width: 80px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.logo-container img:hover {
+  transform: scale(1.05);
+}
+
+/* ==== CONTENEDOR PRINCIPAL ==== */
+.container {
+  position: relative;
+  overflow: visible; /* 🔥 Importante: permite que sobresalga */
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  padding: 80px 20px 40px; /* aumentamos padding-top para dejar espacio */
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 20px;
+}
+/* ==== LÍNEA ROJA SUPERIOR (sobresaliente) ==== */
+.top-line {
+  position: absolute;
+  top: -40px; /* un poco por encima del borde del contenedor */
+  left: -60px; /* sobresale a la izquierda */
+  width: calc(100% + 520px); /* sobresale igual a la derecha */
+  height: 6px; /* grosor de la línea */
+  background-color: #ff0000;
+  border-radius: 10px;
+  box-shadow: 0 0 20px #ff0000; /* efecto de brillo */
+}
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 10px #ff0000; }
+  50% { box-shadow: 0 0 25px #ff0000; }
+  100% { box-shadow: 0 0 10px #ff0000; }
+}
+
+.top-line {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+.question h1{
+  text-align: left;
+  width: 100%;
+  margin-left: 10px; /* mueve un poco desde el borde izquierdo */
+  color: white;
+  font-size: 2rem;
+  font-weight: 700;
+}
+.question h3{
+  text-align: left;
+  width: 100%;
+  margin-left: 10px; /* mueve un poco desde el borde izquierdo */
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 200;
+}
+
+/* Logo centrado (desde la 2da pregunta en adelante) */
+.logo-centered {
+  position: relative !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin-bottom: 20px;
+  align-items: center;       /* Centra el logo y la línea */
+}
+/* Cuando el logo esté centrado, centramos también la línea */
+.logo-centered .top-line {
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120%; /* Ajusta si la quieres más o menos larga */
+}
+/* Input válido / inválido */
+#edad.invalid {
+  border: 2px solid #ff3b3b;
+  background: #000000;
+}
+
+#edad.valid {
+  border: 2px solid #3bff84;
+  background: #effff5;
+}
+
+/* Mensaje de error */
+.error-msg {
+  color: #ff3b3b;
+  margin-top: 5px;
+  font-size: 14px;
+  min-height: 20px;
+}
+
+
+
+
+
+
+/* ==== PREGUNTAS ==== */
+.question {
+  display: none;
+  animation: fadeIn 0.5s ease;
+}
+
+.question.active {
+  display: block;
+}
+
+h2 {
+  font-size: 1.6rem;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+/* ==== OPCIONES ==== */
+.option {
+  background-color: #111;
+  border: 2px solid #ff0000;
+  border-radius: 10px;
+  padding: 12px 15px;
+  margin: 10px 0;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background-color: #ff3c00;
+  color: #000;
+}
+
+/* ==== INPUTS ==== */
+input[type="number"],
+input[type="text"] {
+  width: 80%;
+  padding: 10px;
+  border: 2px solid #ff0000;
+  border-radius: 10px;
+  background-color: #111;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  text-align: center;
+}
+
+input::placeholder {
+  color: #888;
+}
+
+/* ==== BOTÓN SIGUIENTE ==== */
+button {
+  margin-top: 20px;
+  background-color: #ff0000;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #ff3c00;
+  transform: scale(1.05);
+}
+
+/* ==== ANIMACIÓN ==== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==== OPCIONES DE GÉNERO CON IMÁGENES Y BOTÓN ==== */
+.option.hombre, .option.mujer {
+  position: relative;
+  height: 140px;
+  border-radius: 30px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 200;
+  font-size: 2.0rem;
+  border: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Fondo de las imágenes */
+.option.hombre {
+  background: url("../img/img_preguntas/hombre.webp") center/cover no-repeat;
+  margin-bottom: 50px;
+}
+
+.option.mujer {
+  background: url("../img/img_preguntas/mujer.jpg") center/cover no-repeat;
+}
+
+/* Capa oscura sobre la imagen */
+.option.hombre::before,
+.option.mujer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.345);
+  transition: background 0.3s ease;
+}
+
+/* Botón rojo dentro de la tarjeta */
+.option span {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 0, 0, 0.686);
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 1rem;
+  text-shadow: 0 0 5px rgba(0,0,0,0.7);
+}
+
+/* Flecha → */
+.option span::after {
+  content: "→";
+  font-weight: bold;
+}
+
+/* Hover */
+.option:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 20px rgb(255, 0, 0);
+}
+
+.option:hover::before {
+  background: rgba(0,0,0,0.3);
+}

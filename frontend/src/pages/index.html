@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitAiid - Página de inicio</title>
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fuente y CSS externo -->
+  <link rel="stylesheet" href="../styles/index.css" />
+  
+</head>
+
+<body class="bg-[#0b0d17] text-white overflow-x-hidden">
+
+  <!-- NAVBAR -->
+  <header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 sm:px-10 lg:px-16 py-4 bg-[#0b0d17]/80 backdrop-blur-md">
+    <!-- Logo -->
+    <div class="flex items-center gap-2">
+      <img src="../img/logo.png" alt="FitAiid" class="w-10 sm:w-11 h-10 sm:h-11" />
+      <div>
+        <h1 class="text-xl sm:text-2xl font-bold text-[#ff2a2a]">FitAiid</h1>
+        <p class="text-[10px] sm:text-xs text-gray-300 -mt-1">Transforma Tu Cuerpo</p>
+      </div>
+    </div>
+
+    <!-- Menú escritorio -->
+    <nav class="hidden md:flex gap-8 text-sm lg:text-base font-semibold">
+  <a href="#inicio" class="nav-link text-[#ff2a2a] border-red-600 pb-1">Inicio</a>
+  <a href="#servicios" class="nav-link hover:text-[#ff2a2a] transition">Servicios</a>
+  <a href="../pages/chatbot.html" class="nav-link hover:text-[#ff2a2a] transition">Coach Virtual</a>
+  <a href="#herramientas" class="nav-link hover:text-[#ff2a2a] transition">Herramientas Fitness</a>
+  <a href="#sobre-nosotros" class="nav-link hover:text-[#ff2a2a] transition">Sobre Nosotros</a>
+</nav>
+</nav>
+
+
+    <!-- Botones escritorio -->
+    <div class="hidden md:flex gap-3">
+      <a href="login.html" class="border border-orange-500 text-orange-400 px-4 py-2 rounded-full hover:bg-gradient-to-r from-red-600 to-orange-500 hover:text-white transition">Iniciar Sesión</a>
+      <a href="register.html" class="bg-gradient-to-r from-red-600 to-orange-500 px-4 py-2 rounded-full hover:opacity-90 transition text-white">Registrarse</a>
+    </div>
+
+    <!-- Botón menú móvil -->
+    <button id="menu-btn" class="text-3xl md:hidden text-red-500">☰</button>
+  </header>
+
+  <!-- Menú móvil -->
+  <div id="menu" class="hidden fixed top-[70px] left-0 w-full bg-[#0b0d17]/95 flex-col items-center gap-5 py-6 text-sm font-semibold md:hidden z-40">
+    <a href="#inicio" class="hover:text-red-500">Inicio</a>
+    <a href="#servicios" class="hover:text-red-500">Servicios</a>
+    <a href="#" class="hover:text-red-500">Coach Virtual</a>
+    <a href="#sobre-nosotros" class="hover:text-red-500">Sobre Nosotros</a>
+    <a href="login.html" class="border border-orange-500 text-orange-400 px-4 py-2 rounded-full hover:bg-gradient-to-r from-red-600 to-orange-500 hover:text-white transition">Iniciar sesión</a>
+    <a href="register.html" class="bg-gradient-to-r from-red-600 to-orange-500 px-4 py-2 rounded-full hover:opacity-90 transition">Registrarse</a>
+  </div>
+
+  <!-- HERO -->
+<section id="inicio" class="relative flex flex-col lg:flex-row items-center justify-between px-6 sm:px-10 lg:px-20 pt-40 lg:pt-52 pb-24 gap-10 lg:gap-24 overflow-hidden min-h-[80vh]">
+
+  <!-- Fondo degradado principal (mantén right igual al de la imagen) -->
+  <div class="absolute top-0 right-0 w-full h-full overflow-hidden z-0 bg-[#0a0a0a]">
+    <!-- Círculo degradado (posición exacta: right-[10%]) -->
+    <div class="absolute right-[10%] top-1/2 -translate-y-1/2
+                w-[34rem] h-[34rem] rounded-full
+                bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0%,rgba(0,0,0,0)_100%)]
+                before:content-[''] before:absolute before:inset-0 before:rounded-full
+                before:bg-[linear-gradient(to_right,rgba(255,120,30,0.9)_0%,rgba(255,30,0,0.9)_100%)]
+                before:blur-[90px] before:opacity-90"></div>
+
+    <!-- Halo exterior rojo -->
+    <div class="absolute right-[5%] top-1/2 -translate-y-1/2
+                w-[40rem] md:w-[50rem] lg:w-[60rem] h-[40rem] md:h-[50rem] lg:h-[60rem]
+                rounded-full bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.2)_0%,transparent_80%)]
+                blur-[140px] opacity-40"></div>
+
+    <!-- Luz naranja secundaria -->
+    <div class="absolute bottom-[20%] left-[10%] w-[10rem] h-[10rem] rounded-full bg-[rgba(255,120,0,0.25)] blur-[110px] opacity-60"></div>
+
+    <!-- Luz roja suave -->
+    <div class="absolute bottom-[8%] right-[20%] w-[6rem] h-[6rem] rounded-full bg-[rgba(255,0,0,0.25)] blur-[90px] opacity-50"></div>
+  </div>
+
+  <!-- TEXTO (izquierda) -->
+  <div class="lg:w-1/2 text-center lg:text-left space-y-6 z-10">
+    <h1 class="font-extrabold leading-tight">
+      <span class="block text-4xl sm:text-5xl lg:text-6xl text-white">Alcanza Tus</span>
+      <span class="block text-4xl sm:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-500">
+        OBJETIVOS FITNESS
+      </span>
+      <span class="block text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white">Con FitAiid</span>
+    </h1>
+
+    <p class="text-gray-400 text-sm sm:text-base leading-relaxed max-w-md mx-auto lg:mx-0">
+      Únete a la comunidad FitAiid y transforma tu camino hacia el fitness. Nuestros programas personalizados están diseñados para ayudarte a alcanzar tus metas y superar tus expectativas. ¿Listo para un cambio?
+    </p>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+      <a href="register.html">
+      <button class="bg-gradient-to-r from-red-600 to-orange-500 text-white font-semibold px-8 py-3 rounded-full hover:opacity-90 transition w-full sm:w-auto">
+      Empieza tu rutina
+  </button>
+</a>
+      <a href="#servicios">
+      <button class="border border-orange-400 text-orange-400 font-semibold px-8 py-3 rounded-full hover:bg-orange-500 hover:text-white transition w-full sm:w-auto">
+        Explorar servicios
+      </button>
+      </a>
+    </div>
+  </div>
+
+  <!-- IMAGEN PRINCIPAL (alineada con el degradado a la derecha) -->
+  <div class="relative w-full lg:w-1/2 z-10">
+    <!-- usar posición absoluta SOLO en pantallas lg+ para alinear exactamente con el circle -->
+    <img src="../img/SIN FONDO.png" alt="Deportista"
+         class="mx-auto relative w-[90%] sm:w-[28rem] md:w-[34rem] lg:w-[48rem] xl:w-[60rem] h-auto object-contain
+                lg:absolute lg:right-[0%] lg:top-1/2 lg:-translate-y-1/2" />
+
+    <!-- Etiquetas flotantes: mantenidas relativas a la caja -->
+    <span class="absolute top-4 sm:top-8 right-8 bg-black/50 border border-red-500 px-3 sm:px-4 py-1 sm:py-2 rounded-full text-[10px] sm:text-sm whitespace-nowrap">
+      Planes de Nutrición
+    </span>
+    <span class="absolute bottom-4 sm:bottom-8 left-6 bg-black/50 border border-red-500 px-3 sm:px-4 py-1 sm:py-2 rounded-full text-[10px] sm:text-sm whitespace-nowrap">
+      Entrenamientos Personalizados
+    </span>
+  </div>
+</section>
+
+  <!-- STATS -->
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center py-12 border-t border-white/10 px-6 sm:px-10 lg:px-20">
+    <div>
+      <h3 class="text-3xl font-bold text-[#ff2a2a]">96%</h3>
+      <p class="font-semibold text-lg">Satisfacción Del Cliente</p>
+      <p class="text-gray-400 text-sm mt-1">A nuestros miembros les encantan sus resultados y experiencia.</p>
+    </div>
+    <div>
+      <h3 class="text-3xl font-bold text-orange-400">Confía En Nuestra Experiencia</h3>
+      <p class="text-gray-400 text-sm mt-1">Confié en nuestro historial comprobado de transformación.</p>
+    </div>
+    <div>
+      <h3 class="text-3xl font-bold text-[#ff2a2a]">+200</h3>
+      <p class="font-semibold text-lg">Miembros Activos</p>
+      <p class="text-gray-400 text-sm mt-1">Únete a nuestra próspera comunidad de fitness.</p>
+    </div>
+    <div>
+      <h3 class="text-3xl font-bold text-orange-400">24/7</h3>
+      <p class="font-semibold text-lg">Soporte Disponible</p>
+      <p class="text-gray-400 text-sm mt-1">Asistencia siempre que la necesites.</p>
+    </div>
+  </section>
+  <!-- SECCCION SERVICIOS-->
+   <!-- SECCIÓN: NUESTROS SERVICIOS -->
+<section id="servicios" class="py-20 bg-gradient-to-b from-black via-gray-900 to-black text-white">
+  <div class="container mx-auto px-6 md:px-12 lg:px-20 text-center">
+    
+    <!-- Título -->
+    <h2 class="text-4xl font-extrabold text-gray-100 mb-3">
+      Nuestros <span class="text-[#ff2a2a]">Servicios</span>
+    </h2>
+    <p class="max-w-2xl mx-auto text-gray-300 mb-14 text-lg">
+      En esta parte puedes acceder fácilmente a todos nuestros servicios. Échales un vistazo y elige el que quieras.
+    </p>
+
+    <!-- Tarjetas -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center">
+
+      <!-- CARD -->
+      <div class="relative w-[270px] h-[320px] rounded-2xl overflow-hidden shadow-xl group transform transition-all duration-500 hover:scale-105 cursor-pointer">
+        <img src="../img/servicios/entrenamiento de gimnasio.png" alt="Entrenamiento de gimnasio" 
+             class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:brightness-50 group-hover:scale-110">
+
+        <!-- Texto principal (se oculta al hacer hover) -->
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 transition-all duration-500 group-hover:opacity-0 group-hover:translate-y-4">
+          <h3 class="text-white text-xl font-extrabold tracking-wide leading-tight">
+            ENTRENAMIENTO<br>DE GIMNASIO
+          </h3>
+        </div>
+
+        <!-- Texto al hacer hover -->
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center 
+                    bg-gradient-to-t from-black/95 via-black/70 to-transparent 
+                    opacity-0 group-hover:opacity-100 translate-y-10 group-hover:translate-y-0 
+                    transition-all duration-500 px-6">
+          <h3 class="text-white text-2xl font-extrabold mb-3 leading-tight">
+            ENTRENAMIENTO EN EL GIMNASIO
+          </h3>
+          <p class="text-gray-200 text-base leading-relaxed">
+            Lleva tu rendimiento al siguiente nivel con máquinas y rutinas personalizadas que potencian tu fuerza y técnica.
+          </p>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="relative w-[270px] h-[320px] rounded-2xl overflow-hidden shadow-xl group transform transition-all duration-500 hover:scale-105 cursor-pointer">
+        <img src="../img/servicios/rutina personalizada.png" alt="Rutinas personalizadas" 
+             class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:brightness-50 group-hover:scale-110">
+
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 transition-all duration-500 group-hover:opacity-0 group-hover:translate-y-4">
+          <h3 class="text-white text-xl font-extrabold tracking-wide leading-tight">
+            RUTINAS<br>PERSONALIZADAS
+          </h3>
+        </div>
+
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center 
+                    bg-gradient-to-t from-black/95 via-black/70 to-transparent 
+                    opacity-0 group-hover:opacity-100 translate-y-10 group-hover:translate-y-0 
+                    transition-all duration-500 px-6">
+          <h3 class="text-white text-2xl font-extrabold mb-3 leading-tight">
+            RUTINAS PERSONALIZADAS
+          </h3>
+          <p class="text-gray-200 text-base leading-relaxed">
+            Diseñadas a tu medida: objetivos, nivel y estilo de vida. Progreso constante con el acompañamiento adecuado.
+          </p>
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="relative w-[270px] h-[320px] rounded-2xl overflow-hidden shadow-xl group transform transition-all duration-500 hover:scale-105 cursor-pointer">
+        <img src="../img/servicios/entrenamiento en casa (7).png" alt="Entrenamiento en casa" 
+             class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:brightness-50 group-hover:scale-110">
+
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 transition-all duration-500 group-hover:opacity-0 group-hover:translate-y-4">
+          <h3 class="text-white text-xl font-extrabold tracking-wide leading-tight">
+            ENTRENAMIENTO<br>EN CASA
+          </h3>
+        </div>
+
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center 
+                    bg-gradient-to-t from-black/95 via-black/70 to-transparent 
+                    opacity-0 group-hover:opacity-100 translate-y-10 group-hover:translate-y-0 
+                    transition-all duration-500 px-6">
+          <h3 class="text-white text-2xl font-extrabold mb-3 leading-tight">
+            ENTRENAMIENTO EN CASA
+          </h3>
+          <p class="text-gray-200 text-base leading-relaxed">
+            Mantente activo desde casa con rutinas adaptadas a tu espacio y disponibilidad. Sin excusas, solo resultados.
+          </p>
+        </div>
+      </div>
+
+      <!-- CARD 4 -->
+      <div class="relative w-[270px] h-[320px] rounded-2xl overflow-hidden shadow-xl group transform transition-all duration-500 hover:scale-105 cursor-pointer">
+        <img src="../img/servicios/plan nutricional.png" alt="Plan nutricional personalizado" 
+             class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:brightness-50 group-hover:scale-110">
+
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 transition-all duration-500 group-hover:opacity-0 group-hover:translate-y-4">
+          <h3 class="text-white text-xl font-extrabold tracking-wide leading-tight">
+            PLAN NUTRICIONAL<br>PERSONALIZADO
+          </h3>
+        </div>
+
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center 
+                    bg-gradient-to-t from-black/95 via-black/70 to-transparent 
+                    opacity-0 group-hover:opacity-100 translate-y-10 group-hover:translate-y-0 
+                    transition-all duration-500 px-6">
+          <h3 class="text-white text-2xl font-extrabold mb-3 leading-tight">
+            PLAN NUTRICIONAL PERSONALIZADO
+          </h3>
+          <p class="text-gray-200 text-base leading-relaxed">
+            Mejora tu salud y rendimiento con un plan alimenticio adaptado a ti. Logra tus metas con equilibrio y constancia.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- SECCIÓN: NUESTRO PLAN -->
+<!-- SECCIÓN: NUESTRO PLAN -->
+<section id="plan" class="py-10 bg-gradient-to-b from-black via-gray-900 to-black text-white">
+  <div class="container mx-auto px-8 md:px-12 lg:px-20 text-center">
+    
+    <!-- Título -->
+    <h2 class="text-4xl font-extrabold mb-10">
+      Nuestro <span class="text-[#ff2a2a]">Plan</span>
+    </h2>
+
+    <!-- Selector mensual / anual -->
+    <div class="flex justify-center mb-10">
+      <div class="bg-gray-800 rounded-full p-1 flex">
+        <button id="btnMensual" class="bg-[#ff2a2a] text-white px-8 py-2 rounded-full font-semibold transition-all">Mensual</button>
+        <button id="btnAnual" class="text-gray-300 px-8 py-2 rounded-full font-semibold hover:text-white transition-all">Anual</button>
+      </div>
+    </div>
+
+    <!-- Contenedor del plan -->
+    <div id="planCard" class="relative border-2 border-[#ff2a2a] rounded-2xl p-10 max-w-3xl mx-auto bg-gradient-to-br from-red-950/40 via-gray-900/60 to-black/80 shadow-2xl transition-all duration-500">
+      <h3 class="text-2xl gagalin font-extrabold mb-6">PLAN PRO</h3>
+
+      <!-- Descripción -->
+      <div class="text-gray-300 mb-6">
+        <span class="text-red-600 font-semibold block mb-1">Descripción</span>
+        <span id="descripcionPlan">
+          Nuestro Plan Pro ofrece entrenamientos avanzados y asesoramiento nutricional personalizado 
+          para ayudarte a alcanzar tus objetivos más rápido. ¡Regístrate ahora!
+        </span>
+      </div>
+
+      <!-- Características -->
+      <div class="text-left mx-auto max-w-md text-gray-200 mb-10">
+        <span class="text-red-600 font-semibold block mb-2 text-center">Características</span>
+        <ul class="list-disc list-inside space-y-2">
+          <li>Seguimiento del progreso</li>
+          <li>Planes de entrenamiento avanzados y personalizados</li>
+          <li>Asesoramiento nutricional</li>
+          <li>Acceso a programas de entrenamiento avanzados</li>
+          <li>Análisis de la composición corporal</li>
+          <li>Acceso a todos nuestros videos de ejercicios</li>
+        </ul>
+      </div>
+
+      <!-- Precio -->
+      <div class="text-center mb-10">
+        <p id="precioPlan" class="text-3xl font-extrabold text-white">$34.900<span class="text-gray-400 text-lg">/COP</span></p>
+      </div>
+
+      <!-- Botón -->
+      <a id="botonPlan" href="../pages/register.html" class="w-full bg-[#ff2a2a] hover:bg-red-800 text-white font-bold py-3 rounded-full text-lg transition-all text-center block">
+        Inicia Tu Prueba Gratis Por Un Mes
+      </a>
+    </div>
+  </div>
+</section>
+<!-- ============================================= -->
+<!-- SECCIÓN: NUESTRAS HERRAMIENTAS FITNESS -->
+<!-- ============================================= -->
+<section id="herramientas" class="py-10 bg-gradient-to-b from-black via-gray-900 to-black text-white">
+  <div class="container mx-auto px-6 md:px-12 lg:px-20 text-center">
+
+    <!-- Título -->
+    <h2 class="text-4xl font-extrabold mb-3">
+      Nuestras <span class="text-[#ff2a2a]">Herramientas Fitness</span>
+    </h2>
+    <p class="max-w-2xl mx-auto text-gray-300 mb-14 text-lg">
+      Accede a una variedad de herramientas diseñadas para ayudarte a alcanzar tus objetivos de acondicionamiento físico de la manera más efectiva.
+    </p>
+
+    <!-- Tarjetas -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center">
+
+     <!-- HERRAMIENTA 1 - CALCULADORA DE MACRONUTRIENTES -->
+<div onclick="abrirModal('modalMacronutrientes')"
+     class="relative w-[270px] h-[280px] rounded-2xl overflow-hidden shadow-xl group cursor-pointer
+            bg-gradient-to-b from-[#b10000]/60 via-[#1a0000]/80 to-black border border-red-700/40
+            hover:scale-105 transition-transform duration-300">
+
+  <!-- Fondo con leve brillo -->
+  <div class="absolute inset-0 bg-gradient-to-b from-red-700/30 via-black/60 to-black opacity-80"></div>
+
+  <!-- Ícono más grande -->
+  <img src="../img/calculadoras/macronutrientes.png" 
+       alt="Calculadora de macronutrientes"
+       class="relative z-40 mx-auto mt-8 w-[120px] h-[120px] object-contain" />
+
+  <!-- Texto -->
+  <div class="relative z-10 text-center mt-6 px-4">
+    <h3 class="text-white font-extrabold text-lg tracking-wide leading-tight gagalin">
+      CALCULADORA<br>DE MACRONUTRIENTES
+    </h3>
+  </div>
+
+  <!-- Efecto hover luminoso -->
+  <div class="absolute inset-0 bg-gradient-to-t from-red-700/40 via-transparent to-transparent 
+              opacity-0 group-hover:opacity-80 transition-all duration-500 rounded-2xl"></div>
+</div>
+<!-- MODAL CALCULADORA DE MACRONUTRIENTES -->
+<div id="modalMacronutrientes" 
+     class="fixed inset-0 bg-black/70 flex items-center justify-center hidden z-50">
+  <div class="bg-[#1a1a1a] w-[390px] p-8 rounded-xl shadow-2xl relative border-2 border-[#ff0000] text-white font-gagalin">
+    <!-- Botón cerrar -->
+    <button onclick="cerrarModal('modalMacronutrientes')" 
+            class="absolute top-2 right-3 text-[#ff0000] text-lg font-bold hover:text-[#ff4d4d]">X</button>
+    <!-- Título -->
+    <h2 class="text-center text-2xl font-extrabold text-[#ff4000] mb-6">
+      CALCULADORA DE<br>MACRONUTRIENTES
+    </h2>
+    <!-- Formulario -->
+     <!-- === BLOQUE EDAD === -->
+    <form id="formMacronutrientes" class="space-y-5 text-[15px] font-medium">
+  <div>
+    <label class="block text-[#ff3c00] mb-2 font-bold uppercase text-sm">Edad</label>
+    <input type="number" id="edad" min="14" max="90" oninput="limitarDigitos(this, 2)"
+           class="w-[80px] h-[30px] bg-transparent border-2 border-[#ff3c00] rounded-md px-3 text-white placeholder:text-gray-400 focus:outline-none focus:border-[#ff6600]" />
+  </div>
+ <!-- === BLOQUE GÉNERO === -->
+<div class="w-full flex justify-center">
+  <div class="w-[320px] flex flex-col items-center">
+    <label class="text-[#ff3c00] mb-3 font-bold uppercase text-sm text-center">
+      Género
+    </label>
+    <div class="flex items-center justify-center gap-10">
+      <!-- Masculino -->
+      <label class="inline-flex items-center gap-3 text-gray-300 text-sm font-semibold cursor-pointer">
+        <input type="radio" name="genero" value="masculino"
+               class="appearance-none w-5 h-5 border-2 border-[#ff3c00] rounded-full
+                      checked:bg-[#ff3c00] transition-all duration-150" />
+        <span class="select-none">Masculino</span>
+      </label>
+      <!-- Femenino -->
+      <label class="inline-flex items-center gap-3 text-gray-300 text-sm font-semibold cursor-pointer">
+        <input type="radio" name="genero" value="femenino"
+               class="appearance-none w-5 h-5 border-2 border-[#ff3c00] rounded-full
+                      checked:bg-[#ff3c00] transition-all duration-150" />
+        <span class="select-none">Femenino</span>
+      </label>
+    </div>
+  </div>
+</div>
+<!-- === BLOQUE ALTURA === -->
+  <div>
+    <label class="block text-[#ff3c00] mb-2 font-bold uppercase text-sm">Altura (cm)</label>
+    <input type="number" id="altura" min="120" max="210" oninput="limitarDigitos(this, 3)"
+           class="w-full h-[42px] bg-transparent border-2 border-[#ff3c00] rounded-md px-3 text-white placeholder:text-gray-400 focus:outline-none focus:border-[#ff6600]" 
+           placeholder="Ingresa tu altura" />
+  </div>
+<!-- === BLOQUE PESO === -->
+  <div>
+    <label class="block text-[#ff3c00] mb-2 font-bold uppercase text-sm">Peso (kg)</label>
+    <input type="number" id="peso" min="30" max="200" oninput="limitarDigitos(this, 3)"
+           class="w-full h-[42px] bg-transparent border-2 border-[#ff3c00] rounded-md px-3 text-white placeholder:text-gray-400 focus:outline-none focus:border-[#ff6600]" 
+           placeholder="Ingresa tu peso" />
+  </div>
+<!-- === BLOQUE ACTIVIDAD=== -->
+  <div>
+    <label class="block text-[#ff3c00] mb-2 font-bold uppercase text-sm">Actividad</label>
+    <select id="actividad"
+            class="w-full h-[42px] bg-transparent border-2 border-[#ff3c00] rounded-md px-3 text-white focus:outline-none focus:border-[#ff6600]">
+      <option value="" class="bg-[#1a1a1a] text-gray-400">Selecciona tu nivel</option>
+      <option value="sedentario" class="bg-[#1a1a1a]">Sedentario</option>
+      <option value="ligero" class="bg-[#1a1a1a]">Ligero</option>
+      <option value="moderado" class="bg-[#1a1a1a]">Moderado</option>
+      <option value="intenso" class="bg-[#1a1a1a]">Intenso</option>
+    </select>
+  </div>
+<!-- === BLOQUE META === -->
+  <div>
+    <label class="block text-[#ff3c00] mb-2 font-bold uppercase text-sm">Tu meta</label>
+    <select id="meta"
+            class="w-full h-[42px] bg-transparent border-2 border-[#ff3c00] rounded-md px-3 text-white focus:outline-none focus:border-[#ff6600]">
+      <option value="" class="bg-[#1a1a1a] text-gray-400">Selecciona tu meta</option>
+      <option value="bajar" class="bg-[#1a1a1a]">Bajar peso</option>
+      <option value="mantener" class="bg-[#1a1a1a]">Mantener peso</option>
+      <option value="subir" class="bg-[#1a1a1a]">Subir masa</option>
+    </select>
+  </div>
+
+  <!-- Botón -->
+  <button type="button" onclick="calcularMacronutrientes()"
+          class="w-full h-[42px] mt-4 rounded-md font-extrabold text-white text-lg
+                 bg-gradient-to-r from-[#ff6600] to-[#ff0000] hover:from-[#ff7a1f] hover:to-[#ff1f1f] transition-all">
+    CALCULAR
+  </button>
+</form>
+    <!-- Resultado -->
+    <div id="resultadoMacronutrientes" class="hidden mt-8 text-center">
+      <h3 class="text-xl text-[#ff6600] mb-3">Tu requerimiento diario de consumo de macronutrientes estimado es de:</h3>
+      <p id="valorKcal" class="text-3xl text-[#ff0000] font-bold"></p>
+      <button onclick="reiniciarFormulario()" 
+              class="mt-6 py-2 px-6 rounded-md bg-gradient-to-b from-[#ff6600] to-[#ff0000] text-white font-bold hover:from-[#ff7a1f] hover:to-[#ff1f1f] transition-all">
+        Volver
+      </button>
+    </div>
+  </div>
+</div>
+
+ <!-- HERRAMIENTA 2 - CALCULADORA DE ÍNDICE DE MASA CORPORAL -->
+<div onclick="abrirModalIMC()" 
+     class="relative w-[270px] h-[280px] rounded-2xl overflow-hidden shadow-xl group cursor-pointer
+            bg-gradient-to-b from-[#ff7f00]/60 via-[#ff4500]/80 to-black border border-orange-600/40
+            hover:scale-105 transition-transform duration-300">
+
+  <!-- Fondo con leve brillo -->
+  <div class="absolute inset-0 bg-gradient-to-b from-orange-700/30 via-black/60 to-black opacity-80"></div>
+  
+  <!-- Ícono más grande -->
+  <img src="../img/calculadoras/imc.png" 
+       alt="Calculadora de índice de masa corporal"
+       class="relative z-40 mx-auto mt-8 w-[120px] h-[120px] object-contain" />
+  
+  <!-- Texto -->
+  <div class="relative z-10 text-center mt-6 px-4">
+    <h3 class="text-white font-extrabold text-lg tracking-wide leading-tight gagalin">
+      CALCULADORA DE<br>INDICE DE MASA CORPORAL
+    </h3>
+  </div>
+  
+  <!-- Efecto hover luminoso -->
+  <div class="absolute inset-0 bg-gradient-to-t from-orange-700/40 via-transparent to-transparent 
+              opacity-0 group-hover:opacity-80 transition-all duration-500 rounded-2xl"></div>
+</div>
+
+<!-- MODAL IMC -->
+<div id="modalIMC" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+  <div class="bg-[#1a1a1a] w-[390px] p-8 rounded-xl shadow-2xl relative border-2 border-[#ff0000] text-white font-gagalin">
+    <button onclick="cerrarModalIMC()" 
+      class="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+    <h2 class="text-2xl font-bold text-[#ff3c00] mb-4 uppercase">Calculadora de IMC</h2>
+    <!-- FORMULARIO -->
+    <form id="formIMC" class="space-y-5 text-[15px] font-medium">
+      <div>
+        <label class="block text-[#ff3c00] mb-2 font-bold uppercase text-sm">Peso (kg)</label>
+        <input type="number" id="pesoIMC" min="40" max="300" oninput="limitarDigitos(this, 2)"
+               class="w-full h-[42px] bg-transparent border-2 border-[#ff3c00] rounded-md px-3 
+                      text-white placeholder:text-gray-400 focus:outline-none focus:border-[#ff6600]"
+               min="1" step="0.1" placeholder="Ej: 70" />
+      </div>
+      <div>
+        <label class="block text-[#ff3c00] mb-2 font-bold uppercase text-sm">Altura (cm)</label>
+        <input type="number" id="alturaIMC" min="120" max="210" oninput="limitarDigitos(this, 3)"
+               class="w-full h-[42px] bg-transparent border-2 border-[#ff3c00] rounded-md px-3 
+                      text-white placeholder:text-gray-400 focus:outline-none focus:border-[#ff6600]"
+               min="50" max="300" placeholder="Ej: 170" />
+      </div>
+      <button type="button" onclick="calcularIMC()"
+        class="bg-[#ff3c00] text-white w-full py-2 rounded-md font-bold hover:bg-[#ff6600] transition">
+        Calcular
+      </button>
+    </form>
+    <!-- RESULTADO -->
+    <div id="resultadoIMC" class="hidden mt-6 text-white">
+      <p class="text-lg">Tu IMC es:</p>
+      <p id="valorIMC" class="text-3xl font-bold text-[#ff3c00] my-2"></p>
+      <p id="clasificacionIMC" class="text-base font-medium text-gray-300"></p>
+      <button onclick="reiniciarIMC()"
+        class="mt-4 bg-[#ff3c00] text-white px-6 py-2 rounded-md font-bold hover:bg-[#ff6600] transition">
+        Calcular nuevamente
+      </button>
+    </div>
+  </div>
+</div>
+<!-- HERRAMIENTA 3 - CALCULADORA DE CONSUMO DE AGUA -->
+<div onclick="abrirModalAgua()" 
+     class="relative w-[270px] h-[280px] rounded-2xl overflow-hidden shadow-xl group cursor-pointer
+            bg-gradient-to-b from-[#00bfff]/60 via-[#006bff]/80 to-black border border-blue-700/40
+            hover:scale-105 transition-transform duration-300">
+  <div class="absolute inset-0 bg-gradient-to-b from-blue-700/30 via-black/60 to-black opacity-80"></div>
+  <img src="../img/calculadoras/consumo_agua.png" 
+       alt="Calculadora de consumo de agua"
+       class="relative z-40 mx-auto mt-8 w-[120px] h-[120px] object-contain" />
+  <div class="relative z-10 text-center mt-6 px-4">
+    <h3 class="text-white font-extrabold text-lg tracking-wide leading-tight gagalin">
+      CALCULADORA DE CONSUMO DE<br>AGUA
+    </h3>
+  </div>
+  <div class="absolute inset-0 bg-gradient-to-t from-blue-700/40 via-transparent to-transparent 
+              opacity-0 group-hover:opacity-80 transition-all duration-500 rounded-2xl"></div>
+</div>
+
+<!-- MODAL AGUA -->
+<div id="modalAgua" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+  <div class="bg-[#1a1a1a] w-[390px] p-8 rounded-xl shadow-2xl relative border-2 border-[#00bfff] text-white font-gagalin">
+    <button onclick="cerrarModalAgua()" 
+      class="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+    <h2 class="text-2xl font-bold text-[#00bfff] mb-4 uppercase">Calculadora de Agua</h2>
+    
+    <!-- FORMULARIO -->
+    <form id="formAgua" class="space-y-5 text-[15px] font-medium">
+      <div>
+        <label class="block text-[#00bfff] mb-2 font-bold uppercase text-sm">Peso (kg)</label>
+        <input type="number" id="pesoAgua" min="30" max="300" oninput="limitarDigitos(this, 2)"
+               class="w-full h-[42px] bg-transparent border-2 border-[#00bfff] rounded-md px-3 
+                      text-white placeholder:text-gray-400 focus:outline-none focus:border-[#33ccff]"
+               step="0.1" placeholder="Ej: 70" />
+      </div>
+      <div>
+        <label class="block text-[#00bfff] mb-2 font-bold uppercase text-sm">Edad (años)</label>
+        <input type="number" id="edadAgua" min="1" max="120" oninput="limitarDigitos(this, 2)"
+               class="w-full h-[42px] bg-transparent border-2 border-[#00bfff] rounded-md px-3 
+                      text-white placeholder:text-gray-400 focus:outline-none focus:border-[#33ccff]"
+               placeholder="Ej: 25" />
+      </div>
+      <button type="button" onclick="calcularAgua()"
+        class="bg-[#00bfff] text-white w-full py-2 rounded-md font-bold hover:bg-[#33ccff] transition">
+        Calcular
+      </button>
+    </form>
+    
+    <!-- RESULTADO -->
+    <div id="resultadoAgua" class="hidden mt-6 text-white">
+      <p class="text-lg">Debes tomar aproximadamente:</p>
+      <p id="valorAgua" class="text-3xl font-bold text-[#00bfff] my-2"></p>
+      <p id="clasificacionAgua" class="text-base font-medium text-gray-300"></p>
+      <button onclick="reiniciarAgua()"
+        class="mt-4 bg-[#00bfff] text-white px-6 py-2 rounded-md font-bold hover:bg-[#33ccff] transition">
+        Calcular nuevamente
+      </button>
+    </div>
+  </div>
+</div>
+<br/>
+    </div>
+
+<!-- SECCIÓN DE NOTICIAS FITNESS -->
+<section id="noticias" class="w-full py-10 text-white">
+  <div class="max-w-7xl mx-auto px-6 text-center mb-12">
+    <h2 class="text-3xl md:text-4xl font-bold mb-4">
+      Últimas Noticias  <span class="text-[#ff2a2a]">Deportivas </span>
+    </h2>
+    <p class="text-gray-300 text-sm md:text-base max-w-2xl mx-auto">
+      Mantente al día con las noticias más recientes del mundo del deporte.
+    </p>
+  </div>
+
+  <!-- Contenedor de Noticias -->
+  <div id="contenedor-noticias" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto px-6">
+    <!-- Noticias se cargarán automáticamente aquí -->
+  </div>
+</section>
+<!--SECCIÓN COMUNIDAD FITNESS -->
+<section class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 bg-transparent px-6 py-16">
+
+  <!-- Texto Izquierda -->
+  <div class="space-y-5">
+    <h1 class="text-3xl md:text-4xl font-bold leading-tight">
+      Únete A Nuestra <span class="text-[#ff2a2a]">Comunidad Fitness</span>
+    </h1>
+    <p class="text-gray-300 text-sm md:text-base">
+      Regístrate ahora para desbloquear acceso exclusivo a planes de entrenamiento personalizados, entrenamiento experto y una comunidad de apoyo que te ayudará a alcanzar tus objetivos de fitness.
+    </p>
+    <div class="grid sm:grid-cols-2 gap-4 pt-3">
+      <div class="bg-gray-950 rounded-xl p-4 border border-neutral-800 hover:border-red-500 transition">
+        <h3 class="text-[#ff0033] font-semibold">Planes de Entrenamiento <span class="text-white">Personalizado</span></h3>
+        <p class="text-sm text-gray-400 mt-2">Rutinas personalizadas que se adaptan a tu nivel de fitness y objetivos.</p>
+      </div>
+      <div class="bg-gray-950 rounded-xl p-4 border border-neutral-800 hover:border-red-500 transition">
+        <h3 class="text-white font-semibold">Entrenamiento <span class="text-[#ff0033]">Experto</span></h3>
+        <p class="text-sm text-gray-400 mt-2">Guía virtual en cada paso del camino para garantizar que estés en el camino correcto.</p>
+      </div>
+      <div class="bg-gray-950 rounded-xl p-4 border border-neutral-800 hover:border-red-500 transition">
+        <h3 class="text-white font-semibold">Apoyo <span class="text-[#ff0033]">Comunitario</span></h3>
+        <p class="text-sm text-gray-400 mt-2">Conecta con otros miembros para compartir experiencias y mantenerte inspirado.</p>
+      </div>
+      <div class="bg-gray-950 rounded-xl p-4 border border-neutral-800 hover:border-red-500 transition">
+        <h3 class="text-white font-semibold">Recursos <span class="text-[#ff0033]">Exclusivos</span></h3>
+        <p class="text-sm text-gray-400 mt-2">Acceso a contenido premium, guías, tutoriales y descuentos en equipos de fitness.</p>
+      </div>
+    </div>
+  </div>
+  <!-- Formulario Derecha -->
+<div class="flex items-center justify-center">
+  <div class="bg-[#400000]/90 p-8 rounded-xl w-full max-w-md transition-all duration-300">
+    <div class="flex items-center justify-center mb-6 space-x-6">
+      <button class="text-[#ff2a2a] font-semibold text-lg border-b-2 border-[#ff2a2a] pb-1 font-semibold">Registrarse</button>
+      <a href="login.html"
+  class="text-gray-500 hover:text-white text-lg pb-1 font-semibold transition">
+  Iniciar sesión
+</a>
+    </div>
+    <form class="space-y-4 text-left pl-4 pr-4 ">
+      <div>
+        <label class="block text-sm mb-1 text-gray-300 font-semibold">Nombre</label>
+        <input type="text" placeholder="Ingresa tu nombre"
+          class="w-full bg-transparent border border-white rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-[#ff2a2a] focus:shadow-[0_0_8px_#ff2a2a] transition">
+      </div>
+      <div>
+        <label class="block text-sm mb-1 text-gray-300 font-semibold">E-Mail</label>
+        <input type="email" placeholder="Ingresa tu email"
+          class="w-full bg-transparent border border-white rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-[#ff2a2a] focus:shadow-[0_0_8px_#ff2a2a] transition">
+      </div>
+      <button type="submit" formaction="register.html"
+        class="w-full bg-[#ff0000] hover:bg-[#ff0033] transition font-semibold py-2 rounded-lg mt-4">
+        Registrarse
+      </button>
+      <div class="text-center text-gray-200 text-sm my-2 font-bold">o</div>
+      <a href="register.html">
+      <button type="button"
+        class="w-full flex items-center justify-center border border-white hover:border-[#ff0000] py-2 rounded-lg transition hover:shadow-[0_0_10px_#ff1e5640] font-semibold">
+        <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" class="w-5 h-5 mr-2">
+        Regístrate con Google
+      </button>
+      </a>
+
+    </form>
+  </div>
+</div>
+</section>
+<!--FAQ-->
+<section id="FAQS" class="flex flex-col items-center justify-center text-white px-6 py-8">
+  <h2 class="text-3xl sm:text-4xl font-bold mb-10 text-center">Preguntas Frecuentes</h2>
+  <div class="w-full max-w-3xl space-y-3">
+    <!-- FAQ Item 1 -->
+    <div class="border border-[#ff0000] rounded-lg overflow-hidden">
+      <button
+        class="w-full flex justify-between items-center px-5 py-4 text-left font-semibold text-white hover:text-[#ff0000] transition"
+        onclick="toggleFAQ(1)">
+        ¿Qué Es FitAiid Y Cómo Puede Ayudarme A Alcanzar Mis Objetivos De Fitness?
+        <span id="icon-1" class="transition-transform duration-300 text-[#ff2a2a]">▲</span>
+      </button>
+      <div id="answer-1" class="px-5 pb-4 text-gray-400 text-sm hidden">
+        FitAiid Es Una Plataforma De Fitness Online Que Ofrece Planes De Entrenamiento Personalizados, Coach Virtual
+        Impulsado Por IA Y Asesoramiento Nutricional Integral. Si Buscas Perder Peso, Ganar Músculo O Simplemente
+        Mantenerte En Forma, Nuestros Programas Personalizados Y El Apoyo De Nuestra Comunidad Te Ayudarán A Alcanzar
+        Tus Objetivos De Fitness.
+      </div>
+    </div>
+    <!-- FAQ Item 2 -->
+    <div class="border border-[#ff0000] rounded-lg overflow-hidden">
+      <button
+        class="w-full flex justify-between items-center px-5 py-4 text-left font-semibold text-white hover:text-[#ff0000] transition"
+        onclick="toggleFAQ(2)">
+        ¿Cómo Empiezo Con El Plan De Entrenamiento En FitAiid?
+        <span id="icon-2" class="transition-transform duration-300 text-[#ff2a2a]">▼</span>
+      </button>
+      <div id="answer-2" class="px-5 pb-4 text-gray-400 text-sm hidden">
+        Solo necesitas registrarte, completar tu perfil y establecer tus objetivos. FitAiid generará un plan de
+        entrenamiento y nutrición personalizado para ti.
+      </div>
+    </div>
+    <!-- FAQ Item 3 -->
+    <div class="border border-[#ff0000] rounded-lg overflow-hidden">
+      <button
+        class="w-full flex justify-between items-center px-5 py-4 text-left font-semibold text-white hover:text-[#ff0000] transition"
+        onclick="toggleFAQ(3)">
+        ¿Qué Métodos De Pago Se Aceptan?
+        <span id="icon-3" class="transition-transform duration-300 text-[#ff2a2a]">▼</span>
+      </button>
+      <div id="answer-3" class="px-5 pb-4 text-gray-400 text-sm hidden">
+        Aceptamos pagos con Nequi, Daviplata, Bancolombia y Paypal. También puedes optar por planes de pago mensuales o
+        anuales.
+      </div>
+    </div>
+    <!-- FAQ Item 4 -->
+    <div class="border border-[#ff0000] rounded-lg overflow-hidden">
+      <button
+        class="w-full flex justify-between items-center px-5 py-4 text-left font-semibold text-white hover:text-[#ff0000] transition"
+        onclick="toggleFAQ(4)">
+        ¿Puedo Cancelar Mi Suscripción En Cualquier Momento?
+        <span id="icon-4" class="transition-transform duration-300 text-[#ff2a2a]">▼</span>
+      </button>
+      <div id="answer-4" class="px-5 pb-4 text-gray-400 text-sm hidden">
+        No, una vez Cancelado, perderás el acceso a los planes de entrenamiento y asesoramiento nutricional.
+      </div>
+    </div>
+  </div>
+</section>
+
+ <!-- SECCIÓN SOBRE NOSOTROS -->
+<div id="about-section"></div>
+
+    <section id="sobre-nosotros">
+      <div class="about-container">
+        <!-- Columna de imagen -->
+        <div class="about-image">
+          <img src="https://images.unsplash.com/photo-1598970434795-0c54fe7c0648?w=800" alt="Equipo FitAiid">
+        </div>
+
+        <!-- Columna de información -->
+        <div class="about-info" >
+           <h2 class="text-xl sm:text-2xl font-bold text-[#ff0000]">Sobre Nosotros</h2>
+
+          <p>
+            En <strong>FitAiid</strong>, creemos en el poder de la tecnología para mejorar el bienestar de las personas. 
+            Somos un equipo apasionado por la innovación, el deporte y la salud, comprometidos en ofrecer soluciones digitales 
+            que inspiren a nuestros usuarios a alcanzar sus metas de forma más inteligente.
+          </p>
+          <p>
+            Nuestra plataforma combina inteligencia artificial, diseño moderno y una experiencia personalizada, 
+            para que cada usuario pueda disfrutar de un acompañamiento eficaz, motivador y accesible.
+          </p>
+        </div>
+      </div>
+    </section>
+    <section>
+          <div class="cards-container">
+            <div class="card">
+              <h3 class="text-[#ff0000] font-bold text-lg">Misión</h3>
+              <p>Promover el bienestar integral mediante herramientas tecnológicas que faciliten hábitos saludables y sostenibles.</p>
+            </div>
+            <div class="card">
+              <h3 class="text-[#ff0000] font-bold text-lg">Visión</h3>
+              <p>Ser una plataforma líder en innovación y salud digital en Latinoamérica, impulsando el desarrollo humano y deportivo.</p>
+            </div>
+          </div>
+    </section>
+
+<link rel="stylesheet" href="../styles/about.css">
+
+<br/>
+
+<!-- FOOTER -->
+<footer class="bg-to-black text-gray-300 py-16 px-10 md:px-24 mt-24 text-[17px]">
+  <div class="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-14">
+
+    <!-- LOGO + DESCRIPCIÓN -->
+    <div>
+      <div class="flex items-center space-x-3">
+        <img src="../img/logo.png" alt="FitAiid Logo" class="w-16 h-16 drop-shadow-[0_0_10px_#ff2727]">
+        <h2 class="text-4xl font-extrabold tracking-wide">
+          <span class="text-white">Fit</span><span class="text-[#ff2727]">Aiid</span>
+        </h2>
+      </div>
+      <p class="mt-2 text-base font-bold text-[#ff2727] uppercase tracking-wider">
+        Transforma tu cuerpo
+      </p>
+      <p class="mt-5 text-[15px] leading-relaxed text-gray-400">
+        Tu aliado inteligente en fitness. Planes personalizados, asesoramiento nutricional con IA
+        y acompañamiento virtual para alcanzar tu mejor versión.
+      </p>
+      <!-- REDES SOCIALES -->
+      <div class="flex space-x-6 mt-7">
+        <a href="#" class="hover:text-[#ff2727] transition-transform transform hover:scale-110">
+          <i class="fa-brands fa-facebook-f text-2xl"></i>
+        </a>
+        <a href="#" class="hover:text-[#ff2727] transition-transform transform hover:scale-110">
+          <i class="fa-brands fa-instagram text-2xl"></i>
+        </a>
+        <a href="#" class="hover:text-[#ff2727] transition-transform transform hover:scale-110">
+          <i class="fa-brands fa-x-twitter text-2xl"></i>
+        </a>
+      </div>
+    </div>
+    <!-- NOSOTROS -->
+    <div>
+      <h3 class="text-[#ff2727] font-bold text-2xl mb-5 uppercase tracking-wide">Nosotros</h3>
+      <ul class="space-y-3 text-[16px]">
+        <li><a href="#sobre-nosotros" class="hover:text-white transition-colors">Sobre Nosotros</a></li>
+        <li><a href="#servicios" class="hover:text-white transition-colors">Nuestros Servicios</a></li>
+        <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+        <li><a href="#" class="hover:text-white transition-colors">Contáctanos</a></li>
+      </ul>
+    </div>
+    <!-- RECURSOS -->
+    <div>
+      <h3 class="text-[#ff2727] font-bold text-2xl mb-5 uppercase tracking-wide">Recursos</h3>
+      <ul class="space-y-3 text-[16px]">
+        <li><a href="#herramientas" class="hover:text-white transition-colors">Herramientas Fitness</a></li>
+        <li><a href="#" class="hover:text-white transition-colors">Guías de Nutrición</a></li>
+        <li><a href="#FAQS" class="hover:text-white transition-colors">Preguntas Frecuentes</a></li>
+        <li><a href="#plan" class="hover:text-white transition-colors">Membresías</a></li>
+      </ul>
+    </div>
+    <!-- CONTACTOS -->
+    <div>
+      <h3 class="text-[#ff2727] font-bold text-2xl mb-5 uppercase tracking-wide">Contáctanos</h3>
+      <ul class="space-y-4 text-[16px]">
+        <li class="flex items-center space-x-3">
+          <i class="fa-solid fa-location-dot text-[#ff2727] text-lg"></i>
+          <span>Colombia</span>
+        </li>
+        <li class="flex items-center space-x-3">
+          <i class="fa-solid fa-phone text-[#ff2727] text-lg"></i>
+          <span>+57 320 263 6622</span>
+        </li>
+        <li class="flex items-center space-x-3">
+          <i class="fa-solid fa-envelope text-[#ff2727] text-lg"></i>
+          <span>FitAiid@gmail.com</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- COPYRIGHT -->
+  <div class="border-t border-gray-700 mt-14 pt-6 text-center text-[15px] text-gray-500">
+    © 2025 <span class="text-[#ff2727] font-semibold">FitAiid</span> — Todos los derechos reservados.
+  </div>
+</footer>
+  <!-- FontAwesome -->
+  <script src="https://kit.fontawesome.com/a2e0e9d6a7.js" crossorigin="anonymous"></script>
+  <!-- Script menú móvil -->
+  <script>
+    const menuBtn = document.getElementById("menu-btn");
+    const menu = document.getElementById("menu");
+    menuBtn.addEventListener("click", () => menu.classList.toggle("hidden"));
+  </script>
+<!-- Script calculadora de macronutrientes -->
+ <script>
+  function abrirModal(id) {
+    document.getElementById(id).classList.remove('hidden');
+  }
+
+  function cerrarModal(id) {
+    document.getElementById(id).classList.add('hidden');
+    reiniciarFormulario();
+  }
+
+  function calcularMacronutrientes() {
+    const edad = parseInt(document.getElementById('edad').value);
+    const altura = parseFloat(document.getElementById('altura').value);
+    const peso = parseFloat(document.getElementById('peso').value);
+    const actividad = document.getElementById('actividad').value;
+    const meta = document.getElementById('meta').value;
+
+    // Detectar género
+    const genero = document.querySelector('input[name="genero"]:checked');
+    if (!genero) {
+      alert('Por favor selecciona tu género');
+      return;
+    }
+
+    if (!edad || !altura || !peso || !actividad || !meta) {
+      alert('Por favor completa todos los campos');
+      return;
+    }
+
+    let bmr = 0;
+
+    // Fórmulas Harris-Benedict revisadas
+    if (genero.value === "masculino") {
+      bmr = 88.362 + (13.397 * peso) + (4.799 * altura) - (5.677 * edad);
+    } else {
+      bmr = 447.593 + (9.247 * peso) + (3.098 * altura) - (4.330 * edad);
+    }
+
+    // Factor de actividad
+    let factorActividad = 1.2;
+    if (actividad === 'ligero') factorActividad = 1.375;
+    if (actividad === 'moderado') factorActividad = 1.55;
+    if (actividad === 'intenso') factorActividad = 1.725;
+
+    // Calorías totales
+    let calorias = bmr * factorActividad;
+
+    // Ajuste según meta
+    if (meta === 'bajar') calorias -= 400;
+    if (meta === 'subir') calorias += 400;
+
+    // Mostrar resultado
+    document.getElementById('formMacronutrientes').classList.add('hidden');
+    document.getElementById('resultadoMacronutrientes').classList.remove('hidden');
+    document.getElementById('valorKcal').textContent = `${Math.round(calorias)} kcal`;
+  }
+
+  function reiniciarFormulario() {
+    document.getElementById('formMacronutrientes').reset();
+    document.getElementById('formMacronutrientes').classList.remove('hidden');
+    document.getElementById('resultadoMacronutrientes').classList.add('hidden');
+  }
+</script>
+
+<!--Script de IMC-->
+<script>
+  function abrirModalIMC() {
+    document.getElementById('modalIMC').classList.remove('hidden');
+  }
+
+  function cerrarModalIMC() {
+    document.getElementById('modalIMC').classList.add('hidden');
+    reiniciarIMC();
+  }
+
+  function calcularIMC() {
+    const peso = parseFloat(document.getElementById('pesoIMC').value);
+    const altura = parseFloat(document.getElementById('alturaIMC').value);
+
+    if (!peso || !altura || peso <= 0 || altura <= 0) {
+      alert('Por favor ingresa peso y altura válidos.');
+      return;
+    }
+
+    const alturaM = altura / 100;
+    const imc = peso / (alturaM * alturaM);
+
+    let clasificacion = '';
+    if (imc < 18.5) clasificacion = 'Bajo peso';
+    else if (imc < 24.9) clasificacion = 'Peso normal';
+    else if (imc < 29.9) clasificacion = 'Sobrepeso';
+    else clasificacion = 'Obesidad';
+
+    document.getElementById('formIMC').classList.add('hidden');
+    document.getElementById('resultadoIMC').classList.remove('hidden');
+    document.getElementById('valorIMC').textContent = imc.toFixed(1);
+    document.getElementById('clasificacionIMC').textContent = clasificacion;
+  }
+
+  function reiniciarIMC() {
+    document.getElementById('formIMC').reset();
+    document.getElementById('formIMC').classList.remove('hidden');
+    document.getElementById('resultadoIMC').classList.add('hidden');
+  }
+</script>
+<!--script de agua-->
+<!-- SCRIPT -->
+<script>
+function abrirModalAgua() {
+  document.getElementById('modalAgua').classList.remove('hidden');
+}
+
+function cerrarModalAgua() {
+  document.getElementById('modalAgua').classList.add('hidden');
+  reiniciarAgua();
+}
+
+function calcularAgua() {
+  const peso = parseFloat(document.getElementById('pesoAgua').value);
+  const edad = parseInt(document.getElementById('edadAgua').value);
+
+  if (!peso || !edad) {
+    alert("Por favor ingresa todos los datos");
+    return;
+  }
+
+  // Fórmula simple: adultos necesitan ~35 ml por kg de peso
+  // Ajuste según edad: niños y ancianos necesitan menos
+  let litros = peso * 0.035; // litros por kg
+
+  if (edad < 14) litros *= 0.8;      // niños
+  else if (edad > 65) litros *= 0.9; // ancianos
+
+  litros = litros.toFixed(2);
+
+  document.getElementById('valorAgua').textContent = litros + " litros al día";
+  document.getElementById('resultadoAgua').classList.remove('hidden');
+}
+
+function reiniciarAgua() {
+  document.getElementById('formAgua').reset();
+  document.getElementById('resultadoAgua').classList.add('hidden');
+}
+</script>
+<!--Scrip noticias-->
+<script>
+  const API_KEY = "69ab3fff67ec43cd93c26393df9abf96"; // ⚠️ Reemplaza esto con tu clave personal de NewsAPI
+  const API_URL = `https://newsapi.org/v2/everything?q=fitness OR deporte OR nutrición OR alimentación OR yoga OR hidratación OR bienestar&language=es&sortBy=publishedAt&pageSize=6&apiKey=${API_KEY}`;
+
+  async function cargarNoticias() {
+    try {
+      const respuesta = await fetch(API_URL);
+      const data = await respuesta.json();
+
+      const contenedor = document.getElementById("contenedor-noticias");
+      contenedor.innerHTML = "";
+
+      if (!data.articles || data.articles.length === 0) {
+        contenedor.innerHTML = `<p class="text-gray-400 text-center col-span-3">No se encontraron noticias de fitness en este momento.</p>`;
+        return;
+      }
+
+      data.articles.forEach(noticia => {
+        const titulo = noticia.title || "Noticia sin título";
+        const fuente = noticia.source?.name || "Fuente desconocida";
+        const fecha = new Date(noticia.publishedAt).toLocaleDateString("es-ES", {
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        });
+        const link = noticia.url;
+        const imagen = noticia.urlToImage || "https://via.placeholder.com/400x250?text=Noticia+Fitness";
+
+        const card = `
+          <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-[1.02] transition-transform duration-300">
+            <a href="${link}" target="_blank">
+              <img src="${imagen}" alt="${titulo}" class="w-full h-56 object-cover">
+              <div class="p-5 text-left">
+                <h3 class="text-lg font-semibold mb-2">${titulo}</h3>
+                <p class="text-gray-400 text-sm mb-4">${fuente} | ${fecha}</p>
+                <span class="inline-block text-red-500 font-semibold hover:text-red-400">Leer más →</span>
+              </div>
+            </a>
+          </div>
+        `;
+        contenedor.innerHTML += card;
+      });
+    } catch (error) {
+      console.error("Error al cargar las noticias:", error);
+      document.getElementById("contenedor-noticias").innerHTML =
+        `<p class="text-gray-400 text-center col-span-3">Error al conectar con el servicio de noticias.</p>`;
+    }
+  }
+
+  cargarNoticias();
+</script>
+
+      
+<!-- Script para subrayar seccion -->
+ <script>
+  const sections = document.querySelectorAll("section[id]");
+  const navLinks = document.querySelectorAll(".nav-link");
+
+  window.addEventListener("scroll", () => {
+    let current = "";
+
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 150; // Ajusta si tu header es más alto
+      const sectionHeight = section.clientHeight;
+
+      if (pageYOffset >= sectionTop && pageYOffset < sectionTop + sectionHeight) {
+        current = section.getAttribute("id");
+      }
+    });
+
+    navLinks.forEach(link => {
+      link.classList.remove("active");
+      if (link.getAttribute("href") === `#${current}`) {
+        link.classList.add("active");
+      }
+    });
+  });
+</script>
+<!--FAQ-->
+<script>
+  function toggleFAQ(id) {
+    const answer = document.getElementById(`answer-${id}`);
+    const icon = document.getElementById(`icon-${id}`);
+
+    // Cerrar todos los demás
+    document.querySelectorAll('[id^="answer-"]').forEach((el, index) => {
+      if (index + 1 !== id) el.classList.add('hidden');
+    });
+    document.querySelectorAll('[id^="icon-"]').forEach((el, index) => {
+      if (index + 1 !== id) el.textContent = '▼';
+    });
+
+    // Alternar actual
+    if (answer.classList.contains('hidden')) {
+      answer.classList.remove('hidden');
+      icon.textContent = '▲';
+    } else {
+      answer.classList.add('hidden');
+      icon.textContent = '▼';
+    }
+  }
+</script>
+<!-- SCRIPT PLAN -->
+<script>
+  const btnMensual = document.getElementById('btnMensual');
+  const btnAnual = document.getElementById('btnAnual');
+  const precio = document.getElementById('precioPlan');
+  const planCard = document.getElementById('planCard');
+  const descripcion = document.getElementById('descripcionPlan');
+  const botonPlan = document.getElementById('botonPlan');
+
+  btnMensual.addEventListener('click', () => {
+    // Botones
+    btnMensual.classList.add('bg-[#ff2a2a]', 'text-white');
+    btnAnual.classList.remove('bg-[#ff2a2a]', 'text-white');
+    btnAnual.classList.add('text-gray-300');
+
+    // Contenedor
+    planCard.classList.remove('shadow-[0_0_25px_#ff2a2a]');
+    planCard.classList.add('border-[#ff2a2a]');
+
+    // Contenido
+    precio.innerHTML = '$34.900<span class="text-gray-400 text-lg">/COP</span>';
+    descripcion.textContent = 'Nuestro Plan Pro ofrece entrenamientos avanzados y asesoramiento nutricional personalizado para ayudarte a alcanzar tus objetivos más rápido. ¡Regístrate ahora!';
+    botonPlan.textContent = 'Inicia Tu Prueba Gratis Por Un Mes';
+  });
+
+  btnAnual.addEventListener('click', () => {
+    // Botones
+    btnAnual.classList.add('bg-[#ff2a2a]', 'text-white');
+    btnMensual.classList.remove('bg-[#ff2a2a]', 'text-white');
+    btnMensual.classList.add('text-gray-300');
+
+    // Contenedor
+    planCard.classList.add('border-[#ff2a2a]', 'shadow-[0_0_25px_#ff2a2a]');
+
+    // Contenido
+    precio.innerHTML = '$349.900<span class="text-gray-400 text-lg">/COP</span>';
+    descripcion.textContent = 'Obtén todos los beneficios del Plan Pro durante un año completo y ahorra 2 meses. Entrenamientos avanzados, asesoramiento continuo y acceso total 24/7. ¡Únete hoy!';
+    botonPlan.textContent = 'Suscríbete Al Plan Anual e Inicia La Prueba de 1 Mes Gratis';
+  });
+</script>
+<!-- SCRIPT DE LÍMITE -->
+<script>
+  function limitarDigitos(input, max) {
+    if (input.value.length > max) {
+      input.value = input.value.slice(0, max);
+    }
+  }
+</script>
+<!-- Botón flotante del chatbot (solo imagen) -->
+<div id="chatbot-btn" class="chatbot-btn">
+  <img src="../img/image-removebg-preview (23).png" alt="Chatbot FitAiid" />
+</div>
+
+<!-- Iframe del chatbot -->
+<iframe id="chatbot-iframe" src="chatbot.html" class="chatbot-iframe"></iframe>
+
+<!-- Botón de cierre -->
+<button id="close-chat" class="close-chat hidden">&times;</button>
+
+<script>
+  const chatbotBtn = document.getElementById("chatbot-btn");
+  const chatbotIframe = document.getElementById("chatbot-iframe");
+  const closeChat = document.getElementById("close-chat");
+
+  let isDragging = false;
+  let offsetX, offsetY, moved = false;
+
+  // Mostrar / ocultar chatbot solo si no se arrastró
+  chatbotBtn.addEventListener("click", () => {
+    if (!moved) {
+      chatbotIframe.classList.toggle("active");
+      closeChat.classList.toggle("hidden");
+    }
+    moved = false; // reiniciar
+  });
+
+  closeChat.addEventListener("click", () => {
+    chatbotIframe.classList.remove("active");
+    closeChat.classList.add("hidden");
+  });
+
+  // === Permitir arrastrar la imagen ===
+  chatbotBtn.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    offsetX = e.clientX - chatbotBtn.getBoundingClientRect().left;
+    offsetY = e.clientY - chatbotBtn.getBoundingClientRect().top;
+    chatbotBtn.style.cursor = "grabbing";
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (isDragging) {
+      moved = true;
+      const x = e.clientX - offsetX;
+      const y = e.clientY - offsetY;
+
+      chatbotBtn.style.left = `${x}px`;
+      chatbotBtn.style.top = `${y}px`;
+      chatbotBtn.style.right = "auto";
+      chatbotBtn.style.bottom = "auto";
+
+      // Mover también el iframe y el botón de cierre junto al chatbot
+      chatbotIframe.style.right = "auto";
+      chatbotIframe.style.bottom = "auto";
+      chatbotIframe.style.left = `${x - 280}px`; // posición hacia la izquierda del bot
+      chatbotIframe.style.top = `${y - 580}px`;
+
+      closeChat.style.left = `${x + 80}px`;
+      closeChat.style.top = `${y - 40}px`;
+    }
+  });
+
+  document.addEventListener("mouseup", () => {
+    if (isDragging) {
+      isDragging = false;
+      chatbotBtn.style.cursor = "grab";
+    }
+  });
+</script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+</body>
+</html>

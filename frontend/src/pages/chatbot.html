@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FitAiid Chat</title>
+    <link rel="stylesheet" href="../styles/chatbot.css" />
+  </head>
+  <body>
+    <div class="chat-wrapper">
+      <div class="chat-header">
+        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712103.png" alt="FitAiid" />
+        <h1>FitAiid Asistente</h1>
+      </div>
+
+      <div id="chat-box" class="chat-box">
+        <div class="message ai">
+          <span class="avatar">🤖</span>
+          <p>¡Hola! Soy <b>Fitty</b>, tu asistente fitness 💪. Dime, ¿Como te puedo ayudar?😊</p>
+        </div>
+      </div>
+
+      <div class="chat-input">
+        <input type="text" id="user-input" placeholder="Escribe tu mensaje..." />
+        <button id="send-btn">➤</button>
+      </div>
+    </div>
+
+    <script>
+      const chatBox = document.getElementById("chat-box");
+      const userInput = document.getElementById("user-input");
+      const sendBtn = document.getElementById("send-btn");
+
+      sendBtn.addEventListener("click", sendMessage);
+      userInput.addEventListener("keypress", (e) => e.key === "Enter" && sendMessage());
+
+      async function sendMessage() {
+        const text = userInput.value.trim();
+        if (!text) return;
+
+        addMessage(text, "user");
+        userInput.value = "";
+
+        const loading = document.createElement("div");
+        loading.classList.add("message", "ai", "loading");
+        loading.innerHTML = `<span class="avatar">🤖</span><p>Pensando...</p>`;
+        chatBox.appendChild(loading);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        try {
+          const res = await fetch("http://localhost:5000/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: text }),
+          });
+          const data = await res.json();
+          chatBox.removeChild(loading);
+          addMessage(data.reply, "ai");
+        } catch {
+          chatBox.removeChild(loading);
+          addMessage("❌ No se pudo conectar con la IA.", "ai");
+        }
+      }
+
+      function addMessage(text, sender) {
+        const div = document.createElement("div");
+        div.classList.add("message", sender);
+        if (sender === "ai") {
+          div.innerHTML = `<span class="avatar">🤖</span><p>${text}</p>`;
+        } else {
+          div.innerHTML = `<p>${text}</p>`;
+        }
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plan Mensual - Bajar de Peso | FitAiid</title>
+  <style>
+    :root{
+      --bg:#0f0f0f;
+      --card:#0f0f10;
+      --accent:#ff5a00;
+      --muted:#bfbfbf;
+      --glass: rgba(255,255,255,0.03);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: radial-gradient(1200px 400px at 20% 10%, rgba(255,90,0,0.06), transparent), var(--bg);
+      color:#fff; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      padding-bottom:60px;
+    }
+
+    /* Top bar simple */
+    .topbar{
+      background:#0d0d0d;
+      padding:18px 28px;
+      display:flex;
+      align-items:center;
+      gap:16px;
+      box-shadow:0 3px 10px rgba(0,0,0,0.6);
+    }
+    .topbar img{width:48px;}
+    .topbar h2{margin:0;color:var(--accent);font-size:18px}
+
+    .wrap{max-width:980px;margin:28px auto;padding:20px;}
+
+    .hero{
+      display:flex;
+      gap:20px;
+      align-items:center;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:22px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.6);
+    }
+    .hero .hero-img{
+      width:170px;height:110px;border-radius:10px;overflow:hidden;flex:0 0 170px;
+      border:4px solid rgba(255,90,0,0.06);
+    }
+    .hero .hero-img img{width:100%;height:100%;object-fit:cover;display:block}
+    .hero .hero-body h1{margin:0;color:var(--accent);font-size:20px}
+    .hero .hero-body p{color:var(--muted);margin:6px 0 0 0}
+
+    /* Controls */
+    .controls{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
+    .btn{
+      background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;color:#fff;
+      cursor:pointer;font-size:14px;
+    }
+    .btn.primary{background:var(--accent);color:#0f0f0f;border:0}
+
+    /* Accordion weeks */
+    .weeks{margin-top:18px;display:flex;flex-direction:column;gap:12px}
+    .week{
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));
+      border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,0.03);
+      overflow:hidden;
+    }
+    .week .head{
+      display:flex;justify-content:space-between;align-items:center;cursor:pointer;
+    }
+    .week .head h3{margin:0;color:var(--accent);font-size:16px}
+    .week .content{margin-top:10px;color:#eaeaea;display:none;line-height:1.45}
+
+    /* daily cards inside week */
+    .day-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:10px}
+    .day{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);
+    }
+    .day h4{margin:0 0 6px 0;font-size:14px;color:#fff}
+    .day p{margin:0;font-size:13px;color:var(--muted)}
+
+    /* shopping list */
+    .shop{margin-top:18px;padding:14px;background:#0b0b0b;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    .shop pre{white-space:pre-wrap;color:#eaeaea;margin:0;font-size:14px}
+
+    /* tips */
+    .tips{margin-top:16px;color:var(--muted);font-size:14px}
+
+    @media (max-width:820px){
+      .day-grid{grid-template-columns:1fr}
+      .hero{flex-direction:column;align-items:flex-start}
+    }
+    /* === BOTÓN SUPERIOR ALINEADO A LA IZQUIERDA === */
+.btn-back-top {
+  display: inline-block;
+  margin: 10px 0 20px 0;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--glass);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(6px);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: 0.25s ease;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+}
+
+.btn-back-top:hover {
+  background: rgba(255, 90, 0, 0.12);
+  color: #fff;
+  border-color: rgba(255, 90, 0, 0.4);
+  box-shadow: 0 0 12px rgba(255, 90, 0, 0.35);
+  transform: translateX(-3px);
+}
+
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <img src="img_nutricion/logo.png">
+    <h2>Plan Mensual — Bajar de Peso</h2>
+  </div>
+
+  <main class="wrap">
+      <!-- BOTÓN DE VOLVER -->
+  <a href="nutricion.html" class="btn-back-top">← Volver</a>
+    <section class="hero">
+      <div class="hero-img">
+        <img src="../img/nutricion/SJNEFMOMBVBDDDVOQTULAESDPI.jpg" alt="hero">
+      </div>
+      <div class="hero-body">
+        <h1>Plan Mensual (Apto para todos)</h1>
+        <p>Un plan equilibrado, sencillo y seguro para iniciar la reducción de grasa corporal manteniendo energía y salud. Dividido en 4 semanas con ejemplos de comidas, porciones y horarios.</p>
+
+        <div class="controls">
+          <button class="btn primary" id="printBtn">Imprimir Plan</button>
+          <button class="btn" id="downloadShop">Descargar Lista de Compras</button>
+          
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCORDION SEMANAS -->
+    <section class="weeks" id="weeks">
+      <!-- Semana 1 -->
+      <div class="week">
+        <div class="head" data-toggle>
+          <h3>Semana 1 — Ajuste y hábitos</h3>
+          <span class="chev">+</span>
+        </div>
+        <div class="content">
+          <p style="color:var(--muted)">Objetivo: reducir pequeñas porciones y establecer horarios regulares.</p>
+
+          <div class="day-grid">
+            <div class="day">
+              <h4>Desayuno</h4>
+              <p>Avena (50 g) con leche descremada o vegetal (200 ml) + 1 manzana.</p>
+            </div>
+            <div class="day">
+              <h4>Media mañana</h4>
+              <p>Yogur natural (125 g) o un puñado de frutos secos (20 g).</p>
+            </div>
+
+            <div class="day">
+              <h4>Almuerzo</h4>
+              <p>150 g de pechuga de pollo / pescado + 100 g arroz integral + ensalada verde.</p>
+            </div>
+            <div class="day">
+              <h4>Merienda</h4>
+              <p>1 rebanada de pan integral con aguacate (30 g) o hummus.</p>
+            </div>
+
+            <div class="day">
+              <h4>Cena</h4>
+              <p>Verduras al vapor + 120 g de proteína magra (pollo/atún) + 1 porción de carbohidrato pequeño si hace falta (patata pequeña).</p>
+            </div>
+            <div class="day">
+              <h4>Snack nocturno (opcional)</h4>
+              <p>Infusión y 1 cuadradito de chocolate oscuro o 1 yogurt pequeño.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Semana 2 -->
+      <div class="week">
+        <div class="head" data-toggle>
+          <h3>Semana 2 — Consistencia y saciedad</h3>
+          <span class="chev">+</span>
+        </div>
+        <div class="content">
+          <p style="color:var(--muted)">Objetivo: aumentar fibra y proteínas para mayor saciedad.</p>
+
+          <div class="day-grid">
+            <div class="day">
+              <h4>Desayuno</h4>
+              <p>2 huevos revueltos + 1 rebanada de pan integral + tomate.</p>
+            </div>
+            <div class="day">
+              <h4>Media mañana</h4>
+              <p>Zanahoria baby + hummus (30 g).</p>
+            </div>
+
+            <div class="day">
+              <h4>Almuerzo</h4>
+              <p>Ensalada grande con 120 g de atún/garbanzos + quinoa (70 g) + verduras.</p>
+            </div>
+            <div class="day">
+              <h4>Merienda</h4>
+              <p>Batido de proteína ligero o 1 pieza de fruta + 10 almendras.</p>
+            </div>
+
+            <div class="day">
+              <h4>Cena</h4>
+              <p>Sopa de verduras + 100 g de proteína magra + ensalada pequeña.</p>
+            </div>
+            <div class="day">
+              <h4>Snack (si necesario)</h4>
+              <p>1 yogurt griego natural.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Semana 3 -->
+      <div class="week">
+        <div class="head" data-toggle>
+          <h3>Semana 3 — Mayor estructura</h3>
+          <span class="chev">+</span>
+        </div>
+        <div class="content">
+          <p style="color:var(--muted)">Objetivo: introducir comidas planificadas para un déficit ligero y sostenible.</p>
+
+          <div class="day-grid">
+            <div class="day">
+              <h4>Desayuno</h4>
+              <p>Smoothie verde: espinaca + 1 banana pequeña + 1 medida proteína (opcional) + agua.</p>
+            </div>
+            <div class="day">
+              <h4>Media mañana</h4>
+              <p>Fruta + 1 cucharada de mantequilla de maní.</p>
+            </div>
+
+            <div class="day">
+              <h4>Almuerzo</h4>
+              <p>Pechuga de pavo (150 g) + batata asada (120 g) + brócoli.</p>
+            </div>
+            <div class="day">
+              <h4>Merienda</h4>
+              <p>Queso fresco bajo en grasa + pepino.</p>
+            </div>
+
+            <div class="day">
+              <h4>Cena</h4>
+              <p>Ensalada templada con legumbres (lentejas 100 g cocidas) y vegetales.</p>
+            </div>
+            <div class="day">
+              <h4>Snack</h4>
+              <p>Infusión o té + 1 puñado de frutos secos pequeños.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Semana 4 -->
+      <div class="week">
+        <div class="head" data-toggle>
+          <h3>Semana 4 — Optimización</h3>
+          <span class="chev">+</span>
+        </div>
+        <div class="content">
+          <p style="color:var(--muted)">Objetivo: consolidar hábito y preparar transición al siguiente mes.</p>
+
+          <div class="day-grid">
+            <div class="day">
+              <h4>Desayuno</h4>
+              <p>Yogur griego (150 g) + frutos rojos + granola casera (30 g).</p>
+            </div>
+            <div class="day">
+              <h4>Media mañana</h4>
+              <p>Palitos de pepino + 1 huevo duro.</p>
+            </div>
+
+            <div class="day">
+              <h4>Almuerzo</h4>
+              <p>Filete de pescado (150 g) + verduras asadas + quinoa pequeña.</p>
+            </div>
+            <div class="day">
+              <h4>Merienda</h4>
+              <p>Batido de proteína ligero o 1 manzana.</p>
+            </div>
+
+            <div class="day">
+              <h4>Cena</h4>
+              <p>Ensalada grande con 120 g de pollo + aderezo ligero.</p>
+            </div>
+            <div class="day">
+              <h4>Snack</h4>
+              <p>2-3 galletas integrales o té.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lista de compras -->
+    <section class="shop" id="shopList">
+      <h3 style="color:var(--accent);margin:0 0 8px 0">Lista de compras (semanal - base)</h3>
+      <pre>
+Proteínas:
+ - Pechuga de pollo
+ - Pescado blanco
+ - Huevos
+ - Yogur natural / griego
+ - Atún en agua
+ - Legumbres (lentejas, garbanzos)
+
+Carbohidratos integrales:
+ - Arroz integral
+ - Quinoa
+ - Avena
+ - Batata
+ - Pan integral
+
+Frutas y verduras:
+ - Manzana, banana, frutos rojos
+ - Espinaca, lechuga, pepino, tomate
+ - Brócoli, zanahoria, pimiento
+
+Grasas saludables:
+ - Aguacate
+ - Aceite de oliva
+ - Frutos secos (almendras, nueces)
+ - Mantequilla de maní natural
+
+Otros:
+ - Hummus, granola, especias, té/infusiones
+      </pre>
+    </section>
+
+    <div class="tips">
+      <p><strong>Consejos rápidos:</strong> Mantén hidratación (2-3 L/día), prioriza sueño 7-8 horas, controla porciones, y combina con ejercicio regular (3-5x/semana). Ajusta cantidades si eres muy activo/a o tienes condiciones médicas. Consulta un profesional si es necesario.</p>
+    </div>
+  </main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    // Acordeón para las semanas
+    document.querySelectorAll('.week .head').forEach(head => {
+      head.addEventListener('click', () => {
+        const content = head.nextElementSibling;
+        const chev = head.querySelector('.chev');
+        const open = content.style.display === 'block';
+        // cerrar todos
+        document.querySelectorAll('.week .content').forEach(c=>c.style.display='none');
+        document.querySelectorAll('.week .chev').forEach(ch=>ch.textContent='+');
+        if(!open){
+          content.style.display = 'block';
+          chev.textContent = '−';
+          // smooth scroll to content
+          content.scrollIntoView({behavior:'smooth', block:'center'});
+        } else {
+          content.style.display = 'none';
+        }
+      });
+    });
+
+    // Imprimir
+    document.getElementById('printBtn').addEventListener('click', () => {
+      window.print();
+    });
+
+    // Descargar PLAN NUTRICIONAL COMPLETO (4 semanas)
+document.getElementById('downloadShop').addEventListener('click', async () => {
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+
+  // ===== TÍTULO =====
+  doc.setFont("Helvetica", "bold");
+  doc.setFontSize(22);
+  doc.setTextColor(255, 90, 0);
+  doc.text("Plan Nutricional • Baja de peso • FitAiid", 15, 20);
+
+  // ===== LÍNEA =====
+  doc.setDrawColor(255, 90, 0);
+  doc.setLineWidth(2);
+  doc.line(15, 25, 195, 25);
+
+  // ===== LOGO =====
+  const logoUrl = "/mnt/data/logo.png";
+
+  try {
+    const res = await fetch(logoUrl);
+    if (res.ok) {
+      const blob = await res.blob();
+      const reader = new FileReader();
+      await new Promise((resolve) => {
+        reader.onloadend = resolve;
+        reader.readAsDataURL(blob);
+      });
+      doc.addImage(reader.result, "PNG", 150, 8, 40, 40);
+    }
+  } catch (e) {
+    console.warn("No se cargó el logo");
+  }
+
+  // ===== EXTRAER TODO EL PLAN =====
+  const semanas = document.querySelectorAll(".week");
+  let textoCompleto = "";
+
+  semanas.forEach((week, i) => {
+
+    const titulo = week.querySelector("h3").innerText.trim();
+    const objetivo = week.querySelector(".content p")?.innerText.trim() || "";
+
+    textoCompleto += `${titulo}\n${objetivo}\n\n`;
+
+    const bloques = week.querySelectorAll(".day");
+
+    bloques.forEach(b => {
+      const comida = b.querySelector("h4").innerText.trim();
+      const detalle = b.querySelector("p").innerText.trim();
+      textoCompleto += `• ${comida}: ${detalle}\n`;
+    });
+
+    textoCompleto += `\n\n`;
+  });
+
+  // ===== TEXTO PDF =====
+  doc.setFont("Helvetica", "normal");
+  doc.setFontSize(12);
+  doc.setTextColor(40, 40, 40);
+
+  const lineas = doc.splitTextToSize(textoCompleto, 180);
+  doc.text(lineas, 15, 50);
+
+  // ===== GUARDAR =====
+  doc.save("plan_baja de peso_fitaiid.pdf");
+});
+
+
+  </script>
+  
+
+</body>
+</html>

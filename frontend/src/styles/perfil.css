@@ -1,0 +1,91 @@
+:root {
+  --accent: #ff4a2f;
+  --card-bg: rgba(0, 0, 0, 0.55);
+}
+
+body {
+  font-family: 'Oswald', sans-serif;
+}
+.body-bg {
+  padding-top: 5rem; /* aumenta o reduce según lo que necesites */
+}
+
+.body-bg {
+  background: radial-gradient(circle at 10% 20%, rgba(255, 74, 47, 0.08), transparent 10%),
+              linear-gradient(180deg, #0b0b0c 0%, #0e0e10 30%, #120d0f 100%);
+}
+
+.display-font {
+  font-family: 'Bangers', cursive;
+  letter-spacing: 0.6px;
+}
+
+.frost-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.25));
+  backdrop-filter: blur(6px);
+}
+
+.card-shadow {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55);
+}
+
+.card-bg {
+  background: var(--card-bg);
+}
+
+.progress-track {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+}
+
+.progress-fill {
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), #ff7a50);
+}
+
+.avatar-lg {
+  width: 112px;
+  height: 112px;
+}
+
+@media (min-width: 1024px) {
+  .avatar-lg {
+    width: 140px;
+    height: 140px;
+  }
+}
+
+/* Botones */
+.btn-primary {
+  @apply py-2 rounded-lg bg-gradient-to-r from-red-600 to-orange-500 text-white font-semibold hover:opacity-95;
+}
+
+.btn-outline {
+  @apply py-2 rounded-lg border border-white/10 text-white hover:bg-white/10;
+}
+#uploadBtn {
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+#uploadBtn:hover {
+  color: #ff6a1f;
+  transform: scale(1.1);
+}
+/* estilos avatar (añádelo a home.css) */
+#uploadBtn { cursor: pointer; transition: 0.18s ease; }
+#uploadBtn:hover { color: #ff6a1f; transform: scale(1.06); }
+#avatarImg { cursor: pointer; transition: transform .18s ease; }
+#avatarImg:hover { transform: scale(1.02); }
+
+.brand-text h2 {
+  color: #ff2e00;
+  font-size: 22px;
+}
+
+.brand-text p {
+  font-size: 12px;
+  color: #ccc;
+}

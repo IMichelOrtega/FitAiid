@@ -1,0 +1,216 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  
+}
+
+body {
+  font-family: poppins, sans-serif;
+  background-color: #000; /* Fondo negro alrededor */
+  background-image: url("https://img.freepik.com/fotos-premium/gimnasio-luces-rojas-luz-roja-techo_1177960-12802.jpg");
+  background-repeat: no-repeat;
+  background-position: center center; /* Centra la imagen */
+  background-size: contain; /* Muestra la imagen completa sin recortarla */
+  background-attachment: fixed;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* negro semi-transparente */
+  z-index: -1;
+}
+
+.container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+.form-box {
+  width: 350px;
+  min-height: 350px;
+  height: auto;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #ff0000;
+  border-radius: 0px;
+  box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
+  padding: 30px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  backdrop-filter: blur(0px);
+  animation: fadeIn 0.6s ease-in-out;
+  position: relative;
+
+  /* 🔥 Aquí está la magia */
+  transform: scale(1.4);        /* Aumenta el tamaño general (1.4 = 40% más grande) */
+  transform-origin: center;     /* Mantiene el centro en la misma posición */
+}
+
+
+/* Título principal */
+h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  color: #ffffff; /* rojo igual al borde */
+  margin-bottom: 25px;
+  font-size: 26px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+  
+}
+
+/* Etiquetas */
+label {
+  color: #d1d0d0; /* mismo rojo */
+  font-weight: 500;
+  display: block;
+  margin-bottom: 5px;
+  text-align: left;
+  width: 100%;
+  font-size: 13px;
+}
+
+/* Campos de entrada */
+input {
+  width: 100%;
+  padding: 8px;
+  background: black;
+  border: 2px solid #ff0000;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 15px;
+  outline: none;
+  transition: 0.3s;
+}
+
+
+input::placeholder {
+  color: rgba(106, 101, 101, 0.6);
+}
+
+input:focus {
+  border-color: #ff0000;
+  box-shadow: 0 0 8px #ff0000;
+}
+/* Botón */
+.btn {
+  width: 100%;
+  background: #ff0000;
+  color: #ffffff;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: #ff0000;
+  box-shadow: 0 0 12px #ff0000;
+  color: #ffffff;
+}
+
+/* Texto inferior */
+.register-text {
+  margin-top: 15px;
+  color: #ffffff;
+  font-size: 14px;
+  text-align: center;
+}
+
+.register-text a {
+  color: #ff0000;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.register-text a:hover {
+  text-decoration: underline;
+}
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #ff0000;
+  text-shadow: 0 0 10px #ff0000;
+}
+
+
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 40px; /* espacio para el ícono */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #ff0000;
+  font-size: 18px;
+  transition: 0.3s ease;
+}
+
+.toggle-password:hover {
+  color: #ffffff;
+  text-shadow: 0 0 8px #ff0000;
+}
+
+.message {
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.message.error {
+  background-color: #ffdddd;
+  color: #b20000;
+  border-left: 4px solid #b20000;
+}
+
+.message.success {
+  background-color: #ddffdd;
+  color: #006600;
+  border-left: 4px solid #006600;
+}
+

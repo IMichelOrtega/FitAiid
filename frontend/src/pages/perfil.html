@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FitAiid - Panel Usuario</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Tu CSS personalizado -->
+  <link rel="stylesheet" href="../styles/perfil.css" />
+</head>
+<body class="min-h-screen text-white body-bg">
+  <div class="max-w-6xl mx-auto px-6 py-10">
+    <!-- Header -->
+   <header class="fixed top-0 left-0 w-full z-50 flex items-center justify-start px-6 sm:px-10 lg:px-16 py-4 bg-[#0b0d17]/80 backdrop-blur-md">
+    <!-- Logo -->
+    <div class="flex items-center gap-3">
+      <img src="../img/logo.png" alt="FitAiid" class="w-10 sm:w-14 h-14 sm:h-18" />
+      <div class="brand-text">
+        <h1 class="text-xl sm:text-2xl font-bold text-[#ff2a2a]">FitAiid</h1>
+        <p class="text-[10px] sm:text-xs text-gray-300 -mt-1">Transforma Tu Cuerpo</p>
+      </div>
+    </div>
+
+    <!-- Menú escritorio -->
+    <nav class="hidden md:flex gap-8 text-sm lg:text-base font-semibold absolute left-1/2 -translate-x-1/2">
+
+      <a href="#" class="text-[#ff2a2a] border-b-2 border-[#ff2a2a] pb-1">Inicio</a>
+      <a href="#" class="hover:text-[#ff2a2a] transition">Entrenamiento</a>
+      <a href="#" class="hover:text-[#ff2a2a] transition">Coach Virtual</a>
+      <a href="#" class="hover:text-[#ff2a2a] transition">Nutricion</a>
+      <a href="#" class="hover:text-[#ff2a2a] transition">Estadisticas</a>
+    </nav>
+    
+    <!-- Botón menú móvil -->
+    <button id="menu-btn" class="text-3xl md:hidden text-red-500">☰</button>
+  </header>
+
+    <!-- Main panel -->
+    <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Left -->
+      <section class="lg:col-span-2">
+        <div class="frost-card card-shadow rounded-2xl p-6 lg:p-8">
+          <div class="flex flex-col lg:flex-row gap-6 items-center lg:items-start">
+            <div class="flex-shrink-0">
+              <!-- AVATAR: reemplaza el bloque anterior por este -->
+                <div class="relative w-32 h-32">
+  <img 
+    id="avatarImg"
+    src="https://images.unsplash.com/photo-1548691015-6b9258a1e3f9?q=80&w=600&auto=format&fit=crop"
+    alt="avatar"
+    class="w-32 h-32 rounded-full object-cover border-4 border-transparent"
+  />
+
+  <!-- Botón de edición -->
+  <label for="avatarInput" 
+         id="uploadBtn"
+         title="Cambiar foto"
+         class="absolute bottom-1 right-1 bg-black/70 text-white text-xs p-2 rounded-full cursor-pointer hover:bg-orange-500 transition">
+    ✎
+  </label>
+  <input type="file" id="avatarInput" accept="image/*" class="hidden" />
+</div>
+
+</div>
+            <div class="flex-1 w-full">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div id="username" class="text-2xl lg:text-3xl font-bold tracking-wide">USUARIO123</div>
+                  <div class="text-sm text-gray-300 mt-1">Nivel De Progreso</div>
+                </div>
+                <div class="text-sm text-gray-400"> <button class="text-sm hover:text-white">✏️ Editar Perfil</button> </div>
+              </div>
+
+              <div class="mt-4">
+                <div class="progress-track w-full">
+                  <div id="progressFill" class="progress-fill" style="width:40%"></div>
+                </div>
+                <div class="flex justify-between text-xs text-gray-300 mt-2">
+                  <span>Principiante</span>
+                  <span class="text-center">Intermedio</span>
+                  <span class="text-right">Avanzado</span>
+                </div>
+              </div>
+
+              <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                <div>
+                  <h3 class="display-font text-lg text-white/90">OBJETIVO PRINCIPAL</h3>
+                  <div class="text-sm text-gray-200 mt-2" id="mainGoal">Bajar De Peso</div>
+                </div>
+
+                <div class="flex items-center justify-center">
+                  <div class="w-20 h-20 rounded-full flex items-center justify-center bg-gradient-to-br from-red-700 to-orange-500">
+                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 2s-3 4.5-3 7a3 3 0 006 0c0-2.5-3-7-3-7z" fill="white" opacity="0.95"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="text-right">
+                  <h3 class="display-font text-lg text-white/90">RUTINA CUMPLIDA</h3>
+                  <div class="text-sm text-gray-200 mt-2" id="streakCount">7 Días Seguidos</div>
+                </div>
+              </div>
+
+              <!-- Tarjetas -->
+              <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="rounded-xl p-4 frost-card card-shadow card-bg">
+                  <div class="text-xs text-gray-300">Peso Actual</div>
+                  <div class="text-2xl font-bold mt-2" id="currentWeight">70 Kg</div>
+                  <div class="w-full mt-3 progress-track">
+                    <div id="weightProgress" class="progress-fill" style="width:40%"></div>
+                  </div>
+                  <div class="text-xs text-gray-400 mt-2">Meta: <span id="weightTarget">62 Kg</span></div>
+                </div>
+
+                <div class="rounded-xl p-4 frost-card card-shadow card-bg">
+                  <div class="text-xs text-gray-300">De Avance</div>
+                  <div class="text-3xl font-bold mt-2" id="advancePercent">75%</div>
+                  <div class="text-xs text-gray-400 mt-2">Progreso general</div>
+                </div>
+
+                <div class="rounded-xl p-4 frost-card card-shadow card-bg">
+                  <div class="text-xs text-gray-300">Rutinas Completadas</div>
+                  <div class="text-2xl font-bold mt-2" id="routinesDone">3</div>
+                  <div class="text-xs text-gray-400 mt-2">Esta semana</div>
+                </div>
+
+                <div class="rounded-xl p-4 frost-card card-shadow card-bg">
+                  <div class="text-xs text-gray-300">Nivel De Motivación</div>
+                  <div class="mt-2 flex items-end h-16">
+                    <div class="w-6 h-6 bg-orange-500 rounded-sm mr-2"></div>
+                    <div class="w-6 h-10 bg-orange-500 rounded-sm mr-2"></div>
+                    <div class="w-6 h-14 bg-orange-500 rounded-sm mr-2"></div>
+                    <div class="w-6 h-20 bg-orange-500 rounded-sm"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Datos del usuario -->
+        <div class="mt-6 rounded-2xl frost-card card-shadow p-6">
+          <h4 class="font-bold text-white/90 mb-4">Datos del Usuario</h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-gray-300">
+            <div>
+              <div class="text-xs">Edad</div>
+              <div id="userAge" class="text-lg font-semibold mt-1">20</div>
+            </div>
+            <div>
+              <div class="text-xs">Condiciones Médicas</div>
+              <div id="userMed" class="text-lg font-semibold mt-1">Ninguna</div>
+            </div>
+            <div>
+              <div class="text-xs">Altura</div>
+              <div id="userHeight" class="text-lg font-semibold mt-1">170 cm</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right column -->
+      <aside class="space-y-4">
+        <div class="rounded-2xl frost-card card-shadow p-4">
+          <h5 class="font-semibold text-white/90">Resumen Rápido</h5>
+          <div class="mt-3 text-sm text-gray-300">
+            <div class="flex justify-between py-2 border-b border-white/5">
+              <span>Rutinas hoy</span>
+              <span id="todayRoutines">2</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-white/5">
+              <span>Kcal quemadas</span>
+              <span id="kcalsBurned">420</span>
+            </div>
+            <div class="flex justify-between py-2">
+              <span>Última sesión</span>
+              <span id="lastSession">Hace 2 días</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-2xl frost-card card-shadow p-4">
+          <h5 class="font-semibold text-white/90">Acciones</h5>
+          <div class="mt-4 grid gap-3">
+            <button class="btn-primary">Iniciar Rutina</button>
+            <button class="btn-outline">Registrar Peso</button>
+            <button class="btn-outline">Ver Historial</button>
+          </div>
+        </div>
+
+        <div class="rounded-2xl frost-card card-shadow p-4 text-gray-300">
+          <h6 class="font-semibold text-white/90">Motivación</h6>
+          <p class="text-sm mt-3">Sigue así — llevas <span id="streakSmall">7</span> días seguidos. ¡No pierdas el ritmo!</p>
+        </div>
+      </aside>
+    </main>
+  </div>
+  <section class="bg-[#121212] text-white py-10">
+  <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10">
+    
+    <!-- Actividad Reciente -->
+    <div>
+      <h2 class="text-2xl font-gagalin mb-6">ACTIVIDAD RECIENTE</h2>
+      
+      <div class="flex items-center gap-4 mb-4 bg-[#1E1E1E] p-3 rounded-lg">
+        <span class="text-orange-500 text-3xl">🏋️</span>
+        <div>
+          <p class="font-semibold">Rutina De Fuerza</p>
+          <p class="text-gray-400 text-sm">22/Agosto/2025</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4 mb-6 bg-[#1E1E1E] p-3 rounded-lg">
+        <span class="text-orange-500 text-3xl">🎥</span>
+        <div>
+          <p class="font-semibold">Videos De Entrenamiento</p>
+          <p class="text-gray-400 text-sm">22/Agosto/2025</p>
+        </div>
+      </div>
+
+      <button 
+  onclick="logout()" 
+  class="bg-gradient-to-r from-red-600 to-orange-500 text-white font-semibold px-8 py-3 rounded-full hover:opacity-90 transition w-full sm:w-auto">
+  CERRAR SESIÓN
+</button>
+
+    </div>
+
+    <!-- Herramientas FitAiid -->
+    <div>
+      <h2 class="text-2xl font-gagalin mb-6">HERRAMIENTAS FITAIID</h2>
+
+      <div class="bg-[#1E1E1E] p-4 rounded-lg mb-4 flex items-center gap-4">
+        <span class="text-orange-500 text-3xl">🧮</span>
+        <p class="font-semibold">Calculadora Macronutrientes</p>
+      </div>
+
+      <div class="bg-[#1E1E1E] p-4 rounded-lg mb-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <span class="text-orange-500 text-3xl">⚫</span>
+          <p class="font-semibold">IMC Actual</p>
+        </div>
+        <span class="text-gray-300">24.4</span>
+      </div>
+
+      <div class="bg-[#1E1E1E] p-4 rounded-lg flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <span class="text-orange-500 text-3xl">💧</span>
+          <p class="font-semibold">Hidratacion</p>
+        </div>
+        <span class="text-gray-300">2.4 L</span>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- FOOTER -->
+<footer class="bg-black text-gray-300 py-7 px-3 md:px-0 mt-1 text-[13px]">
+  <div class="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-4">
+
+
+    <!-- LOGO + DESCRIPCIÓN -->
+    <div>
+      <div class="flex items-center space-x-3">
+        <img src="../img/logo.png" alt="FitAiid Logo" class="w-16 h-16 drop-shadow-[0_0_10px_#ff2727]">
+        <h2 class="text-4xl text-[26px] font-extrabold tracking-wide">
+          <span class="text-white">Fit</span><span class="text-[#ff2727]">Aiid</span>
+        </h2>
+      </div>
+      <div>
+        <p class="mt-2 text-base font-bold text-[#ff2727] uppercase tracking-wider">
+          Transforma tu cuerpo
+        </p>
+        <p class="mt-6 max-w-[300px] text-[14px] leading-relaxed text-gray-400 mb-5"">
+          Tu aliado inteligente en fitness. Planes personalizados, 
+          asesoramiento nutricional con IA
+          y acompañamiento virtual para alcanzar tu mejor versión.
+        </p>
+      </div>
+      <!-- REDES SOCIALES -->
+      <div class="flex space-x-6 mt-7">
+        <a href="#" class="hover:text-[#ff2727] transition-transform transform hover:scale-110">
+          <i class="fa-brands fa-facebook-f text-2xl"></i>
+        </a>
+        <a href="#" class="hover:text-[#ff2727] transition-transform transform hover:scale-110">
+          <i class="fa-brands fa-instagram text-2xl"></i>
+        </a>
+        <a href="#" class="hover:text-[#ff2727] transition-transform transform hover:scale-110">
+          <i class="fa-brands fa-x-twitter text-2xl"></i>
+        </a>
+      </div>
+    </div>
+    <!-- NOSOTROS -->
+    <div>
+      <h3 class="text-[#ff2727] text-[14px] font-bold text-2xl mb-5 uppercase tracking-wide">Nosotros</h3>
+      <ul class="space-y-3 text-[13px]">
+        <li><a href="#sobre-nosotros" class="hover:text-white transition-colors">Sobre Nosotros</a></li>
+        <li><a href="#servicios" class="hover:text-white transition-colors">Nuestros Servicios</a></li>
+        <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+        <li><a href="#" class="hover:text-white transition-colors">Contáctanos</a></li>
+      </ul>
+    </div>
+    <!-- RECURSOS -->
+    <div>
+      <h3 class="text-[#ff2727] text-[14px] font-bold text-2xl mb-5 uppercase tracking-wide">Recursos</h3>
+      <ul class="space-y-3 text-[13px]">
+        <li><a href="#herramientas" class="hover:text-white transition-colors">Herramientas Fitness</a></li>
+        <li><a href="#" class="hover:text-white transition-colors">Guías de Nutrición</a></li>
+        <li><a href="#FAQS" class="hover:text-white transition-colors">Preguntas Frecuentes</a></li>
+        <li><a href="#plan" class="hover:text-white transition-colors">Membresías</a></li>
+      </ul>
+    </div>
+    <!-- CONTACTOS -->
+    <div>
+      <h3 class="text-[#ff2727] text-[14px] font-bold text-2xl mb-5 uppercase tracking-wide">Contáctanos</h3>
+      <ul class="space-y-4 text-[13px]">
+        <li class="flex items-center space-x-3">
+          <i class="fa-solid fa-location-dot text-[#ff2727] text-lg"></i>
+          <span>Colombia</span>
+        </li>
+        <li class="flex items-center space-x-3">
+          <i class="fa-solid fa-phone text-[#ff2727] text-lg"></i>
+          <span>+57 320 263 6622</span>
+        </li>
+        <li class="flex items-center space-x-3">
+          <i class="fa-solid fa-envelope text-[#ff2727] text-lg"></i>
+          <span>FitAiid@gmail.com</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- COPYRIGHT -->
+  <div class="border-t border-gray-700 mt-14 pt-6 text-center text-[15px] text-gray-500">
+    © 2025 <span class="text-[#ff2727] font-semibold">FitAiid</span> — Todos los derechos reservados.
+  </div>
+</footer>
+
+  <script src="../scripts/home.js"></script>
+<script>
+  function logout() {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = "index.html";
+  }
+</script>
+
+</body>
+</html>

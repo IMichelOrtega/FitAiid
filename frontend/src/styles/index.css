@@ -1,0 +1,225 @@
+/* Fondo general */
+body {
+  background-color: #0b0d17;
+  font-family: 'Poppins', sans-serif;
+  
+}
+
+/* Texto con gradiente rojo-naranja */
+.gradient-text {
+  background: linear-gradient(90deg, #ff0000 0%, #ff7a00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Suaviza los bordes de los elementos */
+button, a {
+  transition: all 0.3s ease;
+}
+
+/* Ajustes responsivos extra */
+@media (max-width: 640px) {
+  header {
+    padding: 1rem 1.5rem;
+  }
+
+  h1 span {
+    font-size: 1.8rem !important;
+  }
+}
+.titulo-fitaiid {
+  font-family: 'Gagalin', sans-serif;
+  color: #ef4444; /* opcional: un rojo estilo FitAiid */
+  font-size: 3rem; /* tamaño opcional */
+}
+
+/* Solo el texto escrito por el usuario en los campos */
+#formMacronutrientes input,
+#formMacronutrientes select {
+  font-family: 'Poppins', sans-serif; /* o la fuente que tú quieras */
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff; /* asegúrate de que el texto siga visible */
+}
+
+/* Para los <option> del select */
+#formMacronutrientes select option {
+  font-family: 'Poppins', sans-serif;
+  color: #ffffff;
+  background-color: #1a1a1a;
+}
+ #formIMC input {
+  font-family: 'Poppins', sans-serif; /* o la fuente que tú quieras */
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff; /* asegúrate de que el texto siga visible */
+}
+#modalAgua input {
+  font-family: 'Poppins', sans-serif; /* o la fuente que tú quieras */
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff; /* asegúrate de que el texto siga visible */
+}
+#resultadoAgua {
+  font-family: 'Poppins', sans-serif; /* o la fuente que tú quieras */
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff; /* asegúrate de que el texto siga visible */
+}
+#resultadoIMC {
+  font-family: 'Poppins', sans-serif; /* o la fuente que tú quieras */
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff; /* asegúrate de que el texto siga visible */
+}
+#resultadoMacronutrientes {
+  font-family: 'Poppins', sans-serif; /* o la fuente que tú quieras */
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff; /* asegúrate de que el texto siga visible */
+}
+/* Noticias FitAiid */
+#noticias-fitness {
+  background: radial-gradient(circle at top left, #2b0000 0%, #0d0d0d 70%);
+  color: #fff;
+  border-top: 1px solid rgba(255, 77, 77, 0.2);
+  border-bottom: 1px solid rgba(255, 77, 77, 0.2);
+}
+
+#noticias-fitness h2 {
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+#noticias-fitness p {
+  color: #ccc;
+}
+
+#noticias-fitness img {
+  transition: transform 0.4s ease;
+}
+
+#noticias-fitness img:hover {
+  transform: scale(1.05);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.nav-link {
+  position: relative;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background-color: #ff2a2a;
+  transition: width 0.3s ease;
+}
+
+/* Subrayado solo al pasar el mouse */
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Activo: color + subrayado fijo */
+.nav-link.active {
+  color: #ff2a2a !important;
+}
+
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* Evita conflicto: si uno está activo, los demás se mantienen sin línea */
+.nav-link:not(.active)::after {
+  width: 0;
+}
+
+footer {
+  background: linear-gradient(to bottom,  #000000, #1a232d, #000000);
+  width: 100vw; /* 100% del ancho visible */
+  margin-left: calc(-50vw + 50%); /* saca el footer del contenedor centrado */
+  padding: 60px 0;
+  }
+
+  footer * {
+  margin-bottom: 0 !important;
+}
+
+  /* ====== BOTÓN FLOTANTE ====== */
+  .chatbot-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    cursor: grab;
+    z-index: 9999;
+  }
+
+  .chatbot-btn img {
+    width: 150px;
+    height: 150px;
+    transition: transform 0.3s ease;
+  }
+
+  .chatbot-btn:hover {
+    transform: scale(1.1);
+  }
+
+  /* ====== IFRAME DEL CHATBOT ====== */
+  .chatbot-iframe {
+    position: fixed;
+    bottom: 150px; /* sube desde el botón */
+    right: 25px;
+    width: 420px;
+    height: 550px;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 9998;
+  }
+
+  .chatbot-iframe.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  /* ====== BOTÓN DE CIERRE ====== */
+  .close-chat {
+    position: fixed;
+    bottom: 720px;
+    right: 35px;
+    font-size: 25px;
+    background: #ff3c00;
+    border: none;
+    color: #fff;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transition: background 0.3s;
+  }
+
+  .close-chat:hover {
+    background: #e03500;
+  }
+
+  .hidden {
+    display: none;
+  }
+
