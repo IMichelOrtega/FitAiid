@@ -512,17 +512,21 @@ const forgotPassword = async (req, res) => {
 
     console.log(`🔑 Solicitud de recuperación para: ${email}`);
 
-    // Buscar usuario
+    // ✅ BUSCAR USUARIO EN MONGODB
     const user = await User.findOne({ email: email.toLowerCase() });
 
-    // Por seguridad, siempre responder lo mismo (aunque el usuario no exista)
+    // ❌ SI NO EXISTE EN LA BASE DE DATOS
     if (!user) {
-      console.log(`⚠️ Usuario no encontrado: ${email}`);
-      return res.status(200).json({
-        success: true,
-        message: 'Si el email existe, recibirás un código de verificación'
+      console.log(`❌ Usuario NO encontrado en BD: ${email}`);
+      return res.status(404).json({
+        success: false,
+        userNotFound: true,
+        message: 'Este correo no está registrado. Por favor regístrate primero.'
       });
     }
+
+    // ✅ SI EXISTE, CONTINUAR CON EL CÓDIGO
+    console.log(`✅ Usuario encontrado en BD: ${email}`);
 
     // Generar código de 6 dígitos
     const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -536,7 +540,7 @@ const forgotPassword = async (req, res) => {
 
     // Guardar código hasheado y expiración (15 minutos)
     user.resetPasswordCode = resetCodeHash;
-    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 minutos
+    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
     await user.save();
 
     // Configurar email
