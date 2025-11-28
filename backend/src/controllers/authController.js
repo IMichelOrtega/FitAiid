@@ -7,13 +7,18 @@ const logger = require('../config/logger');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 console.log('🔐 Inicializando controlador de autenticación');
+const {
+  savePendingVerification,
+  getPendingVerification,
+  deletePendingVerification
+} = require('../utils/pendingVerifications');
 
 // =============================================
-// FUNCIÓN 1: REGISTER - CREAR NUEVA CUENTA
+// FUNCIÓN 1: REGISTER - PREPARAR REGISTRO (NO GUARDA EN BD)
 // =============================================
 
 /**
- * @desc    Registrar nuevo usuario
+ * @desc    Preparar registro y enviar código de verificación
  * @route   POST /api/auth/register
  * @access  Público
  */
@@ -21,7 +26,7 @@ const register = async (req, res, next) => {
   try {
     const { firstName, lastName, email, password, phone, role, provider } = req.body;
 
-    console.log(`📝 Intento de registro: ${email}`);
+    console.log(`📝 Preparando registro para: ${email}`);
 
     // VALIDACIÓN 1: Verificar campos requeridos
     if (!firstName || !lastName || !email) {
@@ -33,7 +38,7 @@ const register = async (req, res, next) => {
       });
     }
 
-    // VALIDACIÓN 2: Verificar que el email no esté registrado
+    // VALIDACIÓN 2: Verificar que el email NO esté registrado
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       console.log(`❌ Email ya registrado: ${email}`);
@@ -47,7 +52,6 @@ const register = async (req, res, next) => {
     // VALIDACIÓN 3: Contraseña o proveedor
     let finalPassword = password;
     if (!password && provider === 'google') {
-      // Generamos una contraseña temporal que cumpla la validación
       finalPassword = 'GoogleTemp123';
       console.log('🟢 Registro con Google: contraseña temporal aplicada');
     }
@@ -59,50 +63,42 @@ const register = async (req, res, next) => {
         message: 'Debes proporcionar una contraseña o usar proveedor OAuth'
       });
     }
-    // Dentro de register(), después de definir finalPassword:
-const verificationToken = crypto.randomBytes(32).toString('hex');
-const verificationTokenExpires = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 días
 
-    // CREAR USUARIO
-    const user = new User({
+    // GENERAR CÓDIGO DE 6 DÍGITOS
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log(`🔢 Código generado: ${verificationCode}`);
+
+    // ✨ GUARDAR DATOS TEMPORALMENTE (NO EN MONGODB)
+    const userData = {
       firstName,
       lastName,
       email: email.toLowerCase(),
-      password: finalPassword, // ahora puede venir de Google
+      password: finalPassword,
       phone,
       role: role || 'customer',
-      provider: provider || 'local',
-      isEmailVerified: false,
-      verificationToken,          // aquí guardas el token
-      verificationTokenExpires    // aquí guardas la expiración
-    });
+      provider: provider || 'local'
+    };
 
-    await user.save();
-    // Enviar email de verificación
+    savePendingVerification(email, verificationCode, userData);
+
+    // ENVIAR EMAIL CON CÓDIGO
     try {
-      await sendVerificationEmail(user);
-      console.log(`📧 Email de verificación enviado a ${user.email}`);
-}     catch (err) {
-      console.error(`❌ Error enviando email de verificación: ${err.message}`);
-}
+      await sendVerificationCodeEmail(email, firstName, verificationCode);
+      console.log(`📧 Código enviado a: ${email}`);
+    } catch (err) {
+      console.error(`❌ Error enviando email: ${err.message}`);
+      return res.status(500).json({
+        success: false,
+        error: 'Error al enviar email',
+        message: 'No se pudo enviar el código de verificación'
+      });
+    }
 
-
-    logger.audit('USER_REGISTERED', {
-      userId: user._id,
-      email: user.email,
-      role: user.role,
-      ip: req.ip,
-      userAgent: req.get('user-agent')
-    });
-
-    const token = user.generateAuthToken();
-    const publicProfile = user.getPublicProfile();
-
-    res.status(201).json({
+    // ✅ RESPUESTA EXITOSA (PERO USUARIO AÚN NO ESTÁ EN BD)
+    res.status(200).json({
       success: true,
-      message: 'Usuario registrado exitosamente',
-      token,
-      user: publicProfile
+      message: 'Código de verificación enviado a tu correo',
+      email: email.toLowerCase()
     });
 
   } catch (error) {
@@ -515,41 +511,31 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendVerificationEmail = async (user) => {
-  const verificationUrl =`http://localhost:5000/api/auth/verify-email?token=${user.verificationToken}`;
+const sendVerificationCodeEmail = async (email, firstName, code) => {
   const mailOptions = {
     from: `"FitAiid 💪" <${process.env.EMAIL_USER}>`,
-    to: user.email,
-    subject: "Verifica tu correo electrónico",
-    html: `<p>Hola ${user.firstName},</p>
-           <p>Gracias por registrarte. Haz click en el siguiente enlace para verificar tu correo:</p>
-           <a href="${verificationUrl}">Verificar correo</a>
-           <p>Este enlace expira en 24 horas.</p>`
+    to: email,
+    subject: "Código de Verificación - FitAiid",
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h2 style="color: #333;">¡Bienvenido a FitAiid!</h2>
+        <p>Hola ${firstName},</p>
+        <p>Gracias por registrarte. Tu código de verificación es:</p>
+        <div style="background-color: #f4f4f4; padding: 20px; text-align: center; border-radius: 5px; margin: 20px 0;">
+          <h1 style="color: #667eea; font-size: 36px; letter-spacing: 5px; margin: 0;">
+            ${code}
+          </h1>
+        </div>
+        <p>Este código expira en <strong>15 minutos</strong>.</p>
+        <p style="color: #999; font-size: 14px;">Si no te registraste, ignora este correo.</p>
+      </div>
+    `
   };
 
   await transporter.sendMail(mailOptions);
 };
 
-const verifyEmail = async (req, res) => {
-  try {
-    const { token } = req.query;
-    const user = await User.findOne({ verificationToken: token });
 
-    if (!user) {
-      return res.status(400).send("Token inválido o expirado.");
-    }
-
-    user.isVerified = true;
-    user.verificationToken = undefined;
-    await user.save();
-
-    // ✅ Redirigir a la página de verificación exitosa del frontend
-    res.redirect("http://localhost:3000/frontend/src/pages/verificacion-exitosa");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error al verificar el correo.");
-  }
-};
 // =============================================
 // RECUPERACIÓN DE CONTRASEÑA
 // =============================================
@@ -778,14 +764,163 @@ const resetPassword = async (req, res) => {
     });
   }
 };
+/**
+ * @desc    Verificar código y CREAR usuario en MongoDB
+ * @route   POST /api/auth/verify-registration
+ * @access  Público
+ */
+const verifyRegistrationCode = async (req, res) => {
+  try {
+    const { email, code } = req.body;
+
+    if (!email || !code) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email y código son requeridos'
+      });
+    }
+
+    console.log(`🔍 Verificando código para: ${email}`);
+
+    // ✅ OBTENER DATOS TEMPORALES
+    const verification = getPendingVerification(email);
+
+    if (!verification) {
+      console.log(`❌ No hay verificación pendiente o expiró para: ${email}`);
+      return res.status(400).json({
+        success: false,
+        message: 'Código inválido o expirado. Solicita uno nuevo.'
+      });
+    }
+
+    // ✅ VERIFICAR CÓDIGO
+    if (verification.code !== code) {
+      console.log(`❌ Código incorrecto para: ${email}`);
+      return res.status(400).json({
+        success: false,
+        message: 'Código incorrecto'
+      });
+    }
+
+    console.log(`✅ Código correcto para: ${email}`);
+
+    // ✅ AHORA SÍ CREAR USUARIO EN MONGODB
+    const user = new User({
+      ...verification.userData,
+      isEmailVerified: true,  // Ya verificado
+      isActive: true
+    });
+
+    await user.save();
+    console.log(`💾 Usuario guardado en MongoDB: ${email}`);
+
+    // ✅ ELIMINAR VERIFICACIÓN TEMPORAL
+    deletePendingVerification(email);
+
+    // ✅ REGISTRAR AUDITORÍA
+    logger.audit('USER_REGISTERED', {
+      userId: user._id,
+      email: user.email,
+      role: user.role,
+      ip: req.ip,
+      userAgent: req.get('user-agent')
+    });
+
+    // ✅ GENERAR TOKEN
+    const token = user.generateAuthToken();
+    const publicProfile = user.getPublicProfile();
+
+    res.status(201).json({
+      success: true,
+      message: '¡Registro completado exitosamente!',
+      token,
+      user: publicProfile
+    });
+
+  } catch (error) {
+    console.error(`❌ Error en verifyRegistrationCode: ${error.message}`);
+
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({
+        success: false,
+        error: 'Error de validación',
+        details: messages
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: 'Error al completar el registro'
+    });
+  }
+};
+/**
+ * @desc    Reenviar código de verificación
+ * @route   POST /api/auth/resend-verification
+ * @access  Público
+ */
+const resendVerificationCode = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email es requerido'
+      });
+    }
+
+    console.log(`🔄 Reenvío solicitado para: ${email}`);
+
+    // Verificar que haya una verificación pendiente
+    const verification = getPendingVerification(email);
+
+    if (!verification) {
+      return res.status(400).json({
+        success: false,
+        message: 'No hay ningún registro pendiente para este email'
+      });
+    }
+
+    // Generar NUEVO código
+    const newCode = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Actualizar código temporal
+    savePendingVerification(email, newCode, verification.userData);
+
+    // Enviar nuevo email
+    await sendVerificationCodeEmail(
+      email, 
+      verification.userData.firstName, 
+      newCode
+    );
+
+    console.log(`📧 Nuevo código enviado a: ${email}`);
+
+    res.status(200).json({
+      success: true,
+      message: 'Nuevo código enviado a tu correo'
+    });
+
+  } catch (error) {
+    console.error(`❌ Error en resendVerificationCode: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      message: 'Error al reenviar código'
+    });
+  }
+};
+
 module.exports = {
     register,
     login,
     getProfile,
     updateProfile,
     googleLogin,
-    verifyEmail,
+    verifyRegistrationCode, 
     forgotPassword,
+    resendVerificationCode,
     verifyResetCode,
     resetPassword
 };

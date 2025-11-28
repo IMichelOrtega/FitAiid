@@ -225,7 +225,15 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null
   },
-
+// ✨ AGREGAR ESTOS CAMPOS NUEVOS:
+verificationCode: {
+    type: String,
+    select: false  // No mostrar en consultas por defecto
+},
+verificationCodeExpires: {
+    type: Date,
+    select: false
+},
 // =============================================
     // ROLES Y PERMISOS
     // =============================================

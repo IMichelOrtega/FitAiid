@@ -108,7 +108,20 @@ console.log("👉 authController.googleLogin =", authController.googleLogin);
 
 router.post('/google', authController.googleLogin);
 
-router.get('/verify-email', authController.verifyEmail);
+router.post('/verify-registration',
+    authLimiter,
+    authController.verifyRegistrationCode
+);
+/**
+ * @route   POST /api/auth/resend-verification
+ * @desc    Reenviar código de verificación
+ * @access  Público
+ * @body    { email }
+ */
+router.post('/resend-verification',
+    authLimiter,
+    authController.resendVerificationCode
+);
 
 // =============================================
 // RUTAS DE RECUPERACIÓN DE CONTRASEÑA
