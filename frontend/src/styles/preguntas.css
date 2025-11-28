@@ -252,3 +252,15 @@ button:hover {
 .option:hover::before {
   background: rgba(0,0,0,0.3);
 }
+
+.continuar-button {
+  margin-top: 30px;
+  background-color: #ff0000;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 30px;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}

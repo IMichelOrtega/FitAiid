@@ -8,12 +8,13 @@
   <link rel="stylesheet" href="../styles/login.css">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+  <!-- 🔹 AGREGA ESTO AQUÍ 👇 -->
+<script type="module" src="../scripts/firebase-login.js"></script>
 </head>
 <body>
   <div class="container">
     <div class="form-box">
-       <a href="index.html" class="close-btn">×</a>
+       <a href="index.html" class="close-btn">x</a>
       <h2>Inicia Sesión</h2>
       <div id="login-message" class="message" style="display:none;"></div>
       <form id="loginForm">
@@ -37,6 +38,29 @@
         <button type="submit" class="btn">Iniciar Sesión</button>
         <p class="register-text">¿No tienes cuenta?
           <a href="register.html">Regístrate aquí</a>
+          <!-- 🔹 AGREGA ESTO AQUÍ 👇 -->
+        <div class="social-login">
+          <p>O inicia sesión con</p>
+          <div class="icons">
+            <img
+              src="https://png.pngtree.com/png-vector/20230817/ourmid/pngtree-google-internet-icon-vector-png-image_9183287.png"
+              alt="Google"
+              id="googleLoginBtn"
+              style="cursor: pointer;"
+            />
+            <img
+              src="https://static.xx.fbcdn.net/rsrc.php/v4/yG/r/pENh3y_2Pnw.png"
+              alt="Facebook"
+              style="cursor: pointer;"
+            />
+            <img
+              id="Apple"
+              src="https://img.icons8.com/ios_filled/512/FFFFFF/mac-os.png"
+              alt="Apple"
+              style="cursor: pointer;"
+            />
+          </div>
+        </div>
         </p>
       </form>
     </div>

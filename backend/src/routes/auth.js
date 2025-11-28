@@ -12,7 +12,7 @@ const {
     loginValidation, 
     updateProfileValidation,
     handleValidationErrors 
-} = require('../validators/authValidators');  // ✨ NUEVO
+} = require('../validators/authValidators');
 
 // Importar controladores
 const {
@@ -22,7 +22,7 @@ const {
     updateProfile
 } = require('../controllers/authController');
 
-console.log('🔐 Inicializando rutas de autenticación');
+console.log('🔧 Inicializando rutas de autenticación');
 
 // =============================================
 // RUTAS PÚBLICAS (NO REQUIEREN AUTENTICACIÓN)
@@ -32,91 +32,59 @@ console.log('🔐 Inicializando rutas de autenticación');
  * @route   POST /api/auth/register
  * @desc    Registrar nuevo usuario
  * @access  Público
- * @body    { firstName, lastName, email, password, phone?, role? }
  */
-// Registro con validación
-    router.post('/register', 
-    authLimiter,              // 1. Rate limiting
-    registerValidation,        // 2. Validar datos
-    handleValidationErrors,    // 3. Manejar errores
-    authController.register    // 4. Controlador
+router.post('/register', 
+    authLimiter,
+    registerValidation,
+    handleValidationErrors,
+    authController.register
+);
+
+/**
+ * @route   POST /api/auth/register-with-code
+ * @desc    Registrar usuario con código de verificación
+ * @access  Público
+ */
+router.post('/register-with-code',
+    authLimiter,
+    registerValidation,
+    handleValidationErrors,
+    authController.registerWithCode
 );
 
 /**
  * @route   POST /api/auth/login
- * @desc    Login de usuario (devuelve token JWT)
+ * @desc    Login de usuario
  * @access  Público
- * @body    { email, password }
  */
-// Login con validación
-    router.post('/login', 
+router.post('/login', 
     authLimiter,
     loginValidation,
     handleValidationErrors,
     authController.login
 );
 
-// =============================================
-// RUTAS PRIVADAS (REQUIEREN AUTENTICACIÓN)
-// =============================================
-// TODO: En Parte 3C3 agregaremos middleware de autenticación
-// Por ahora funcionan sin middleware para testing
-
-/**
- * @route   GET /api/auth/profile
- * @desc    Obtener perfil del usuario autenticado
- * @access  Privado (requiere token)
- * @query   userId (temporal para testing)
- */
-router.get('/profile', getProfile);
-
-/**
- * @route   PUT /api/auth/profile
- * @desc    Actualizar perfil del usuario
- * @access  Privado (requiere token)
- * @query   userId (temporal para testing)
- * @body    { firstName?, lastName?, phone?, address?, etc }
- */
-// Actualizar perfil con validación
-    router.put('/profile',
-    updateProfileValidation,
-    handleValidationErrors,
-    updateProfile
-);
-
-// =============================================
-// LOG DE RUTAS CONFIGURADAS
-// =============================================
-
-console.log('✅ Rutas de autenticación configuradas:');
-console.log('   📝 POST /api/auth/register - Crear cuenta');
-console.log('   🔐 POST /api/auth/login - Iniciar sesión');
-console.log('   👤 GET /api/auth/profile - Ver perfil');
-console.log('   ✏️ PUT /api/auth/profile - Actualizar perfil');
-console.log('   🔑 POST /api/auth/forgot-password - Solicitar código');
-console.log('   ✅ POST /api/auth/verify-code - Verificar código');
-console.log('   🔐 POST /api/auth/reset-password - Nueva contraseña');
-module.exports = router;
-
 /**
  * @route   POST /api/auth/google
  * @desc    Login o registro con Google
  * @access  Público
- * @body    { firstName, lastName, email }
  */
-console.log("👉 authController.googleLogin =", authController.googleLogin);
-
 router.post('/google', authController.googleLogin);
 
+/**
+ * @route   POST /api/auth/verify-registration
+ * @desc    Verificar código de registro
+ * @access  Público
+ */
 router.post('/verify-registration',
     authLimiter,
     authController.verifyRegistrationCode
 );
+
 /**
  * @route   POST /api/auth/resend-verification
  * @desc    Reenviar código de verificación
  * @access  Público
- * @body    { email }
  */
 router.post('/resend-verification',
     authLimiter,
@@ -124,14 +92,13 @@ router.post('/resend-verification',
 );
 
 // =============================================
-// RUTAS DE RECUPERACIÓN DE CONTRASEÑA
+// 🔐 RUTAS DE RECUPERACIÓN DE CONTRASEÑA
 // =============================================
 
 /**
  * @route   POST /api/auth/forgot-password
  * @desc    Enviar código de recuperación al email
  * @access  Público
- * @body    { email }
  */
 router.post('/forgot-password', 
     authLimiter,
@@ -142,7 +109,6 @@ router.post('/forgot-password',
  * @route   POST /api/auth/verify-code
  * @desc    Verificar código de recuperación
  * @access  Público
- * @body    { email, code }
  */
 router.post('/verify-code',
     authLimiter,
@@ -153,9 +119,51 @@ router.post('/verify-code',
  * @route   POST /api/auth/reset-password
  * @desc    Restablecer contraseña con código válido
  * @access  Público
- * @body    { email, code, password }
  */
 router.post('/reset-password',
     authLimiter,
     authController.resetPassword
 );
+
+// =============================================
+// RUTAS PRIVADAS (REQUIEREN AUTENTICACIÓN)
+// =============================================
+
+/**
+ * @route   GET /api/auth/profile
+ * @desc    Obtener perfil del usuario autenticado
+ * @access  Privado
+ */
+router.get('/profile', getProfile);
+
+/**
+ * @route   PUT /api/auth/profile
+ * @desc    Actualizar perfil del usuario
+ * @access  Privado
+ */
+router.put('/profile',
+    updateProfileValidation,
+    handleValidationErrors,
+    updateProfile
+);
+
+// =============================================
+// LOG DE RUTAS CONFIGURADAS
+// =============================================
+console.log('✅ Rutas de autenticación configuradas:');
+console.log('   📝 POST /api/auth/register - Crear cuenta');
+console.log('   📝 POST /api/auth/register-with-code - Registro con código');
+console.log('   🔑 POST /api/auth/login - Iniciar sesión');
+console.log('   🔵 POST /api/auth/google - Login con Google');
+console.log('   ✅ POST /api/auth/verify-registration - Verificar registro');
+console.log('   📧 POST /api/auth/resend-verification - Reenviar código');
+console.log('   🔐 POST /api/auth/forgot-password - Solicitar código recuperación');
+console.log('   ✅ POST /api/auth/verify-code - Verificar código recuperación');
+console.log('   🔄 POST /api/auth/reset-password - Nueva contraseña');
+console.log('   👤 GET /api/auth/profile - Ver perfil');
+console.log('   ✏️ PUT /api/auth/profile - Actualizar perfil');
+
+// =============================================
+// ⚠️ IMPORTANTE: EXPORTAR AL FINAL
+// =============================================
+module.exports = router;

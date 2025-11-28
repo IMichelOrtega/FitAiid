@@ -1,7 +1,7 @@
 // =============================================
 // SCRIPT: forgot-password.html
 // =============================================
-
+console.log('✅ Script password-recovery.js cargado correctamente');
 const API_URL = 'http://localhost:5000/api/auth';
 
 // Función para mostrar mensajes
@@ -11,7 +11,6 @@ function showMessage(message, type = 'success') {
   messageDiv.className = `message ${type}`;
   messageDiv.style.display = 'block';
   
-  // Auto-ocultar después de 5 segundos
   setTimeout(() => {
     messageDiv.style.display = 'none';
   }, 5000);
@@ -40,7 +39,6 @@ document.getElementById('forgotPasswordForm').addEventListener('submit', async (
   const email = document.getElementById('email').value.trim();
   const submitBtn = document.getElementById('submitBtn');
   
-  // Validar email
   if (!email) {
     showMessage('Por favor ingresa tu correo electrónico', 'error');
     return;
@@ -49,6 +47,8 @@ document.getElementById('forgotPasswordForm').addEventListener('submit', async (
   setLoading(submitBtn, true);
   
   try {
+    console.log('📤 Enviando solicitud para:', email);
+    
     const response = await fetch(`${API_URL}/forgot-password`, {
       method: 'POST',
       headers: {
@@ -58,22 +58,35 @@ document.getElementById('forgotPasswordForm').addEventListener('submit', async (
     });
     
     const data = await response.json();
+    console.log('📥 Respuesta del servidor:', data);
     
+    // ✅ USUARIO EXISTE - Código enviado
     if (response.ok && data.success) {
       showMessage('Código enviado a tu correo electrónico', 'success');
-      
-      // Guardar email en localStorage para usarlo después
       localStorage.setItem('resetEmail', email);
       
-      // Redirigir a verificar código después de 2 segundos
       setTimeout(() => {
         window.location.href = 'verify-code.html';
       }, 2000);
-    } else {
+    } 
+    // ❌ USUARIO NO EXISTE
+    else if (response.status === 404 && data.userNotFound) {
+      showMessage(data.message, 'error');
+      
+      setTimeout(() => {
+        const goToRegister = confirm('¿Deseas registrarte ahora?');
+        if (goToRegister) {
+          window.location.href = 'register.html';
+        }
+      }, 1500);
+    } 
+    // ❌ OTRO ERROR
+    else {
       showMessage(data.message || 'Error al enviar el código', 'error');
     }
+    
   } catch (error) {
-    console.error('Error:', error);
+    console.error('❌ Error en la solicitud:', error);
     showMessage('Error de conexión con el servidor', 'error');
   } finally {
     setLoading(submitBtn, false);

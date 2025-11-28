@@ -101,9 +101,8 @@ function togglePasswordHelpers() {
 passwordInput.addEventListener("input", togglePasswordHelpers);
 
 
-
 // ==============================
-// REGISTRO NORMAL (MODIFICADO)
+// REGISTRO NORMAL (CON VERIFICACIÓN DE CÓDIGO)
 // ==============================
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -123,7 +122,8 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
   };
 
   try {
-    const response = await fetch("http://localhost:5000/api/auth/register", {
+    // ✨ CAMBIO IMPORTANTE: Usar el endpoint /register-with-code
+    const response = await fetch("http://localhost:5000/api/auth/register-with-code", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData)
@@ -132,20 +132,21 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     const result = await response.json();
 
     if (response.ok) {
+      // ✅ Guardar email para verificación
+      localStorage.setItem('pendingVerificationEmail', userData.email);
 
       msgBox.classList.add("msg-success");
-      msgBox.innerHTML = "✅ Usuario registrado correctamente";
+      msgBox.innerHTML = "✅ Código enviado a tu correo. Revisa tu bandeja de entrada.";
       msgBox.style.display = "block";
 
       document.getElementById("registerForm").reset();
 
-      // Redirigir después de 1.5s
+      // ✅ Redirigir a página de verificación
       setTimeout(() => {
-        window.location.href = "preguntas.html";
-      }, 1500);
+        window.location.href = "verify-code.html";
+      }, 2000);
 
     } else {
-
       msgBox.classList.add("msg-error");
       msgBox.innerHTML = `❌ Error: ${result.message || "No se pudo registrar el usuario"}`;
       msgBox.style.display = "block";
@@ -164,42 +165,112 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
   }
 });
 
-
-
-
 // ==============================
-// LOGIN CON GOOGLE (MODIFICADO)
+// LOGIN CON GOOGLE
 // ==============================
-document.querySelector(".icons img[alt='Google']").addEventListener("click", async () => {
-  try {
-    const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: "select_account" });
-
-    const result = await signInWithPopup(auth, provider);
-    const user = result.user;
-
-    const userData = {
-      firstName: user.displayName?.split(" ")[0] || "",
-      lastName: user.displayName?.split(" ")[1] || "",
-      email: user.email
-    };
-
-    const response = await fetch("http://localhost:5000/api/auth/google", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData)
-    });
-
-    const resultData = await response.json();
-    console.log("📦 Respuesta backend:", resultData);
-
-    if (response.ok) {
-      showToast("✅ Inicio de sesión con Google exitoso", "login.html");
-    } else {
-      showToast(`⚠️ Error: ${resultData.message || "No se pudo registrar"}`);
-    }
-  } catch (error) {
-    console.error("❌ Error al iniciar sesión con Google:", error);
-    showToast("❌ Error al iniciar sesión con Google");
+// Esperar a que el DOM y Firebase estén listos
+setTimeout(() => {
+  const googleButton = document.querySelector(".icons img[alt='Google']");
+  
+  if (!googleButton) {
+    console.error("❌ Botón de Google no encontrado");
+    return;
   }
-});
+
+  googleButton.addEventListener("click", async () => {
+    console.log("🔵 Click en botón de Google detectado");
+    
+    try {
+      // ✅ VERIFICAR que Firebase esté disponible
+      if (!window.firebaseAuth) {
+        console.error("❌ Firebase Auth no disponible");
+        alert("Error: Firebase no está cargado. Recarga la página.");
+        return;
+      }
+
+      if (!window.GoogleAuthProvider || !window.signInWithPopup) {
+        console.error("❌ GoogleAuthProvider o signInWithPopup no disponibles");
+        alert("Error: Componentes de Firebase no disponibles.");
+        return;
+      }
+
+      console.log("✅ Firebase verificado correctamente");
+      
+      const provider = new window.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: "select_account" });
+
+      console.log("🔄 Abriendo ventana de Google...");
+      const result = await window.signInWithPopup(window.firebaseAuth, provider);
+      const user = result.user;
+
+      console.log("✅ Usuario autenticado en Firebase:");
+      console.log("   📧 Email:", user.email);
+      console.log("   🆔 UID:", user.uid);
+      console.log("   👤 Nombre:", user.displayName);
+
+      const userData = {
+        firstName: user.displayName?.split(" ")[0] || "Usuario",
+        lastName: user.displayName?.split(" ").slice(1).join(" ") || "Google",
+        email: user.email,
+        uid: user.uid
+      };
+
+      console.log("📤 Enviando al backend:", userData);
+
+      const response = await fetch("http://localhost:5000/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData)
+      });
+
+      console.log("📥 Respuesta del servidor - Status:", response.status);
+
+      const resultData = await response.json();
+      console.log("📦 Datos recibidos del backend:", resultData);
+
+      if (response.ok && resultData.success) {
+        // ✅ Guardar token y usuario
+        localStorage.setItem('authToken', resultData.token);
+        localStorage.setItem('user', JSON.stringify(resultData.user));
+        
+        console.log("✅ Token guardado en localStorage");
+        console.log("✅ Usuario guardado:", resultData.user.email);
+        
+        // Mostrar mensaje
+        const msgBox = document.getElementById("msgBox");
+        if (msgBox) {
+          msgBox.classList.add("msg-success");
+          msgBox.innerHTML = "✅ Inicio de sesión con Google exitoso";
+          msgBox.style.display = "block";
+        }
+        
+        setTimeout(() => {
+          console.log("🔄 Redirigiendo a preguntas.html...");
+          window.location.href = "preguntas.html";
+        }, 1500);
+        
+      } else {
+        console.error("❌ Error en respuesta del servidor:", resultData);
+        alert(`Error: ${resultData.message || "No se pudo iniciar sesión"}`);
+      }
+      
+    } catch (error) {
+      console.error("❌ ERROR COMPLETO:");
+      console.error("   Nombre:", error.name);
+      console.error("   Mensaje:", error.message);
+      console.error("   Código:", error.code);
+      
+      let errorMessage = "Error al iniciar sesión con Google";
+      
+      if (error.code === 'auth/popup-closed-by-user') {
+        errorMessage = "Cerraste la ventana de Google";
+      } else if (error.code === 'auth/popup-blocked') {
+        errorMessage = "El navegador bloqueó el popup. Permite popups.";
+      }
+      
+      alert(errorMessage);
+    }
+  });
+
+  console.log("✅ Listener de Google configurado correctamente");
+}, 500); // Esperar 500ms para asegurar que Firebase esté listo

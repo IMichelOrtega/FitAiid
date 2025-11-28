@@ -17,8 +17,12 @@ const {
 // FUNCIÓN 1: REGISTER - PREPARAR REGISTRO (NO GUARDA EN BD)
 // =============================================
 
+// =============================================
+// FUNCIÓN 1: REGISTER - REGISTRO DIRECTO (PARA GOOGLE)
+// =============================================
+
 /**
- * @desc    Preparar registro y enviar código de verificación
+ * @desc    Registrar nuevo usuario directo en MongoDB (para Google/OAuth)
  * @route   POST /api/auth/register
  * @access  Público
  */
@@ -26,7 +30,7 @@ const register = async (req, res, next) => {
   try {
     const { firstName, lastName, email, password, phone, role, provider } = req.body;
 
-    console.log(`📝 Preparando registro para: ${email}`);
+    console.log(`📝 Registro directo para: ${email} (Provider: ${provider || 'local'})`);
 
     // VALIDACIÓN 1: Verificar campos requeridos
     if (!firstName || !lastName || !email) {
@@ -64,6 +68,93 @@ const register = async (req, res, next) => {
       });
     }
 
+    // ✅ CREAR USUARIO DIRECTAMENTE EN MONGODB
+    const user = new User({
+      firstName,
+      lastName,
+      email: email.toLowerCase(),
+      password: finalPassword,
+      phone,
+      role: role || 'customer',
+      provider: provider || 'local',
+      isEmailVerified: provider === 'google', // Google ya verifica
+      isActive: true
+    });
+
+    await user.save();
+    console.log(`💾 Usuario guardado en MongoDB: ${email}`);
+
+    logger.audit('USER_REGISTERED', {
+      userId: user._id,
+      email: user.email,
+      role: user.role,
+      provider: provider || 'local',
+      ip: req.ip,
+      userAgent: req.get('user-agent')
+    });
+
+    const token = user.generateAuthToken();
+    const publicProfile = user.getPublicProfile();
+
+    res.status(201).json({
+      success: true,
+      message: 'Usuario registrado exitosamente',
+      token,
+      user: publicProfile
+    });
+
+  } catch (error) {
+    console.error(`❌ Error en register: ${error.message}`);
+
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({
+        success: false,
+        error: 'Error de validación',
+        details: messages
+      });
+    }
+
+    next(error);
+  }
+};
+
+// =============================================
+// NUEVA FUNCIÓN: REGISTER WITH CODE - REGISTRO CON CÓDIGO
+// =============================================
+
+/**
+ * @desc    Registro con código de verificación (NO guarda en MongoDB hasta verificar)
+ * @route   POST /api/auth/register-with-code
+ * @access  Público
+ */
+const registerWithCode = async (req, res, next) => {
+  try {
+    const { firstName, lastName, email, password, phone, role } = req.body;
+
+    console.log(`📝 Registro con código para: ${email}`);
+
+    // VALIDACIÓN 1: Verificar campos requeridos
+    if (!firstName || !lastName || !email || !password) {
+      console.log('❌ Faltan campos requeridos');
+      return res.status(400).json({
+        success: false,
+        error: 'Campos requeridos',
+        details: 'firstName, lastName, email y password son obligatorios'
+      });
+    }
+
+    // VALIDACIÓN 2: Verificar que el email NO esté registrado
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    if (existingUser) {
+      console.log(`❌ Email ya registrado: ${email}`);
+      return res.status(400).json({
+        success: false,
+        error: 'Email ya registrado',
+        message: 'Ya existe una cuenta con este email'
+      });
+    }
+
     // GENERAR CÓDIGO DE 6 DÍGITOS
     const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
     console.log(`🔢 Código generado: ${verificationCode}`);
@@ -73,10 +164,10 @@ const register = async (req, res, next) => {
       firstName,
       lastName,
       email: email.toLowerCase(),
-      password: finalPassword,
+      password, // Se encriptará cuando se guarde en MongoDB
       phone,
       role: role || 'customer',
-      provider: provider || 'local'
+      provider: 'local'
     };
 
     savePendingVerification(email, verificationCode, userData);
@@ -87,6 +178,8 @@ const register = async (req, res, next) => {
       console.log(`📧 Código enviado a: ${email}`);
     } catch (err) {
       console.error(`❌ Error enviando email: ${err.message}`);
+      // Limpiar verificación si falla el email
+      deletePendingVerification(email);
       return res.status(500).json({
         success: false,
         error: 'Error al enviar email',
@@ -94,7 +187,7 @@ const register = async (req, res, next) => {
       });
     }
 
-    // ✅ RESPUESTA EXITOSA (PERO USUARIO AÚN NO ESTÁ EN BD)
+    // ✅ RESPUESTA EXITOSA (USUARIO AÚN NO ESTÁ EN BD)
     res.status(200).json({
       success: true,
       message: 'Código de verificación enviado a tu correo',
@@ -102,7 +195,7 @@ const register = async (req, res, next) => {
     });
 
   } catch (error) {
-    console.error(`❌ Error en register: ${error.message}`);
+    console.error(`❌ Error en registerWithCode: ${error.message}`);
 
     if (error.name === 'ValidationError') {
       const messages = Object.values(error.errors).map(err => err.message);
@@ -912,8 +1005,10 @@ const resendVerificationCode = async (req, res) => {
   }
 };
 
+
 module.exports = {
     register,
+    registerWithCode,
     login,
     getProfile,
     updateProfile,
