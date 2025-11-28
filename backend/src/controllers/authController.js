@@ -1,7 +1,7 @@
 // =============================================
 // CONTROLADOR DE AUTENTICACIÓN - TECHSTORE PRO
 // =============================================
-
+const admin = require('../config/FirebaseAdmin'); // ⬅️ AGREGAR ESTA LÍNEA
 const User = require('../models/User');
 const logger = require('../config/logger');
 const crypto = require('crypto');
@@ -406,42 +406,102 @@ console.log('   • updateProfile - Actualizar perfil');
 // =============================================
 // LOGIN / REGISTRO CON GOOGLE
 // =============================================
+// =============================================
+// LOGIN CON GOOGLE (VERIFICA EN FIREBASE)
+// =============================================
 const googleLogin = async (req, res) => {
   try {
-    const { firstName, lastName, email } = req.body;
+    const { firstName, lastName, email, uid } = req.body;
 
-    if (!email) {
-      return res.status(400).json({ message: "El email es obligatorio" });
-    }
-
-    // Buscar si ya existe
-    let user = await User.findOne({ email });
-
-    if (!user) {
-      // Crear uno nuevo (contraseña dummy válida)
-      user = await User.create({
-        firstName: firstName || "Usuario",
-        lastName: lastName || "Google",
-        email,
-        password: "GoogleAuth123", // cumple tu regex
-        role: "customer",
-        isEmailVerified: true,
+    if (!email || !uid) {
+      return res.status(400).json({ 
+        success: false,
+        message: "El email y UID son obligatorios" 
       });
     }
 
+    console.log(`🔍 Verificando en Firebase: ${email} (UID: ${uid})`);
+
+    // ✅ VERIFICAR EN FIREBASE AUTHENTICATION PRIMERO
+    let firebaseUser;
+    try {
+      firebaseUser = await admin.auth().getUser(uid);
+      console.log(`✅ Usuario ENCONTRADO en Firebase: ${email}`);
+      console.log(`📧 Email verificado en Firebase: ${firebaseUser.emailVerified}`);
+    } catch (firebaseError) {
+      console.log(`❌ Usuario NO encontrado en Firebase Authentication`);
+      console.error(`❌ Error Firebase: ${firebaseError.code} - ${firebaseError.message}`);
+      
+      // ❌ Usuario no existe en Firebase Authentication
+      return res.status(404).json({
+        success: false,
+        userNotFound: true,
+        message: "Este correo no está registrado en Firebase. Por favor regístrate primero."
+      });
+    }
+
+    // ✅ Usuario existe en Firebase, ahora buscar/crear en MongoDB
+    let user = await User.findOne({ email: email.toLowerCase() });
+
+    // Si no existe en MongoDB, sincronizar desde Firebase
+    if (!user) {
+      console.log(`📝 Usuario existe en Firebase pero no en MongoDB. Sincronizando...`);
+      
+      user = new User({
+        firstName: firstName || firebaseUser.displayName?.split(' ')[0] || 'Usuario',
+        lastName: lastName || firebaseUser.displayName?.split(' ')[1] || 'Google',
+        email: email.toLowerCase(),
+        password: 'GoogleTemp123', // No se usará
+        provider: 'google',
+        isEmailVerified: firebaseUser.emailVerified,
+        isActive: true,
+        role: 'customer'
+      });
+
+      await user.save();
+      console.log(`✅ Usuario sincronizado en MongoDB: ${email}`);
+    } else {
+      console.log(`✅ Usuario ya existe en MongoDB: ${email}`);
+    }
+
+    // Verificar si la cuenta está activa
+    if (!user.isActive) {
+      return res.status(401).json({
+        success: false,
+        message: 'Tu cuenta ha sido desactivada. Contacta soporte.'
+      });
+    }
+
+    logger.audit('USER_LOGIN_GOOGLE', {
+      userId: user._id,
+      email: user.email,
+      ip: req.ip
+    });
+
+    // 🎫 GENERAR TOKEN JWT
+    const token = user.generateAuthToken();
+    
+    // 📦 OBTENER PERFIL PÚBLICO
+    const publicProfile = user.getPublicProfile();
+
+    console.log(`✅ Login con Google exitoso: ${email}`);
+
+    // ✅ DEVOLVER TOKEN Y USUARIO
     return res.status(200).json({
       success: true,
       message: "Inicio de sesión con Google exitoso",
-      user: {
-        id: user._id,
-        name: `${user.firstName} ${user.lastName}`,
-        email: user.email,
-        role: user.role,
-      },
+      token: token,
+      user: publicProfile
     });
+
   } catch (err) {
     console.error("❌ Error en googleLogin:", err);
-    res.status(500).json({ message: "Error al iniciar sesión con Google" });
+    console.error("Stack trace:", err.stack);
+    res.status(500).json({ 
+      success: false,
+      message: "Error al iniciar sesión con Google",
+      error: err.message 
+    });
   }
 };
 

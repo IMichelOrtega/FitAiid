@@ -73,4 +73,7 @@ temp/
 logs/
 *.log
 npm-debug.log*
+# Firebase credentials
+firebase-adminsdk.json
+*.json
 ```
