@@ -8,6 +8,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet" />
 </head>
 <body class="min-h-screen text-white body-bg">
+  <script>
+    // 🔒 Proteger página
+    if (!localStorage.getItem("token")) {
+      window.location.replace("login.html");
+    } 
+  </script>
   <header class="navbar">
     <div class="logo">
       <img src="../img/logo.png" alt="FitAiid Logo">
@@ -28,7 +34,9 @@
     <div class="icons">
       <a href="perfil.html" class="profile-link">Mi Perfil</a>
       <span class="bell">🔔</span>
+      <button onclick="logout()" class="logout-btn">Cerrar Sesión</button>
     </div>
+    
   </header>
 
   <section class="hero">
@@ -95,5 +103,15 @@
       </div>
     </div>
   </footer>
+  </footer>
+  
+  <script>
+    function logout() {
+      localStorage.removeItem("token");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>
 </body>
 </html>
