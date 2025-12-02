@@ -154,6 +154,7 @@
             font-size: 30px;
             cursor: pointer;
             transition: color 0.3s, transform 0.2s;
+            text-decoration: none;
         }
 
         .close-btn:hover {
@@ -232,155 +233,156 @@
         </div>
     </div>
 
-    <script>
-        const API_URL = 'http://localhost:5000/api/auth';
-        
-        // 🔍 DETECTAR SI ES REGISTRO O RECUPERACIÓN
-        const registrationEmail = localStorage.getItem('pendingVerificationEmail');
-        const resetEmail = localStorage.getItem('resetEmail');
-        
-        let userEmail = null;
-        let verificationType = null;
+   <script>
+const API_URL = 'http://localhost:5000/api/auth';
 
-        if (resetEmail) {
-            // 🔐 FLUJO DE RECUPERACIÓN DE CONTRASEÑA
-            userEmail = resetEmail;
-            verificationType = 'reset';
-            document.getElementById('pageTitle').textContent = 'CÓDIGO DE RECUPERACIÓN';
-            document.getElementById('backLink').href = 'forgot-password.html';
-        } else if (registrationEmail) {
-            // 📝 FLUJO DE REGISTRO
-            userEmail = registrationEmail;
-            verificationType = 'registration';
-            document.getElementById('pageTitle').textContent = 'VERIFICAR REGISTRO';
-            document.getElementById('backLink').href = 'register.html';
-        } else {
-            // ❌ NO HAY EMAIL GUARDADO
-            alert('Sesión expirada. Por favor inicia el proceso nuevamente.');
-            window.location.href = 'login.html';
-        }
+const registrationEmail = localStorage.getItem('pendingVerificationEmail');
+const resetEmail = localStorage.getItem('resetEmail');
 
-        document.getElementById('emailDisplay').textContent = userEmail;
+let userEmail = null;
+let verificationType = null;
 
-        // 📤 FUNCIÓN PARA MOSTRAR MENSAJES
-        function showMessage(message, type) {
-            const msgBox = document.getElementById('msgBox');
-            msgBox.className = `msg-box ${type}`;
-            msgBox.textContent = message;
-            setTimeout(() => {
-                msgBox.className = 'msg-box';
-            }, 5000);
-        }
+if (resetEmail) {
+    userEmail = resetEmail;
+    verificationType = 'reset';
+    document.getElementById('pageTitle').textContent = 'CÓDIGO DE RECUPERACIÓN';
+    document.getElementById('backLink').href = 'forgot-password.html';
+} else if (registrationEmail) {
+    userEmail = registrationEmail;
+    verificationType = 'registration';
+    document.getElementById('pageTitle').textContent = 'VERIFICAR REGISTRO';
+    document.getElementById('backLink').href = 'register.html';
+} else {
+    alert('Sesión expirada. Por favor inicia el proceso nuevamente.');
+    window.location.href = 'login.html';
+}
 
-        // ✅ VERIFICAR CÓDIGO
-        document.getElementById('verifyForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const code = document.getElementById('code').value.trim();
-            const submitBtn = document.getElementById('submitBtn');
+document.getElementById('emailDisplay').textContent = userEmail;
 
-            if (code.length !== 6) {
-                showMessage('El código debe tener 6 dígitos', 'error');
-                return;
-            }
+function showMessage(message, type) {
+    const msgBox = document.getElementById('msgBox');
+    msgBox.className = `msg-box ${type}`;
+    msgBox.textContent = message;
+}
 
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Verificando...';
+document.getElementById('verifyForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const code = document.getElementById('code').value.trim();
+    const submitBtn = document.getElementById('submitBtn');
 
-            try {
-                let endpoint = '';
-                
-                if (verificationType === 'reset') {
-                    // 🔐 VERIFICAR CÓDIGO DE RECUPERACIÓN
-                    endpoint = `${API_URL}/verify-code`;
-                } else {
-                    // 📝 VERIFICAR CÓDIGO DE REGISTRO
-                    endpoint = `${API_URL}/verify-registration`;
-                }
+    if (code.length !== 6) {
+        showMessage('El código debe tener 6 dígitos', 'error');
+        return;
+    }
 
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: userEmail, code })
-                });
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Verificando...';
 
-                const data = await response.json();
+    try {
+        let endpoint = verificationType === 'reset' 
+            ? `${API_URL}/verify-code`
+            : `${API_URL}/verify-registration`;
 
-                if (data.success) {
-    showMessage('✅ Código verificado correctamente', 'success');
-
-    if (verificationType === 'reset') {
-        // 🔐 IR A CAMBIAR CONTRASEÑA
-        localStorage.setItem('verificationCode', code); // ⬅️ GUARDAR EL CÓDIGO
-        setTimeout(() => {
-            window.location.href = 'reset-password.html';
-        }, 1500);
-                    } else {
-                        // 📝 REGISTRO COMPLETADO - GUARDAR TOKEN
-                        localStorage.setItem('authToken', data.token);
-                        localStorage.setItem('user', JSON.stringify(data.user));
-                        localStorage.removeItem('pendingVerificationEmail');
-
-                        setTimeout(() => {
-                            window.location.href = 'preguntas.html';
-                        }, 1500);
-                    }
-                } else {
-                    showMessage(data.message || 'Código inválido o expirado', 'error');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Verificar Código';
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showMessage('Error de conexión. Intenta nuevamente.', 'error');
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Verificar Código';
-            }
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: userEmail, code })
         });
 
-        // 🔄 REENVIAR CÓDIGO
-        document.getElementById('resendLink').addEventListener('click', async () => {
-            try {
-                let endpoint = '';
+        const data = await response.json();
+
+        if (data.success) {
+            if (verificationType === 'reset') {
+                localStorage.setItem('verificationCode', code);
+                showMessage('✅ Código verificado', 'success');
+                setTimeout(() => {
+                    window.location.href = 'reset-password.html';
+                }, 1000);
+            } else {
+                // ⭐ REGISTRO - GUARDAR PRIMERO, REDIRIGIR DESPUÉS
+                const userId = data.user._id || data.user.id;
                 
-                if (verificationType === 'reset') {
-                    // 🔐 REENVIAR CÓDIGO DE RECUPERACIÓN
-                    endpoint = `${API_URL}/forgot-password`;
-                } else {
-                    // 📝 REENVIAR CÓDIGO DE REGISTRO
-                    endpoint = `${API_URL}/resend-verification`;
-                }
-
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: userEmail })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    showMessage('✅ Nuevo código enviado a tu correo', 'success');
-                } else {
-                    showMessage(data.message || 'Error al reenviar código', 'error');
-                }
-            } catch (error) {
-                showMessage('Error de conexión', 'error');
-            }
-        });
-
-        // Auto-focus en el input
-        document.getElementById('code').focus();
-
-        // Cerrar ventana
-        document.querySelector('.close-btn').addEventListener('click', (e) => {
-            e.preventDefault();
-            if (confirm('¿Seguro que deseas cancelar el proceso?')) {
-                localStorage.removeItem('resetEmail');
+                // GUARDAR TODO SINCRONICAMENTE
+                localStorage.setItem('authToken', data.token);
+                localStorage.setItem('userId', userId);
+                localStorage.setItem('user', JSON.stringify(data.user));
                 localStorage.removeItem('pendingVerificationEmail');
-                window.location.href = 'login.html';
+                
+                showMessage('✅ Registro completado', 'success');
+                
+                // ESPERAR Y REDIRIGIR
+                setTimeout(() => {
+                    window.location.href = 'preguntas.html';
+                }, 2000);
             }
+        } else {
+            showMessage(data.message || 'Código inválido', 'error');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Verificar Código';
+        }
+    } catch (error) {
+        showMessage('Error de conexión', 'error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Verificar Código';
+    }
+});
+
+document.getElementById('resendLink').addEventListener('click', async () => {
+    const resendLink = document.getElementById('resendLink');
+    const originalText = resendLink.textContent;
+    resendLink.textContent = 'Enviando...';
+    resendLink.style.pointerEvents = 'none';
+
+    try {
+        let endpoint = verificationType === 'reset'
+            ? `${API_URL}/forgot-password`
+            : `${API_URL}/resend-verification`;
+
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: userEmail })
         });
-    </script>
+
+        const data = await response.json();
+
+        if (data.success) {
+            showMessage('✅ Nuevo código enviado', 'success');
+            
+            let countdown = 60;
+            const interval = setInterval(() => {
+                resendLink.textContent = `Reenviar (${countdown}s)`;
+                countdown--;
+                
+                if (countdown < 0) {
+                    clearInterval(interval);
+                    resendLink.textContent = originalText;
+                    resendLink.style.pointerEvents = 'auto';
+                }
+            }, 1000);
+        } else {
+            showMessage('Error al reenviar', 'error');
+            resendLink.textContent = originalText;
+            resendLink.style.pointerEvents = 'auto';
+        }
+    } catch (error) {
+        showMessage('Error de conexión', 'error');
+        resendLink.textContent = originalText;
+        resendLink.style.pointerEvents = 'auto';
+    }
+});
+
+document.getElementById('code').focus();
+
+document.querySelector('.close-btn').addEventListener('click', (e) => {
+    e.preventDefault();
+    if (confirm('¿Seguro que deseas cancelar?')) {
+        localStorage.removeItem('resetEmail');
+        localStorage.removeItem('pendingVerificationEmail');
+        window.location.href = 'login.html';
+    }
+});
+</script>
 </body>
 </html>

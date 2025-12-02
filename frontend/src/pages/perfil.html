@@ -77,7 +77,7 @@
             <div class="flex-1 w-full">
               <div class="flex items-center justify-between">
                 <div>
-                  <div id="username" class="text-2xl lg:text-3xl font-bold tracking-wide">USUARIO123</div>
+                  <h1><span class="user" id="userName">USUARIO</span></h1>
                   <div class="text-sm text-gray-300 mt-1">Nivel De Progreso</div>
                 </div>
                 <div class="text-sm text-gray-400"> <button class="text-sm hover:text-white">✏️ Editar Perfil</button> </div>
@@ -353,7 +353,19 @@
     window.location.href = "index.html";
   }
 </script>
-
+<script>
+  // Obtener nombre del usuario
+  const userString = localStorage.getItem('user');
+  if (userString) {
+    try {
+      const user = JSON.parse(userString);
+      const userName = user.firstName || 'USUARIO';
+      document.getElementById('userName').textContent = userName.toUpperCase();
+    } catch (e) {
+      console.error('Error al parsear usuario:', e);
+    }
+  }
+</script>
 
 </body>
 </html>

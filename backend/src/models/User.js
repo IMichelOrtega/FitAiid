@@ -1,50 +1,17 @@
 // =============================================
-// MODELO USUARIO - TECHSTORE PRO ECOMMERCE
+// MODELO USUARIO - FITAIID FITNESS PLATFORM
 // =============================================
 
-/**
- * INFORMACIÓN DEL ARCHIVO:
- * 
- * ¿Qué hace este archivo?
- * Define el modelo de datos para los usuarios del sistema
- * Incluye autenticación segura con encriptación de contraseñas
- * 
- * ¿Qué incluye?
- * - Esquema completo con validaciones de seguridad
- * - Encriptación automática de contraseñas
- * - Métodos de verificación para login
- * - Roles y permisos de usuario
- * - Campos virtuales para datos calculados
- * 
- * Seguridad implementada:
- * - Contraseñas encriptadas con bcrypt
- * - Validaciones de formato estrictas
- * - Campos sensibles excluidos de JSON
- * - Métodos seguros de comparación
- */
-
-// Importar librerías necesarias
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-/**
- * ¿Qué es bcryptjs?
- * Es la librería de encriptación más segura para contraseñas
- * - Genera "salt" aleatorio para cada contraseña
- * - Hace que encriptar tome tiempo (evita ataques de fuerza bruta)
- * - Es irreversible (no se puede "desencriptar")
- * - Es el estándar de la industria
- */
-
 console.log('👤 Iniciando creación del modelo User con seguridad avanzada...');
+
 // =============================================
 // ESQUEMA DEL USUARIO
 // =============================================
 
-/**
- * Crear esquema con validaciones de seguridad estrictas
- */
 const userSchema = new mongoose.Schema({
     
     // =============================================
@@ -54,12 +21,11 @@ const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
         required: [true, 'El nombre es obligatorio'],
-        trim: true,                                    // Eliminar espacios automáticamente
+        trim: true,
         minlength: [2, 'El nombre debe tener al menos 2 caracteres'],
         maxlength: [50, 'El nombre no puede tener más de 50 caracteres'],
         validate: {
             validator: function(name) {
-                // Solo letras, espacios y acentos
                 const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
                 return nameRegex.test(name);
             },
@@ -91,43 +57,13 @@ const userSchema = new mongoose.Schema({
         trim: true,
         validate: {
             validator: function(phone) {
-                if (!phone) return true;              // Teléfono es opcional
-                
-                /**
-                 * Validación para números colombianos:
-                 * - Puede empezar con +57 (opcional)
-                 * - Debe empezar con 3 (celulares)
-                 * - Debe tener 10 dígitos después del 3
-                 * 
-                 * Ejemplos válidos:
-                 * - "+57 3123456789"
-                 * - "3123456789" 
-                 * - "+573123456789"
-                 */
+                if (!phone) return true;
                 const phoneRegex = /^(\+57)?[3][0-9]{9}$/;
-                return phoneRegex.test(phone.replace(/\s/g, ''));  // Eliminar espacios para validar
+                return phoneRegex.test(phone.replace(/\s/g, ''));
             },
             message: 'Por favor ingresa un número de teléfono colombiano válido (ej: +57 3123456789)'
         }
     },
-    
-
-    /*
- * Expresión regular: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/
- * 
- * ^ = inicio de string
- * [a-zA-Z] = letras minúsculas y mayúsculas
- * áéíóúÁÉÍÓÚñÑ = caracteres especiales del español
- * \s = espacios (para nombres compuestos como "María José")
- * + = uno o más caracteres
- * $ = final de string
- * 
- * ¿Por qué esta validación?
- * - Evita números en nombres: "Juan123" ❌
- * - Permite acentos: "José María" ✅
- * - Permite espacios: "Ana María" ✅
- * - Evita símbolos raros: "Juan@#$" ❌
- */
 
     // =============================================
     // EMAIL - IDENTIFICADOR ÚNICO Y CRÍTICO
@@ -136,40 +72,20 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: [true, 'El email es obligatorio'],
-        unique: true,                                  // ¡CRÍTICO! No puede haber emails duplicados
-        lowercase: true,                               // Convertir automáticamente a minúsculas
+        unique: true,
+        lowercase: true,
         trim: true,
         validate: {
             validator: function(email) {
-                /**
-                 * Validación estricta de email
-                 * Acepta: juan.perez@gmail.com, ana_maria@empresa.co
-                 * Rechaza: email-invalido, @gmail.com, juan@
-                 */
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 return emailRegex.test(email);
             },
             message: 'Por favor ingresa un email válido'
         },
-        index: true                                   // Índice para búsquedas rápidas por email
+        index: true
     },
- /*
- * ¿Por qué unique: true?
- * - Cada usuario debe tener un email único
- * - Es como el "documento de identidad" digital
- * - MongoDB rechazará automáticamente duplicados
- * 
- * ¿Por qué lowercase: true?
- * - "Juan@Gmail.Com" se convierte en "juan@gmail.com"
- * - Evita duplicados por diferencias de mayúsculas
- * - Hace las búsquedas más confiables
- * 
- * ¿Por qué index: true?
- * - Login busca por email constantemente
- * - Índice hace estas búsquedas súper rápidas
- * - Crítico para performance en login
- */
- // =============================================
+
+    // =============================================
     // CONTRASEÑA - SEGURIDAD CRÍTICA
     // =============================================
     
@@ -179,62 +95,44 @@ const userSchema = new mongoose.Schema({
         minlength: [8, 'La contraseña debe tener al menos 8 caracteres'],
         validate: {
             validator: function(password) {
-                /**
-                 * Validación de contraseña segura:
-                 * - Al menos 8 caracteres
-                 * - Al menos 1 minúscula (a-z)
-                 * - Al menos 1 mayúscula (A-Z)  
-                 * - Al menos 1 número (0-9)
-                 * 
-                 * Ejemplos válidos: "Password123!", "MiClave456"
-                 * Ejemplos inválidos: "password", "12345678", "PASSWORD"
-                 */
                 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
                 return passwordRegex.test(password);
             },
             message: 'La contraseña debe tener al menos 8 caracteres, incluyendo mayúscula, minúscula y número'
         },
-        select: false                                 // ¡MUY IMPORTANTE! No incluir en consultas por defecto
+        select: false
     },
-/*
- * ¿Qué hace select: false?
- * - Cuando haces User.find(), la contraseña NO se incluye
- * - Cuando haces User.findById(), la contraseña NO se incluye
- * - Solo aparece cuando explícitamente la pides: User.findById().select('+password')
- * 
- * ¿Por qué es crítico?
- * - Evita enviar contraseñas por accidente al frontend
- * - Reduce riesgo de exposición en logs
- * - Cumple principio de "menor privilegio"
- * 
- * ¿Cuándo SÍ necesitamos la contraseña?
- * - Solo durante login para verificarla
- * - Nunca para mostrar perfil de usuario
- * - Nunca para APIs públicas
- */
-  // Verificación de correo electrónico
+
+    // =============================================
+    // VERIFICACIÓN DE EMAIL
+    // =============================================
+    
     isEmailVerified: {
-    type: Boolean,
-    default: false
-  },
+        type: Boolean,
+        default: false
+    },
+    
     verificationToken: {
-    type: String,
-    default: null
-  },
+        type: String,
+        default: null
+    },
+    
     verificationTokenExpires: {
-    type: Date,
-    default: null
-  },
-// ✨ AGREGAR ESTOS CAMPOS NUEVOS:
-verificationCode: {
-    type: String,
-    select: false  // No mostrar en consultas por defecto
-},
-verificationCodeExpires: {
-    type: Date,
-    select: false
-},
-// =============================================
+        type: Date,
+        default: null
+    },
+    
+    verificationCode: {
+        type: String,
+        select: false
+    },
+    
+    verificationCodeExpires: {
+        type: Date,
+        select: false
+    },
+
+    // =============================================
     // ROLES Y PERMISOS
     // =============================================
     
@@ -244,8 +142,8 @@ verificationCodeExpires: {
             values: ['customer', 'admin', 'moderator'],
             message: '{VALUE} no es un rol válido'
         },
-        default: 'customer',                          // Usuarios normales por defecto
-        index: true                                   // Para filtrar rápido por rol
+        default: 'customer',
+        index: true
     },
     
     // =============================================
@@ -254,51 +152,23 @@ verificationCodeExpires: {
     
     isActive: {
         type: Boolean,
-        default: true,                                // Cuentas activas por defecto
-        index: true                                   // Para filtrar usuarios activos
+        default: true,
+        index: true
     },
     
-    isEmailVerified: {
-        type: Boolean,
-        default: false                                // Por defecto no verificado
+    // =============================================
+    // RECUPERACIÓN DE CONTRASEÑA
+    // =============================================
+    
+    resetPasswordCode: {
+        type: String,
+        select: false
     },
     
-    // Código de recuperación de contraseña (6 dígitos)
-resetPasswordCode: {
-    type: String,
-    select: false                                 // No mostrar código en consultas
-},
-
-resetPasswordExpire: {
-    type: Date,
-    select: false                                 // Fecha de expiración del código
-},
-/*
- * customer (cliente normal):
- * - Ver productos ✅
- * - Comprar productos ✅
- * - Ver sus pedidos ✅
- * - Gestionar su perfil ✅
- * - Crear/editar productos ❌
- * - Ver pedidos de otros ❌
- * 
- * moderator (moderador):
- * - Todo lo de customer ✅
- * - Moderar reviews ✅
- * - Gestionar contenido ✅
- * - Ver reportes básicos ✅
- * - Gestionar usuarios ❌
- * - Ver finanzas ❌
- * 
- * admin (administrador):
- * - Todo sin restricciones ✅
- * - Gestionar productos ✅
- * - Gestionar usuarios ✅
- * - Ver todas las estadísticas ✅
- * - Configurar el sistema ✅
- */
-    
-    
+    resetPasswordExpire: {
+        type: Date,
+        select: false
+    },
     
     // =============================================
     // INFORMACIÓN DE ACTIVIDAD Y SESIONES
@@ -306,43 +176,20 @@ resetPasswordExpire: {
     
     lastLogin: {
         type: Date,
-        default: Date.now                             // Fecha de último acceso
+        default: Date.now
     },
     
     loginAttempts: {
         type: Number,
         default: 0,
-        max: [10, 'Demasiados intentos de login']     // Prevenir ataques de fuerza bruta
+        max: [10, 'Demasiados intentos de login']
     },
     
     lockUntil: {
-        type: Date,
-        // Si hay muchos intentos fallidos, bloquear temporalmente
+        type: Date
     },
-/*
- * ¿Cómo funciona loginAttempts + lockUntil?
- * 
- * 1. Usuario intenta login con contraseña incorrecta
- *    → loginAttempts + 1
- * 
- * 2. Si loginAttempts >= 5:
- *    → lockUntil = Date.now() + 30 minutos
- *    → Usuario bloqueado temporalmente
- * 
- * 3. Usuario intenta login durante bloqueo:
- *    → "Cuenta temporalmente bloqueada"
- * 
- * 4. Después de 30 minutos:
- *    → lockUntil expira
- *    → loginAttempts = 0
- *    → Usuario puede intentar de nuevo
- * 
- * 5. Login exitoso:
- *    → loginAttempts = 0
- *    → lockUntil = null
- *    → lastLogin = ahora
- */
- // =============================================
+
+    // =============================================
     // INFORMACIÓN COMERCIAL E HISTORIAL
     // =============================================
     
@@ -358,17 +205,109 @@ resetPasswordExpire: {
         min: [0, 'El total gastado no puede ser negativo']
     },
     
-    // Lista de productos favoritos
     wishlist: [{
-        type: mongoose.Schema.Types.ObjectId,         // Referencia a productos
-        ref: 'Product'                                // Nombre del modelo al que hace referencia
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
     }],
     
-    // Puntos de fidelidad
     loyaltyPoints: {
         type: Number,
         default: 0,
         min: [0, 'Los puntos de lealtad no pueden ser negativos']
+    },
+
+    // =============================================
+    // 🏋️ PERFIL FITNESS - DATOS DEL CUESTIONARIO
+    // =============================================
+    
+    fitnessProfile: {
+        // Pregunta 1: Género
+        gender: {
+            type: String,
+            enum: ['hombre', 'mujer', null],
+            default: null
+        },
+        
+        // Pregunta 2: Edad
+        age: {
+            type: Number,
+            min: [14, 'La edad mínima es 14 años'],
+            max: [100, 'La edad máxima es 100 años'],
+            default: null
+        },
+        
+        // Pregunta 3: Altura en cm
+        height: {
+            type: Number,
+            min: [100, 'La altura mínima es 100 cm'],
+            max: [250, 'La altura máxima es 250 cm'],
+            default: null
+        },
+        
+        // Pregunta 4: Peso en kg
+        weight: {
+            type: Number,
+            min: [30, 'El peso mínimo es 30 kg'],
+            max: [300, 'El peso máximo es 300 kg'],
+            default: null
+        },
+        
+        // Pregunta 5: Nivel de experiencia
+        fitnessLevel: {
+            type: String,
+            enum: ['principiante', 'intermedio', 'avanzado', null],
+            default: null,
+            index: true
+        },
+        
+        // Pregunta 6: Objetivo principal
+        mainGoal: {
+            type: String,
+            enum: ['tonificar', 'ganar masa muscular', 'bajar de peso', null],
+            default: null,
+            index: true
+        },
+        
+        // Pregunta 7: Lesión o condición médica
+        medicalConditions: {
+            type: String,
+            default: '',
+            maxlength: [500, 'Máximo 500 caracteres']
+        },
+        
+        // Pregunta 8: Lugar de entrenamiento
+        trainingLocation: {
+            type: String,
+            enum: ['casa', 'gym', null],
+            default: null
+        },
+        
+        // Pregunta 9: Días por semana
+        trainingDaysPerWeek: {
+            type: Number,
+            min: [1, 'Mínimo 1 día'],
+            max: [7, 'Máximo 7 días'],
+            default: null
+        },
+        
+        // Pregunta 10: Tiempo por sesión
+        sessionDuration: {
+            type: String,
+            enum: ['30 min', '45 min', '1 hr', '+1 hr', null],
+            default: null
+        },
+        
+        // Control de cuestionario
+        questionnaireCompleted: {
+            type: Boolean,
+            default: false,
+            index: true
+        },
+        
+        questionnaireCompletedAt: {
+            type: Date,
+            default: null
+        }
     }
     
 }, {
@@ -376,18 +315,18 @@ resetPasswordExpire: {
     // OPCIONES DEL SCHEMA
     // =============================================
     
-    timestamps: true,                                 // createdAt y updatedAt automáticos
+    timestamps: true,
     
     toJSON: { 
-        virtuals: true,                               // Incluir campos virtuales
+        virtuals: true,
         transform: function(doc, ret) {
-            ret.id = ret._id;                         // Cambiar _id por id
+            ret.id = ret._id;
             delete ret._id;
             delete ret.__v;
-            delete ret.password;                      // ¡CRÍTICO! NUNCA enviar contraseña
-            delete ret.resetPasswordCode;             // Ni códigos de recuperación
+            delete ret.password;
+            delete ret.resetPasswordCode;
             delete ret.resetPasswordExpire;
-            delete ret.loginAttempts;                 // Ni información de seguridad
+            delete ret.loginAttempts;
             delete ret.lockUntil;
             return ret;
         }
@@ -397,34 +336,15 @@ resetPasswordExpire: {
         virtuals: true 
     }
 });
-/*
- * Es el tipo de dato para referenciar otros documentos:
- * - Guarda solo el ID del producto, no el producto completo
- * - Ahorra espacio (ID vs objeto completo)
- * - Permite "populate" para obtener datos completos cuando necesites
- * 
- * Ejemplo:
- * // Guardar solo el ID
- * user.wishlist = ["676f1a2b3c4d5e6f78901234"]
- * 
- * // Obtener producto completo cuando necesites
- * const userWithProducts = await User.findById(id).populate('wishlist');
- * // userWithProducts.wishlist[0] será el objeto Product completo
- */
+
 // =============================================
 // CAMPOS VIRTUALES - PROPIEDADES CALCULADAS
 // =============================================
 
-/**
- * Campo virtual: nombre completo
- */
 userSchema.virtual('fullName').get(function() {
     return `${this.firstName} ${this.lastName}`;
 });
 
-/**
- * Campo virtual: edad calculada automáticamente
- */
 userSchema.virtual('age').get(function() {
     if (!this.dateOfBirth) return null;
     
@@ -432,7 +352,6 @@ userSchema.virtual('age').get(function() {
     const birthDate = new Date(this.dateOfBirth);
     let age = today.getFullYear() - birthDate.getFullYear();
     
-    // Ajustar si no ha pasado el cumpleaños este año
     const monthDiff = today.getMonth() - birthDate.getMonth();
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
         age--;
@@ -441,9 +360,6 @@ userSchema.virtual('age').get(function() {
     return age;
 });
 
-/**
- * Campo virtual: dirección completa formateada
- */
 userSchema.virtual('fullAddress').get(function() {
     if (!this.address || !this.address.street) return '';
     
@@ -459,26 +375,17 @@ userSchema.virtual('fullAddress').get(function() {
     return parts.join(', ');
 });
 
-/**
- * Campo virtual: estado de cuenta bloqueada
- */
 userSchema.virtual('isLocked').get(function() {
     return !!(this.lockUntil && this.lockUntil > Date.now());
 });
 
-/**
- * Campo virtual: nivel de cliente basado en gastos
- */
 userSchema.virtual('customerLevel').get(function() {
-    if (this.totalSpent >= 5000000) return 'platinum';      // $5M+
-    if (this.totalSpent >= 2000000) return 'gold';          // $2M+
-    if (this.totalSpent >= 500000) return 'silver';         // $500K+
-    return 'bronze';                                         // Menos de $500K
+    if (this.totalSpent >= 5000000) return 'platinum';
+    if (this.totalSpent >= 2000000) return 'gold';
+    if (this.totalSpent >= 500000) return 'silver';
+    return 'bronze';
 });
 
-/**
- * Campo virtual: total gastado formateado
- */
 userSchema.virtual('formattedTotalSpent').get(function() {
     return new Intl.NumberFormat('es-CO', {
         style: 'currency',
@@ -488,192 +395,84 @@ userSchema.virtual('formattedTotalSpent').get(function() {
     }).format(this.totalSpent);
 });
 
-/**
- * EJEMPLOS DE USO DE CAMPOS VIRTUALES:
- * 
- * const user = await User.findById(userId);
- * 
- * console.log(user.firstName);              // "Juan" (guardado en BD)
- * console.log(user.lastName);               // "Pérez" (guardado en BD)
- * console.log(user.fullName);               // "Juan Pérez" (calculado)
- * console.log(user.age);                    // 32 (calculado desde dateOfBirth)
- * console.log(user.fullAddress);            // "Calle 123, Bogotá, Cundinamarca" (calculado)
- * console.log(user.customerLevel);          // "gold" (calculado desde totalSpent)
- * console.log(user.formattedTotalSpent);    // "$2.500.000" (calculado)
- */
+// =============================================
+// 🏋️ VIRTUALES FITNESS - IMC Y CATEGORÍA
+// =============================================
+
+userSchema.virtual('bmi').get(function() {
+    if (!this.fitnessProfile?.weight || !this.fitnessProfile?.height) {
+        return null;
+    }
+    
+    const heightInMeters = this.fitnessProfile.height / 100;
+    const bmi = this.fitnessProfile.weight / (heightInMeters * heightInMeters);
+    return Math.round(bmi * 10) / 10;
+});
+
+userSchema.virtual('bmiCategory').get(function() {
+    const bmi = this.bmi;
+    if (!bmi) return null;
+    
+    if (bmi < 18.5) return 'Bajo peso';
+    if (bmi < 25) return 'Peso normal';
+    if (bmi < 30) return 'Sobrepeso';
+    return 'Obesidad';
+});
+
 // =============================================
 // MIDDLEWARE PARA ENCRIPTACIÓN DE CONTRASEÑAS
 // =============================================
 
-/**
- * MIDDLEWARE PRE-SAVE - EL MÁS CRÍTICO DEL SISTEMA
- * Se ejecuta ANTES de guardar cualquier usuario
- * Su función principal: ENCRIPTAR CONTRASEÑAS DE MANERA SEGURA
- */
 userSchema.pre('save', async function(next) {
     console.log(`🔍 Procesando usuario antes de guardar: ${this.email}`);
     
-    // =============================================
-    // 1. VERIFICAR SI LA CONTRASEÑA FUE MODIFICADA
-    // =============================================
-    
-    /**
-     * ¿Cuándo NO encriptar?
-     * - Si el usuario ya existe y no cambió su contraseña
-     * - Si solo modificó el nombre, email, etc.
-     * - Si la contraseña ya está encriptada
-     */
     if (!this.isModified('password')) {
         console.log(`💤 Usuario ${this.email}: contraseña no modificada, saltando encriptación`);
         return next();
     }
     
     try {
-        // =============================================
-        // 2. CONFIGURAR NIVEL DE SEGURIDAD
-        // =============================================
-        
         console.log(`🔐 Encriptando contraseña para usuario: ${this.email}`);
         
-        /**
-         * ¿Qué es saltRounds?
-         * Es qué tan "difícil" hacer la encriptación
-         * 
-         * saltRounds = 10 → ~100ms por contraseña (rápido, menos seguro)
-         * saltRounds = 12 → ~300ms por contraseña (balance perfecto)
-         * saltRounds = 14 → ~1000ms por contraseña (lento, muy seguro)
-         * 
-         * Para ecommerce: 12 es perfecto
-         * - Seguro contra ataques modernos
-         * - No ralentiza demasiado el registro/login
-         */
         const saltRounds = 12;
-        
-        // =============================================
-        // 3. PROCESO DE ENCRIPTACIÓN
-        // =============================================
-        
-        /**
-         * ¿Cómo funciona bcrypt internamente?
-         * 
-         * Entrada: "MiPassword123!"
-         * ↓
-         * 1. Generar salt aleatorio: "a1b2c3d4e5f6..."
-         * ↓
-         * 2. Combinar: "MiPassword123!" + "a1b2c3d4e5f6..."
-         * ↓
-         * 3. Aplicar función hash 2^12 veces (4096 iteraciones)
-         * ↓
-         * 4. Resultado: "$2b$12$a1b2c3d4e5f6...resultado_final"
-         * 
-         * El resultado incluye:
-         * - $2b$ → Versión del algoritmo
-         * - 12$ → Número de saltRounds
-         * - a1b2c3... → El salt usado
-         * - resultado_final → El hash de la contraseña + salt
-         */
-        
         const originalLength = this.password.length;
         
-        // Encriptar la contraseña
         this.password = await bcrypt.hash(this.password, saltRounds);
         
         console.log(`✅ Contraseña encriptada exitosamente:`);
         console.log(`   📧 Email: ${this.email}`);
         console.log(`   📏 Longitud original: ${originalLength} caracteres`);
         console.log(`   🔒 Longitud encriptada: ${this.password.length} caracteres`);
-        console.log(`   🛡️ Nivel de seguridad: ${saltRounds} rounds`);
-        console.log(`   ⏱️ Tiempo aproximado: ~300ms`);
         
-        next(); // Continuar con el guardado
+        next();
         
     } catch (error) {
         console.error(`❌ Error encriptando contraseña para ${this.email}:`);
         console.error(`   🐛 Error: ${error.message}`);
-        
-        // Pasar el error para que no se guarde el usuario
         next(error);
     }
 });
 
-/**
- * MIDDLEWARE POST-SAVE
- * Se ejecuta DESPUÉS de guardar el usuario exitosamente
- */
 userSchema.post('save', function(doc) {
     console.log(`✅ Usuario guardado exitosamente:`);
     console.log(`   👤 Nombre: ${doc.fullName}`);
     console.log(`   📧 Email: ${doc.email}`);
     console.log(`   👑 Rol: ${doc.role}`);
-    console.log(`   📊 Nivel: ${doc.customerLevel}`);
     console.log(`   🆔 ID: ${doc._id}`);
-    
-    // Aquí podrías agregar:
-    // - Enviar email de bienvenida
-    // - Registrar en sistema de analytics
-    // - Crear entrada en logs de auditoría
 });
 
-/**
- * MIDDLEWARE PRE-REMOVE
- * Se ejecuta ANTES de eliminar un usuario
- */
 userSchema.pre('remove', function(next) {
     console.log(`🗑️ Preparando eliminación de usuario: ${this.email}`);
-    
-    // Aquí podrías verificar:
-    // - Si tiene pedidos pendientes
-    // - Si debe conservarse por razones legales
-    // - Si hay datos relacionados que limpiar
-    
     next();
 });
 
-/**
- * ¿POR QUÉ EL MIDDLEWARE ES TAN IMPORTANTE?
- * 
- * SIN MIDDLEWARE (❌ peligroso):
- * const user = new User({
- *   email: "juan@test.com",
- *   password: "MiPassword123!"  // ¡SE GUARDA EN TEXTO PLANO!
- * });
- * await user.save(); // ¡CONTRASEÑA VISIBLE EN BD!
- * 
- * CON MIDDLEWARE (✅ seguro):
- * const user = new User({
- *   email: "juan@test.com", 
- *   password: "MiPassword123!"  // Texto plano temporalmente
- * });
- * await user.save(); // Middleware encripta automáticamente
- * // BD guarda: "$2b$12$abc123xyz789..."
- */
 // =============================================
-// MÉTODOS DE INSTANCIA - FUNCIONES DEL USUARIO
+// MÉTODOS DE INSTANCIA
 // =============================================
 
-/**
- * Método para verificar contraseña durante login
- * ¡EL MÉTODO MÁS IMPORTANTE PARA LA SEGURIDAD!
- */
 userSchema.methods.comparePassword = async function(candidatePassword) {
     try {
         console.log(`🔍 Verificando contraseña para usuario: ${this.email}`);
-        
-        /**
-         * ¿Cómo funciona bcrypt.compare()?
-         * 
-         * 1. Toma la contraseña sin encriptar: "MiPassword123!"
-         * 2. Toma la contraseña encriptada: "$2b$12$abc123..."
-         * 3. Extrae el salt de la contraseña encriptada: "abc123..."
-         * 4. Encripta la contraseña candidata con el mismo salt
-         * 5. Compara los dos hashes resultantes
-         * 6. Retorna true si coinciden, false si no
-         * 
-         * ¿Por qué es seguro?
-         * - Tiempo constante (no revela información por tiempo de respuesta)
-         * - Resistente a ataques de timing
-         * - No se puede "desencriptar" la contraseña guardada
-         */
         
         const startTime = Date.now();
         const isMatch = await bcrypt.compare(candidatePassword, this.password);
@@ -681,48 +480,37 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
         
         if (isMatch) {
             console.log(`✅ Contraseña CORRECTA para: ${this.email}`);
-            console.log(`   ⏱️ Tiempo de verificación: ${endTime - startTime}ms`);
         } else {
             console.log(`❌ Contraseña INCORRECTA para: ${this.email}`);
-            console.log(`   ⏱️ Tiempo de verificación: ${endTime - startTime}ms`);
         }
         
+        console.log(`   ⏱️ Tiempo de verificación: ${endTime - startTime}ms`);
         return isMatch;
         
     } catch (error) {
         console.error(`❌ Error verificando contraseña para ${this.email}:`);
-        console.error(`   🐛 Error: ${error.message}`);
         throw new Error('Error interno al verificar contraseña');
     }
 };
 
-/**
- * Método para manejar intentos de login fallidos
- * Implementa protección contra ataques de fuerza bruta
- */
 userSchema.methods.incrementLoginAttempts = function() {
-    // Si la cuenta estaba bloqueada pero ya expiró, resetear
     if (this.lockUntil && this.lockUntil < Date.now()) {
         return this.updateOne({
-            $unset: { lockUntil: 1 },  // Eliminar el bloqueo
-            $set: { loginAttempts: 1 }  // Reiniciar contador
+            $unset: { lockUntil: 1 },
+            $set: { loginAttempts: 1 }
         });
     }
     
-    const updates = { $inc: { loginAttempts: 1 } };  // Incrementar intentos
+    const updates = { $inc: { loginAttempts: 1 } };
     
-    // Si alcanza el límite de intentos, bloquear temporalmente
     if (this.loginAttempts + 1 >= 5 && !this.isLocked) {
-        updates.$set = { lockUntil: Date.now() + 30 * 60 * 1000 }; // 30 minutos
+        updates.$set = { lockUntil: Date.now() + 30 * 60 * 1000 };
         console.log(`🔒 Cuenta bloqueada temporalmente: ${this.email}`);
     }
     
     return this.updateOne(updates);
 };
 
-/**
- * Método para resetear intentos después de login exitoso
- */
 userSchema.methods.resetLoginAttempts = function() {
     return this.updateOne({
         $unset: { 
@@ -735,28 +523,17 @@ userSchema.methods.resetLoginAttempts = function() {
     });
 };
 
-/**
- * Método para actualizar estadísticas de compra
- */
 userSchema.methods.addPurchase = function(orderTotal) {
     this.totalOrders += 1;
     this.totalSpent += orderTotal;
     
-    // Agregar puntos de fidelidad (1 punto por cada $1000)
     const pointsEarned = Math.floor(orderTotal / 1000);
     this.loyaltyPoints += pointsEarned;
     
-    console.log(`💰 Compra registrada para ${this.email}:`);
-    console.log(`   💵 Total: ${orderTotal.toLocaleString('es-CO')}`);
-    console.log(`   🏆 Puntos ganados: ${pointsEarned}`);
-    console.log(`   📊 Nuevo nivel: ${this.customerLevel}`);
-    
+    console.log(`💰 Compra registrada para ${this.email}`);
     return this.save();
 };
 
-/**
- * Método para agregar producto a lista de deseos
- */
 userSchema.methods.addToWishlist = function(productId) {
     if (!this.wishlist.includes(productId)) {
         this.wishlist.push(productId);
@@ -766,29 +543,21 @@ userSchema.methods.addToWishlist = function(productId) {
     return Promise.resolve(this);
 };
 
-/**
- * Método para remover producto de lista de deseos
- */
 userSchema.methods.removeFromWishlist = function(productId) {
     this.wishlist = this.wishlist.filter(id => !id.equals(productId));
     console.log(`💔 Producto removido de wishlist de ${this.email}`);
     return this.save();
 };
-/**
- * Método para generar token JWT
- * Se usa después de login o registro exitoso
- */
+
 userSchema.methods.generateAuthToken = function() {
     console.log(`🎫 Generando token JWT para usuario: ${this.email}`);
     
-    // Payload del token (datos que contendrá)
     const payload = {
         id: this._id,
         email: this.email,
         role: this.role
     };
     
-    // Firmar el token con el SECRET del .env
     const token = jwt.sign(
         payload,
         process.env.JWT_SECRET,
@@ -796,26 +565,19 @@ userSchema.methods.generateAuthToken = function() {
     );
     
     console.log('✅ Token JWT generado exitosamente');
-    console.log(`📅 Expira en: ${process.env.JWT_EXPIRE || '30d'}`);
-    
     return token;
 };
 
-/**
- * Método para obtener perfil público del usuario
- * Excluye contraseñas, tokens y datos sensibles
- */
 userSchema.methods.getPublicProfile = function() {
     return {
         id: this._id,
+        _id: this._id,
         firstName: this.firstName,
         lastName: this.lastName,
         fullName: this.fullName,
         email: this.email,
         role: this.role,
         phone: this.phone,
-        address: this.address,
-        avatar: this.avatar,
         isActive: this.isActive,
         isEmailVerified: this.isEmailVerified,
         customerLevel: this.customerLevel,
@@ -823,66 +585,75 @@ userSchema.methods.getPublicProfile = function() {
         totalSpent: this.totalSpent,
         formattedTotalSpent: this.formattedTotalSpent,
         loyaltyPoints: this.loyaltyPoints,
-        createdAt: this.createdAt
+        createdAt: this.createdAt,
+        fitnessProfile: this.fitnessProfile || { // ⭐ AGREGAR FITNESS PROFILE
+            questionnaireCompleted: false
+        },
+        bmi: this.bmi, // ⭐ AGREGAR IMC
+        bmiCategory: this.bmiCategory // ⭐ AGREGAR CATEGORÍA IMC
     };
+};
+// =============================================
+// 🏋️ MÉTODO FITNESS: Contexto para el chatbot
+// =============================================
+
+userSchema.methods.getFitnessContext = function() {
+    const profile = this.fitnessProfile;
+    
+    if (!profile || !profile.questionnaireCompleted) {
+        return "Usuario sin perfil fitness completado";
+    }
+    
+    return `
+**PERFIL FITNESS DEL USUARIO:**
+- Nombre: ${this.firstName} ${this.lastName}
+- Género: ${profile.gender || 'No especificado'}
+- Edad: ${profile.age || 'No especificada'} años
+- Altura: ${profile.height || 'No especificada'} cm
+- Peso: ${profile.weight || 'No especificado'} kg
+- IMC: ${this.bmi || 'No calculado'} (${this.bmiCategory || 'N/A'})
+- Nivel: ${profile.fitnessLevel || 'No especificado'}
+- Objetivo: ${profile.mainGoal || 'No especificado'}
+- Condiciones médicas: ${profile.medicalConditions || 'Ninguna'}
+- Entrena en: ${profile.trainingLocation || 'No especificado'}
+- Días por semana: ${profile.trainingDaysPerWeek || 'No especificado'}
+- Duración sesión: ${profile.sessionDuration || 'No especificado'}
+
+Usa esta información para personalizar tus recomendaciones.`;
 };
 
 // =============================================
-// MÉTODOS ESTÁTICOS - FUNCIONES DEL MODELO
+// MÉTODOS ESTÁTICOS
 // =============================================
 
-/**
- * Buscar usuario por email (incluye contraseña para login)
- * ¿Por qué es especial?
- * Normalmente password no se incluye (select: false)
- * Pero para login necesitamos verificarla
- */
 userSchema.statics.findByEmail = function(email) {
     console.log(`🔍 Buscando usuario por email: ${email}`);
     return this.findOne({ 
         email: email.toLowerCase() 
-    }).select('+password');  // Incluir contraseña explícitamente
+    }).select('+password');
 };
 
-/**
- * Buscar usuario por email E INCLUIR contraseña
- * Usado específicamente para login (necesitamos verificar password)
- */
 userSchema.statics.findByCredentials = async function(email) {
     console.log(`🔐 Buscando usuario para login: ${email}`);
     return this.findOne({ 
         email: email.toLowerCase() 
-    }).select('+password');  // +password incluye el campo que normalmente está oculto
+    }).select('+password');
 };
 
-/**
- * Obtener usuarios activos solamente
- */
 userSchema.statics.getActiveUsers = function(limit = 50) {
     console.log(`👥 Obteniendo usuarios activos (límite: ${limit})...`);
-    return this.find({ 
-        isActive: true 
-    })
-    .sort({ createdAt: -1 })  // Más recientes primero
-    .limit(limit)
-    .select('-password');     // Excluir contraseña
+    return this.find({ isActive: true })
+        .sort({ createdAt: -1 })
+        .limit(limit)
+        .select('-password');
 };
 
-/**
- * Obtener usuarios por rol
- */
 userSchema.statics.getUsersByRole = function(role) {
     console.log(`👑 Obteniendo usuarios con rol: ${role}...`);
-    return this.find({ 
-        role: role,
-        isActive: true 
-    })
-    .sort({ createdAt: -1 });
+    return this.find({ role: role, isActive: true })
+        .sort({ createdAt: -1 });
 };
 
-/**
- * Obtener estadísticas generales de usuarios
- */
 userSchema.statics.getUserStats = function() {
     console.log('📈 Calculando estadísticas de usuarios...');
     
@@ -899,28 +670,10 @@ userSchema.statics.getUserStats = function() {
                 averageSpent: { $avg: '$totalSpent' },
                 totalLoyaltyPoints: { $sum: '$loyaltyPoints' }
             }
-        },
-        {
-            $project: {
-                totalUsers: 1,
-                activeUsers: 1,
-                adminUsers: 1,
-                customerUsers: 1,
-                totalOrders: 1,
-                totalSpent: { $round: ['$totalSpent', 0] },
-                averageSpent: { $round: ['$averageSpent', 0] },
-                totalLoyaltyPoints: 1,
-                activePercentage: { 
-                    $round: [{ $multiply: [{ $divide: ['$activeUsers', '$totalUsers'] }, 100] }, 1] 
-                }
-            }
         }
     ]);
 };
 
-/**
- * Buscar usuarios por nivel de cliente
- */
 userSchema.statics.getUsersByLevel = function(level) {
     const spentRanges = {
         'bronze': { min: 0, max: 499999 },
@@ -931,10 +684,8 @@ userSchema.statics.getUsersByLevel = function(level) {
     
     const range = spentRanges[level];
     if (!range) {
-        throw new Error('Nivel de cliente inválido. Usar: bronze, silver, gold, platinum');
+        throw new Error('Nivel de cliente inválido');
     }
-    
-    console.log(`🏆 Buscando usuarios nivel ${level} (gasto: ${range.min.toLocaleString()}-${range.max.toLocaleString()})...`);
     
     return this.find({
         totalSpent: { 
@@ -942,65 +693,52 @@ userSchema.statics.getUsersByLevel = function(level) {
             $lt: range.max === Infinity ? Number.MAX_SAFE_INTEGER : range.max 
         },
         isActive: true
-    })
-    .sort({ totalSpent: -1 });
+    }).sort({ totalSpent: -1 });
 };
+
 // =============================================
-// CREAR EL MODELO DESDE EL ESQUEMA
+// 🏋️ MÉTODO ESTÁTICO FITNESS: Estadísticas
 // =============================================
 
-/**
- * Crear el modelo a partir del esquema
- * Similar al Product, pero para usuarios
- */
+userSchema.statics.getFitnessStats = async function() {
+    return this.aggregate([
+        {
+            $match: { 
+                'fitnessProfile.questionnaireCompleted': true 
+            }
+        },
+        {
+            $group: {
+                _id: null,
+                totalUsers: { $sum: 1 },
+                principiantes: { 
+                    $sum: { 
+                        $cond: [{ $eq: ['$fitnessProfile.fitnessLevel', 'principiante'] }, 1, 0] 
+                    } 
+                },
+                intermedios: { 
+                    $sum: { 
+                        $cond: [{ $eq: ['$fitnessProfile.fitnessLevel', 'intermedio'] }, 1, 0] 
+                    } 
+                },
+                avanzados: { 
+                    $sum: { 
+                        $cond: [{ $eq: ['$fitnessProfile.fitnessLevel', 'avanzado'] }, 1, 0] 
+                    } 
+                }
+            }
+        }
+    ]);
+};
+
+// =============================================
+// CREAR Y EXPORTAR EL MODELO
+// =============================================
+
 const User = mongoose.model('User', userSchema);
-
-/**
- * TRANSFORMACIÓN AUTOMÁTICA DE NOMBRES:
- * 
- * Nombre del modelo: 'User'
- * ↓ MongoDB automáticamente convierte a:
- * - Minúsculas: User → user  
- * - Plural: user → users
- * - Resultado: collection "users" en la base de datos
- */
 
 console.log('✅ Modelo User creado exitosamente');
 console.log('📋 Collection en MongoDB: users');
-console.log('🔐 Características de seguridad:');
-console.log('   • Contraseñas encriptadas con bcrypt');
-console.log('   • Validaciones estrictas de email y contraseña');
-console.log('   • Protección contra ataques de fuerza bruta');
-console.log('   • Campos sensibles excluidos de JSON');
-console.log('   • Roles y permisos implementados');
-console.log('🔧 Funcionalidades disponibles:');
-console.log('   • Registro seguro: new User(data)');
-console.log('   • Login seguro: user.comparePassword()');
-console.log('   • Búsqueda por email: User.findByEmail()');
-console.log('   • Estadísticas: User.getUserStats()');
-// =============================================
-// EXPORTAR EL MODELO
-// =============================================
+console.log('🏋️ Campos fitness integrados correctamente');
 
 module.exports = User;
-
-console.log('📦 Modelo User exportado y listo para usar');
-console.log('🛡️ Seguridad implementada y verificada');
-
-/**
- * MODELO USER COMPLETADO ✅
- * 
- * Características implementadas:
- * ✅ Esquema completo con validaciones de seguridad
- * ✅ Encriptación automática de contraseñas
- * ✅ Métodos de verificación para login
- * ✅ Protección contra ataques de fuerza bruta
- * ✅ Campos virtuales útiles (edad, nivel cliente, etc.)
- * ✅ Métodos para gestión de wishlist
- * ✅ Estadísticas y reportes
- * ✅ Roles y permisos
- * 
- * Próximo paso: Probar el modelo con datos reales
- */
-
-

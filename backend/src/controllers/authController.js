@@ -94,14 +94,27 @@ const register = async (req, res, next) => {
     });
 
     const token = user.generateAuthToken();
-    const publicProfile = user.getPublicProfile();
+    // OBTENER PERFIL PÚBLICO
+const publicProfile = user.getPublicProfile();
 
-    res.status(201).json({
-      success: true,
-      message: 'Usuario registrado exitosamente',
-      token,
-      user: publicProfile
-    });
+// ⭐ AGREGAR FITNESS PROFILE AL LOGIN
+const userResponse = {
+    ...publicProfile,
+    fitnessProfile: user.fitnessProfile || {
+        questionnaireCompleted: false
+    }
+};
+
+console.log(`🎫 Token generado para: ${user.email}`);
+console.log(`🏋️ Cuestionario completado: ${user.fitnessProfile?.questionnaireCompleted || false}`);
+
+// RESPUESTA EXITOSA
+res.status(200).json({
+    success: true,
+    message: 'Login exitoso',
+    token,
+    user: userResponse
+});
 
   } catch (error) {
     console.error(`❌ Error en register: ${error.message}`);

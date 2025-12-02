@@ -16,7 +16,7 @@
       <div id="chat-box" class="chat-box">
         <div class="message ai">
           <span class="avatar">🤖</span>
-          <p>¡Hola! Soy <b>Fitty</b>, tu asistente fitness 💪. Dime, ¿Como te puedo ayudar?😊</p>
+          <p>¡Hola! Soy <b>Fitty</b>, tu coach personal fitness 💪. ¿Cómo te puedo ayudar hoy?</p>
         </div>
       </div>
 
@@ -25,55 +25,109 @@
         <button id="send-btn">➤</button>
       </div>
     </div>
-<!-- 🔒 Protección de autenticación -->
-  <script src="../scripts/auth-guard.js"></script>
-    <script>
-      const chatBox = document.getElementById("chat-box");
-      const userInput = document.getElementById("user-input");
-      const sendBtn = document.getElementById("send-btn");
 
-      sendBtn.addEventListener("click", sendMessage);
-      userInput.addEventListener("keypress", (e) => e.key === "Enter" && sendMessage());
+    <!-- PROTECCIÓN DE AUTENTICACIÓN -->
+    <script src="../scripts/auth-guard.js"></script>
+    
+  <script>
+  const chatBox = document.getElementById("chat-box");
+  const userInput = document.getElementById("user-input");
+  const sendBtn = document.getElementById("send-btn");
 
-      async function sendMessage() {
-        const text = userInput.value.trim();
-        if (!text) return;
+  // ✅ NO declarar userId aquí, ya existe desde auth-guard.js
+  // Ya tenemos acceso a: userId (viene de auth-guard.js)
 
-        addMessage(text, "user");
-        userInput.value = "";
+  if (!userId) {
+    addMessage("⚠️ Por favor inicia sesión para usar el chat.", "ai");
+    userInput.disabled = true;
+    sendBtn.disabled = true;
+  }
 
-        const loading = document.createElement("div");
-        loading.classList.add("message", "ai", "loading");
-        loading.innerHTML = `<span class="avatar">🤖</span><p>Pensando...</p>`;
-        chatBox.appendChild(loading);
-        chatBox.scrollTop = chatBox.scrollHeight;
+  sendBtn.addEventListener("click", sendMessage);
+  userInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
 
-        try {
-          const res = await fetch("http://localhost:5000/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: text }),
-          });
-          const data = await res.json();
-          chatBox.removeChild(loading);
-          addMessage(data.reply, "ai");
-        } catch {
-          chatBox.removeChild(loading);
-          addMessage("❌ No se pudo conectar con la IA.", "ai");
-        }
+  async function sendMessage() {
+    const text = userInput.value.trim();
+    if (!text) return;
+
+    addMessage(text, "user");
+    userInput.value = "";
+
+    const loading = document.createElement("div");
+    loading.classList.add("message", "ai", "loading");
+    loading.innerHTML = `<span class="avatar">🤖</span><p>Fitty está pensando...</p>`;
+    chatBox.appendChild(loading);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    try {
+      const res = await fetch("http://localhost:5000/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          message: text,
+          user_id: userId  // ✅ Usando el userId de auth-guard.js
+        }),
+      });
+      
+      const data = await res.json();
+      chatBox.removeChild(loading);
+
+      if (data.reply) {
+        addMessage(data.reply, "ai");
+      } else if (data.error) {
+        addMessage(`⚠️ ${data.error}`, "ai");
+      } else {
+        addMessage("⚠️ No recibí una respuesta válida.", "ai");
       }
 
-      function addMessage(text, sender) {
-        const div = document.createElement("div");
-        div.classList.add("message", sender);
-        if (sender === "ai") {
-          div.innerHTML = `<span class="avatar">🤖</span><p>${text}</p>`;
-        } else {
-          div.innerHTML = `<p>${text}</p>`;
+    } catch (error) {
+      console.error("Error:", error);
+      chatBox.removeChild(loading);
+      addMessage("❌ No pude conectarme con Fitty. Verifica tu conexión.", "ai");
+    }
+  }
+
+  function addMessage(text, sender) {
+    const div = document.createElement("div");
+    div.classList.add("message", sender);
+    
+    if (sender === "ai") {
+      const formattedText = text.replace(/\n/g, '<br>');
+      div.innerHTML = `<span class="avatar">🤖</span><p>${formattedText}</p>`;
+    } else {
+      div.innerHTML = `<p>${text}</p>`;
+    }
+    
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  // Mensaje inicial personalizado
+  window.addEventListener('load', async () => {
+    if (!userId) return;
+
+    try {
+      const res = await fetch(`http://localhost:5000/api/questionnaire/${userId}`);
+      
+      if (res.ok) {
+        const data = await res.json();
+
+        if (data.success && data.data && data.data.hasCompletedQuestionnaire) {
+          const profile = data.data.fitnessProfile;
+          setTimeout(() => {
+            addMessage(
+              `Veo que tu objetivo es "${profile.mainGoal}" y entrenas ${profile.trainingDaysPerWeek} días a la semana. ¡Estoy aquí para ayudarte! 💪`,
+              "ai"
+            );
+          }, 1000);
         }
-        chatBox.appendChild(div);
-        chatBox.scrollTop = chatBox.scrollHeight;
       }
-    </script>
+    } catch (error) {
+      console.log("No se pudo cargar el perfil");
+    }
+  });
+</script>
   </body>
 </html>

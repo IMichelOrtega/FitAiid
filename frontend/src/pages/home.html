@@ -9,11 +9,17 @@
 </head>
 <body class="min-h-screen text-white body-bg">
   <script>
-    // 🔒 Proteger página
-    if (!localStorage.getItem("token")) {
-      window.location.replace("login.html");
-    } 
-  </script>
+  // 🔒 Proteger página
+  const token = localStorage.getItem("token") || localStorage.getItem("authToken");
+  const userId = localStorage.getItem("userId");
+  
+  if (!token || !userId) {
+    console.log("❌ No autenticado, redirigiendo a login...");
+    window.location.replace("login.html");
+  } else {
+    console.log("✅ Usuario autenticado en home");
+  }
+</script>
   <header class="navbar">
     <div class="logo">
       <img src="../img/logo.png" alt="FitAiid Logo">
@@ -42,7 +48,7 @@
   <section class="hero">
 
     <div class="hero-left">
-      <h1>¡HOLA, <span class="user">USUARIO</span>!</h1>
+      <h1>¡HOLA, <span class="user" id="userName">USUARIO</span>!</h1>
       <h2>¿LISTA PARA ENTRENAR HOY?</h2>
       <p class="sub">Cada Día Es Una Nueva Oportunidad</p>
     </div>
@@ -105,12 +111,33 @@
   </footer>
   </footer>
   
-  <script>
-    function logout() {
-      localStorage.removeItem("token");
-      window.location.href = "login.html";
+ <script>
+  function logout() {
+    // Limpiar TODOS los datos de sesión
+    localStorage.removeItem("token");
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("user");
+    localStorage.removeItem("userEmail");
+    
+    console.log("🚪 Sesión cerrada");
+    window.location.href = "login.html";
+  }
+</script>
+<script>
+  // Obtener nombre del usuario
+  const userString = localStorage.getItem('user');
+  if (userString) {
+    try {
+      const user = JSON.parse(userString);
+      const userName = user.firstName || 'USUARIO';
+      document.getElementById('userName').textContent = userName.toUpperCase();
+    } catch (e) {
+      console.error('Error al parsear usuario:', e);
     }
-  </script>
+  }
+</script>
+  
 </body>
 </html>
 </body>

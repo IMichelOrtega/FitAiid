@@ -1,5 +1,5 @@
 // =============================================
-// APLICACIÓN PRINCIPAL - TECHSTORE PRO BACKEND
+// APLICACIÓN PRINCIPAL - FITAIID FITNESS PLATFORM
 // =============================================
 
 require('dotenv').config(); // Cargar variables de entorno PRIMERO
@@ -12,10 +12,10 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const helmet = require('helmet');
 const logger = require('./config/logger');
-//IA 
 const OpenAI = require("openai");
+const User = require('./models/User'); // ⭐ IMPORTAR MODELO USER
 
-logger.info('🚀 Iniciando TechStore Pro Backend...');
+logger.info('🚀 Iniciando FitAiid Backend...');
 
 // Crear aplicación Express
 const app = express();
@@ -23,9 +23,7 @@ const app = express();
 // =============================================
 // HELMET - HEADERS DE SEGURIDAD
 // =============================================
-// Aplicar Helmet PRIMERO (antes de otros middlewares)
 app.use(helmet({
-    // Content Security Policy - Protección XSS moderna
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
@@ -39,9 +37,8 @@ app.use(helmet({
             frameSrc: ["'none'"]
         }
     },
-    // Forzar HTTPS en producción
     hsts: {
-        maxAge: 31536000, // 1 año
+        maxAge: 31536000,
         includeSubDomains: true,
         preload: true
     }
@@ -54,7 +51,7 @@ console.log('   ✅ X-Content-Type-Options: nosniff');
 console.log('   ✅ Strict-Transport-Security (HSTS)');
 
 // =============================================
-// MIDDLEWARE DE LOGGING PERSONALIZADO TECHSTORE
+// MIDDLEWARE DE LOGGING PERSONALIZADO
 // =============================================
 app.use((req, res, next) => {
     const timestamp = new Date().toISOString();
@@ -62,60 +59,53 @@ app.use((req, res, next) => {
     const url = req.originalUrl;
     const ip = req.ip || req.connection.remoteAddress;
     
-    // Identificar tipo de petición con iconos específicos
     let requestType = '📡';
     if (url.includes('/products')) requestType = '📱';
     if (url.includes('/users')) requestType = '👤';
     if (url.includes('/orders')) requestType = '🛒';
     if (url.includes('/auth')) requestType = '🔐';
     if (url.includes('/health')) requestType = '💚';
+    if (url.includes('/questionnaire')) requestType = '📋';
+    if (url.includes('/chat')) requestType = '💬';
     
     console.log(`${requestType} ${timestamp} - ${method} ${url} - IP: ${ip}`);
     next();
 });
 
-// ✨ NUEVO: Morgan para HTTP logs
 const morganMiddleware = require('./config/morganConfig');
 app.use(morganMiddleware);
 logger.info('📊 Morgan HTTP logging activado');
 
 // =============================================
-// RATE LIMITING - PROTECCIÓN CONTRA ABUSO
+// RATE LIMITING
 // =============================================
-// Aplicar rate limiting a todas las rutas de la API
 app.use('/api/', generalLimiter);
 console.log('🛡️  Rate Limiting activado: 100 peticiones/15min por IP');
 
 // =============================================
-// CONFIGURACIÓN CORS MEJORADA PARA TECHSTORE
+// CORS CONFIGURACIÓN
 // =============================================
-
-// =============================================
-// CORS AVANZADO POR ENTORNO
-// =============================================
-
 const allowedOrigins = process.env.NODE_ENV === 'production'
     ? [
         'https://techstore-pro.vercel.app',
         'https://www.techstore-pro.com',
         process.env.FRONTEND_URL
-    ].filter(Boolean) // Eliminar undefined
+    ].filter(Boolean)
     : [
-        'http://localhost:3000',      // React desarrollo
-        'http://127.0.0.1:5500',      // Live Server Puerto 1
-        'http://127.0.0.1:5501',      // Live Server puerto 2 ✨ NUEVO
-        'http://127.0.0.1:5502',      // Live Server puerto 3 ✨ NUEVO
-        'http://localhost:5500',      // Live Server puerto 1 ✨ NUEVO
-        'http://localhost:5501',      // Live Server puerto 2 ✨ NUEVO
-        'http://localhost:5502',      // Live Server puerto 3 ✨ NUEVO
-        'http://localhost:8080',      // Webpack
-        'http://localhost:5173',      // Vite
-        'http://localhost:4200'       // Angular
+        'http://localhost:3000',
+        'http://127.0.0.1:5500',
+        'http://127.0.0.1:5501',
+        'http://127.0.0.1:5502',
+        'http://localhost:5500',
+        'http://localhost:5501',
+        'http://localhost:5502',
+        'http://localhost:8080',
+        'http://localhost:5173',
+        'http://localhost:4200'
     ];
 
 app.use(cors({
     origin: function (origin, callback) {
-        // Permitir requests sin origin (Postman, apps móviles)
         if (!origin) return callback(null, true);
         
         if (allowedOrigins.indexOf(origin) === -1) {
@@ -143,7 +133,7 @@ app.use(cors({
         'RateLimit-Remaining',
         'RateLimit-Reset'
     ],
-    maxAge: 86400 // Cache preflight por 24 horas
+    maxAge: 86400
 }));
 
 logger.info('✅ CORS configurado', { 
@@ -153,14 +143,12 @@ logger.info('✅ CORS configurado', {
 console.log(`   📍 Orígenes permitidos: ${allowedOrigins.length}`);
 
 // =============================================
-// MIDDLEWARE DE PARSEO OPTIMIZADO
+// MIDDLEWARE DE PARSEO
 // =============================================
-// Aumentar límite para imágenes de productos
 app.use(express.json({ 
     limit: '10mb',
     verify: (req, res, buf) => {
-        // Log para requests grandes (posibles uploads de imágenes)
-        if (buf.length > 1000000) { // > 1MB
+        if (buf.length > 1000000) {
             console.log(`📁 Request grande detectado: ${(buf.length / 1024 / 1024).toFixed(2)}MB`);
         }
     }
@@ -172,95 +160,73 @@ app.use(express.urlencoded({
 }));
 
 // =============================================
-// SANITIZACIÓN DE DATOS - SEGURIDAD
+// SANITIZACIÓN DE DATOS
 // =============================================
-
-// 1. Sanitizar contra inyecciones NoSQL
 app.use(mongoSanitize({
-    replaceWith: '_',  // Reemplazar caracteres prohibidos con '_'
+    replaceWith: '_',
     onSanitize: ({ req, key }) => {
         console.log(`🧹 Sanitización NoSQL: campo "${key}" limpiado`);
     }
 }));
-console.log('🛡️  Sanitización NoSQL activada (express-mongo-sanitize)');
+console.log('🛡️  Sanitización NoSQL activada');
 
-// 2. Sanitizar contra ataques XSS
 app.use(xss());
-console.log('🛡️  Sanitización XSS activada (xss-clean)');
+console.log('🛡️  Sanitización XSS activada');
 
-// Sanitización personalizada (opcional)
-const { sanitizeInput, preventSQLInjection } = require('./middleware/sanitize');
+const { sanitizeInput } = require('./middleware/sanitize');
 app.use(sanitizeInput);
-// app.use(preventSQLInjection); //
 console.log('🛡️  Sanitización personalizada activada');
 
-
-
 // =============================================
-// CONECTAR A MONGODB ATLAS
+// CONECTAR A MONGODB
 // =============================================
 connectDB();
 
 // =============================================
-// RUTAS PRINCIPALES DE TECHSTORE PRO
+// RUTAS PRINCIPALES
 // =============================================
 
-// Ruta principal - Información mejorada de la API
 app.get('/', (req, res) => {
     res.json({
         success: true,
-        message: '🏪 TechStore Pro API funcionando correctamente',
+        message: '🏋️ FitAiid API funcionando correctamente',
         version: process.env.APP_VERSION || '1.0.0',
         environment: process.env.NODE_ENV || 'development',
         timestamp: new Date().toISOString(),
         endpoints: {
-            products: {
-                description: 'Catálogo de productos tecnológicos',
-                routes: {
-                    list: 'GET /api/products',
-                    details: 'GET /api/products/:id',
-                    create: 'POST /api/products (Admin)',
-                    update: 'PUT /api/products/:id (Admin)',
-                    delete: 'DELETE /api/products/:id (Admin)',
-                    categories: 'GET /api/products/categories',
-                    featured: 'GET /api/products/featured',
-                    search: 'GET /api/products/search?q=macbook'
-                }
-            },
-            users: {
-                description: 'Gestión de usuarios y perfiles',
+            auth: {
+                description: 'Autenticación y registro',
                 routes: {
                     register: 'POST /api/auth/register',
                     login: 'POST /api/auth/login',
-                    profile: 'GET /api/users/profile',
-                    list: 'GET /api/users (Admin)'
+                    google: 'POST /api/auth/google'
                 }
             },
-            orders: {
-                description: 'Gestión de pedidos y compras',
+            questionnaire: {
+                description: 'Cuestionario fitness personalizado',
                 routes: {
-                    create: 'POST /api/orders',
-                    list: 'GET /api/orders',
-                    details: 'GET /api/orders/:id',
-                    userOrders: 'GET /api/orders/user/:userId'
+                    save: 'POST /api/questionnaire',
+                    get: 'GET /api/questionnaire/:userId'
+                }
+            },
+            chat: {
+                description: 'Chat con IA fitness coach',
+                routes: {
+                    chat: 'POST /api/chat'
                 }
             },
             health: 'GET /api/health'
         },
         features: [
-            'Catálogo completo de productos Apple y tecnología',
             'Sistema de autenticación seguro con JWT',
-            'Gestión de pedidos en tiempo real',
-            'Filtros avanzados por categoría y precio',
-            'Búsqueda inteligente de productos',
-            'Manejo profesional de errores',
-            'Validaciones automáticas de datos',
-            'Rate Limiting contra ataques de fuerza bruta',            
+            'Cuestionario fitness personalizado',
+            'Chat IA con coach personal (GPT-4o-mini)',
+            'Planes de entrenamiento personalizados',
+            'Seguimiento de progreso fitness'
         ]
     });
 });
 
-// Ruta de health check mejorada
 app.get('/api/health', (req, res) => {
     const mongoose = require('mongoose');
     
@@ -274,7 +240,7 @@ app.get('/api/health', (req, res) => {
     res.json({
         success: true,
         timestamp: new Date().toISOString(),
-        service: 'TechStore Pro API',
+        service: 'FitAiid API',
         version: process.env.APP_VERSION || '1.0.0',
         database: {
             status: dbStates[mongoose.connection.readyState],
@@ -300,7 +266,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // =============================================
-// RUTAS DE LA API - TECHSTORE PRO
+// RUTAS DE LA API
 // =============================================
 
 // Rutas de productos
@@ -310,82 +276,279 @@ app.use('/api/auth', require('./routes/auth'));
 // Ruta para verificar correo electrónico
 app.use('/api/verify', require('./routes/verifyEmail'));
 
+app.use('/api/questionnaire', require('./routes/questionnaire')); // ⭐ Debe estar aquí
 console.log('✅ Rutas API configuradas:');
-console.log('   📱 /api/products - Gestión de productos');
-console.log('   🔐 /api/auth - Autenticación y usuarios');
-console.log('   🏥 /api/health - Estado del servidor');
-
-// TODO: Futuras rutas
-// app.use('/api/users', require('./routes/users'));
-// app.use('/api/orders', require('./routes/orders'));
-// app.use('/api/auth', require('./routes/auth'));
-
+console.log('   🔐 /api/auth - Autenticación');
+console.log('   📱 /api/products - Productos');
+console.log('   📋 /api/questionnaire - Cuestionario fitness')
 // =============================================
-// MIDDLEWARE DE MANEJO DE ERRORES (DEBE IR AL FINAL)
+// RUTAS DE CUESTIONARIO FITNESS
 // =============================================
 
+app.post("/api/questionnaire", async (req, res) => {
+  try {
+    const {
+      userId,
+      gender,
+      age,
+      height,
+      weight,
+      fitnessLevel,
+      mainGoal,
+      medicalConditions,
+      trainingLocation,
+      trainingDaysPerWeek,
+      sessionDuration
+    } = req.body;
 
+    console.log(`📋 Guardando cuestionario para usuario: ${userId}`);
 
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      console.log(`❌ Usuario NO encontrado con ID: ${userId}`);
+      return res.status(404).json({
+        success: false,
+        message: "Usuario no encontrado"
+      });
+    }
 
-/**
- * CONFIGURACIÓN COMPLETADA PARA TECHSTORE PRO ✅
- * 
- * Middleware implementado:
- * ✅ Logging personalizado con iconos por tipo de petición
- * ✅ CORS configurado para desarrollo y producción
- * ✅ Parseo de JSON con límites para imágenes
- * ✅ Rutas de información y health check mejoradas
- * ✅ Manejo global de errores profesional
- * ✅ Respuestas 404 personalizadas con sugerencias
- * 
- * Próximos pasos (Parte 3B):
- * 🎯 Crear controladores de productos
- * 🎯 Implementar rutas REST para productos
- * 🎯 Probar con Postman
- */
+    if (!age || !height || !weight || !fitnessLevel || !mainGoal) {
+      return res.status(400).json({
+        success: false,
+        message: "Faltan datos obligatorios del cuestionario"
+      });
+    }
+
+    user.fitnessProfile = {
+      gender: gender || null,
+      age: parseInt(age),
+      height: parseInt(height),
+      weight: parseInt(weight),
+      fitnessLevel: fitnessLevel.toLowerCase(),
+      mainGoal: mainGoal.toLowerCase(),
+      medicalConditions: medicalConditions || '',
+      trainingLocation: trainingLocation ? trainingLocation.toLowerCase() : null,
+      trainingDaysPerWeek: trainingDaysPerWeek ? parseInt(trainingDaysPerWeek) : null,
+      sessionDuration: sessionDuration || null,
+      questionnaireCompleted: true,
+      questionnaireCompletedAt: new Date()
+    };
+
+    await user.save();
+
+    console.log(`✅ Cuestionario guardado para: ${user.email}`);
+    console.log(`   🎯 Objetivo: ${user.fitnessProfile.mainGoal}`);
+    console.log(`   📊 Nivel: ${user.fitnessProfile.fitnessLevel}`);
+    console.log(`   💪 IMC: ${user.bmi} (${user.bmiCategory})`);
+
+    res.json({
+      success: true,
+      message: "Cuestionario guardado exitosamente",
+      data: {
+        userId: user._id,
+        fitnessProfile: user.fitnessProfile,
+        bmi: user.bmi,
+        bmiCategory: user.bmiCategory
+      }
+    });
+
+  } catch (error) {
+    console.error("❌ Error guardando cuestionario:", error.message);
+    
+    if (error.name === 'ValidationError') {
+      const errors = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({
+        success: false,
+        message: "Error de validación",
+        errors
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      message: "Error al guardar el cuestionario"
+    });
+  }
+});
+
+app.get("/api/questionnaire/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    const user = await User.findById(userId).select('firstName lastName email fitnessProfile');
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Usuario no encontrado"
+      });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        user: {
+          id: user._id,
+          name: `${user.firstName} ${user.lastName}`,
+          email: user.email
+        },
+        fitnessProfile: user.fitnessProfile,
+        bmi: user.bmi,
+        bmiCategory: user.bmiCategory,
+        hasCompletedQuestionnaire: user.fitnessProfile?.questionnaireCompleted || false
+      }
+    });
+
+  } catch (error) {
+    console.error("❌ Error obteniendo perfil fitness:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Error al obtener el perfil fitness"
+    });
+  }
+});
+
+console.log('✅ Rutas de cuestionario fitness configuradas');
+
+// =============================================
+// RUTA PARA VERIFICACIÓN EXITOSA
+// =============================================
 const path = require("path");
 
-// Ruta absoluta hacia tu carpeta de frontend
 app.get("/verificacion-exitosa", (req, res) => {
   const filePath = path.join(__dirname, "../frontend/src/pages/verificacion-exitosa.html");
   res.sendFile(filePath);
 });
 
-//IA 
-// ======================================================
-// 🔹 RUTA PARA CHAT IA (GPT-4o-mini)
-// ======================================================
+// =============================================
+// ALMACENAMIENTO TEMPORAL PARA HISTORIAL
+// =============================================
+const conversationHistory = {}; // Memoria de conversaciones por usuario
+
+// =============================================
+// RUTA PARA CHAT IA (GPT-4o-mini) - MEJORADA
+// =============================================
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 app.post("/api/chat", async (req, res) => {
   try {
-    const { message } = req.body;
+    const { message, userId, user_id } = req.body;
+    const finalUserId = userId || user_id || "anonymous";
+
+    if (!message || message.trim().length === 0) {
+      return res.status(400).json({ 
+        error: "Por favor escribe un mensaje válido" 
+      });
+    }
+
+    // Inicializar historial si no existe
+    if (!conversationHistory[finalUserId]) {
+      conversationHistory[finalUserId] = [];
+    }
+
+    // Obtener contexto del usuario si tiene perfil fitness
+    let systemPrompt = `Eres Fitty, un asistente experto en fitness y nutrición llamado FitAiid.
+
+🚨 REGLAS ESTRICTAS:
+1. SOLO respondes preguntas relacionadas con: fitness, ejercicio, nutrición, dieta, salud física, entrenamiento, gym, pérdida de peso, ganancia muscular, rutinas de ejercicio, suplementos, deportes, bienestar físico.
+
+2. Si te preguntan algo NO relacionado con estos temas (como programación, historia, matemáticas, política, etc.), responde:
+   "Lo siento, solo puedo ayudarte con temas de fitness, ejercicio y nutrición 💪. ¿Tienes alguna pregunta sobre entrenamiento, dieta o salud física?"
+
+3. Sé motivador, amigable y profesional. Usa emojis fitness ocasionalmente (💪, 🏋️, 🥗, 🔥).
+
+4. Da respuestas concisas (máximo 4 párrafos).
+
+5. Si el usuario saluda, responde brevemente y pregunta cómo puedes ayudar con fitness.`;
+    
+    if (finalUserId !== "anonymous") {
+      try {
+        const user = await User.findById(finalUserId).select('firstName fitnessProfile');
+        if (user && user.fitnessProfile?.questionnaireCompleted) {
+          systemPrompt += `
+
+📋 PERFIL DEL USUARIO:
+- Nombre: ${user.firstName}
+- Nivel: ${user.fitnessProfile.fitnessLevel}
+- Objetivo: ${user.fitnessProfile.mainGoal}
+- Entrena en: ${user.fitnessProfile.trainingLocation}
+- Días por semana: ${user.fitnessProfile.trainingDaysPerWeek}
+
+Personaliza tus respuestas considerando este perfil específico.`;
+        }
+      } catch (error) {
+        console.log("⚠️ No se pudo cargar perfil, usando prompt genérico");
+      }
+    }
+
+    // Agregar mensaje del usuario al historial
+    conversationHistory[finalUserId].push({
+      role: "user",
+      content: message
+    });
+
+    // Mantener solo últimos 10 mensajes
+    if (conversationHistory[finalUserId].length > 10) {
+      conversationHistory[finalUserId] = conversationHistory[finalUserId].slice(-10);
+    }
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini", 
       messages: [
         {
           role: "system",
-          content: "Eres un asistente experto en fitness y nutrición llamado FitAiid. Responde de forma clara, motivadora y profesional.",
+          content: systemPrompt
         },
-        { role: "user", content: message },
+        ...conversationHistory[finalUserId] // Incluir historial
       ],
+      temperature: 0.7,
+      max_tokens: 600
     });
 
     const reply = completion.choices[0].message.content;
+
+    // Agregar respuesta al historial
+    conversationHistory[finalUserId].push({
+      role: "assistant",
+      content: reply
+    });
+
+    console.log(`💬 Fitty respondió a ${finalUserId} (${reply.length} caracteres)`);
+    
     res.json({ reply });
+    
   } catch (error) {
     console.error("❌ Error en el chat:", error.message);
-    res.status(500).json({ error: "Error interno en la IA" });
+    
+    if (error.code === 'insufficient_quota') {
+      return res.status(503).json({ 
+        error: "El servicio de IA está temporalmente no disponible." 
+      });
+    }
+    
+    res.status(500).json({ 
+      error: "Hubo un problema al procesar tu mensaje. Intenta de nuevo." 
+    });
   }
 });
 
+console.log('✅ Rutas API configuradas:');
+console.log('   📱 /api/products - Gestión de productos');
+console.log('   🔐 /api/auth - Autenticación y usuarios');
+console.log('   📋 /api/questionnaire - Cuestionario fitness');
+console.log('   💬 /api/chat - Chat IA fitness coach');
+console.log('   🏥 /api/health - Estado del servidor');
+
+// =============================================
+// MIDDLEWARE DE MANEJO DE ERRORES (AL FINAL)
+// =============================================
 
 // Middleware para rutas no encontradas (404)
 app.use(notFound);
-// Middleware de manejo global de errores (siempre al final)
+// Middleware de manejo global de errores
 app.use(errorHandler);
 
 module.exports = app;
