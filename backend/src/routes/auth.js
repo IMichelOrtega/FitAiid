@@ -70,7 +70,7 @@ router.post('/login',
  * @access  Público
  */
 router.post('/google', authController.googleLogin);
-
+router.post('/google-register', authController.googleRegister);
 /**
  * @route   POST /api/auth/verify-registration
  * @desc    Verificar código de registro

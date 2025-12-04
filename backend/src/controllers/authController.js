@@ -504,13 +504,14 @@ console.log('   • login - Autenticar usuario');
 console.log('   • getProfile - Obtener perfil');
 console.log('   • updateProfile - Actualizar perfil');
 
-
 // =============================================
-// LOGIN / REGISTRO CON GOOGLE
+// LOGIN CON GOOGLE (SOLO LOGIN - NO REGISTRA)
 // =============================================
-// =============================================
-// LOGIN CON GOOGLE (VERIFICA EN FIREBASE)
-// =============================================
+/**
+ * @desc    Login con Google - SOLO para usuarios ya registrados
+ * @route   POST /api/auth/google
+ * @access  Público
+ */
 const googleLogin = async (req, res) => {
   try {
     const { firstName, lastName, email, uid } = req.body;
@@ -522,49 +523,22 @@ const googleLogin = async (req, res) => {
       });
     }
 
-    console.log(`🔍 Verificando en Firebase: ${email} (UID: ${uid})`);
+    console.log(`🔍 Login con Google para: ${email}`);
 
-    // ✅ VERIFICAR EN FIREBASE AUTHENTICATION PRIMERO
-    let firebaseUser;
-    try {
-      firebaseUser = await admin.auth().getUser(uid);
-      console.log(`✅ Usuario ENCONTRADO en Firebase: ${email}`);
-      console.log(`📧 Email verificado en Firebase: ${firebaseUser.emailVerified}`);
-    } catch (firebaseError) {
-      console.log(`❌ Usuario NO encontrado en Firebase Authentication`);
-      console.error(`❌ Error Firebase: ${firebaseError.code} - ${firebaseError.message}`);
-      
-      // ❌ Usuario no existe en Firebase Authentication
+    // ✅ BUSCAR USUARIO EN MONGODB PRIMERO
+    let user = await User.findOne({ email: email.toLowerCase() });
+
+    // ❌ SI NO EXISTE EN MONGODB, RECHAZAR LOGIN
+    if (!user) {
+      console.log(`❌ Usuario NO registrado en MongoDB: ${email}`);
       return res.status(404).json({
         success: false,
         userNotFound: true,
-        message: "Este correo no está registrado en Firebase. Por favor regístrate primero."
+        message: "Este correo no está registrado. Por favor regístrate primero."
       });
     }
 
-    // ✅ Usuario existe en Firebase, ahora buscar/crear en MongoDB
-    let user = await User.findOne({ email: email.toLowerCase() });
-
-    // Si no existe en MongoDB, sincronizar desde Firebase
-    if (!user) {
-      console.log(`📝 Usuario existe en Firebase pero no en MongoDB. Sincronizando...`);
-      
-      user = new User({
-        firstName: firstName || firebaseUser.displayName?.split(' ')[0] || 'Usuario',
-        lastName: lastName || firebaseUser.displayName?.split(' ')[1] || 'Google',
-        email: email.toLowerCase(),
-        password: 'GoogleTemp123', // No se usará
-        provider: 'google',
-        isEmailVerified: firebaseUser.emailVerified,
-        isActive: true,
-        role: 'customer'
-      });
-
-      await user.save();
-      console.log(`✅ Usuario sincronizado en MongoDB: ${email}`);
-    } else {
-      console.log(`✅ Usuario ya existe en MongoDB: ${email}`);
-    }
+    console.log(`✅ Usuario encontrado en MongoDB: ${email}`);
 
     // Verificar si la cuenta está activa
     if (!user.isActive) {
@@ -586,6 +560,14 @@ const googleLogin = async (req, res) => {
     // 📦 OBTENER PERFIL PÚBLICO
     const publicProfile = user.getPublicProfile();
 
+    // ⭐ AGREGAR FITNESS PROFILE
+    const userResponse = {
+      ...publicProfile,
+      fitnessProfile: user.fitnessProfile || {
+        questionnaireCompleted: false
+      }
+    };
+
     console.log(`✅ Login con Google exitoso: ${email}`);
 
     // ✅ DEVOLVER TOKEN Y USUARIO
@@ -593,12 +575,11 @@ const googleLogin = async (req, res) => {
       success: true,
       message: "Inicio de sesión con Google exitoso",
       token: token,
-      user: publicProfile
+      user: userResponse
     });
 
   } catch (err) {
     console.error("❌ Error en googleLogin:", err);
-    console.error("Stack trace:", err.stack);
     res.status(500).json({ 
       success: false,
       message: "Error al iniciar sesión con Google",
@@ -606,7 +587,106 @@ const googleLogin = async (req, res) => {
     });
   }
 };
+// =============================================
+// REGISTRO CON GOOGLE (SOLO REGISTRO - CREA USUARIO)
+// =============================================
+/**
+ * @desc    Registro con Google - Crea nuevo usuario
+ * @route   POST /api/auth/google-register
+ * @access  Público
+ */
+const googleRegister = async (req, res) => {
+  try {
+    const { firstName, lastName, email, uid } = req.body;
 
+    if (!email || !uid) {
+      return res.status(400).json({ 
+        success: false,
+        message: "El email y UID son obligatorios" 
+      });
+    }
+
+    console.log(`📝 Registro con Google para: ${email}`);
+
+    // ✅ VERIFICAR QUE NO EXISTA YA EN MONGODB
+    let existingUser = await User.findOne({ email: email.toLowerCase() });
+
+    if (existingUser) {
+      console.log(`❌ Usuario YA existe en MongoDB: ${email}`);
+      return res.status(400).json({
+        success: false,
+        userExists: true,
+        message: "Este correo ya está registrado. Por favor inicia sesión."
+      });
+    }
+
+    // ✅ VERIFICAR EN FIREBASE QUE EL UID SEA VÁLIDO
+    let firebaseUser;
+    try {
+      firebaseUser = await admin.auth().getUser(uid);
+      console.log(`✅ Usuario verificado en Firebase: ${email}`);
+    } catch (firebaseError) {
+      console.error(`❌ Error Firebase: ${firebaseError.code}`);
+      return res.status(400).json({
+        success: false,
+        message: "Error al verificar con Google. Intenta de nuevo."
+      });
+    }
+
+    // ✅ CREAR NUEVO USUARIO EN MONGODB
+    const user = new User({
+      firstName: firstName || firebaseUser.displayName?.split(' ')[0] || 'Usuario',
+      lastName: lastName || firebaseUser.displayName?.split(' ').slice(1).join(' ') || 'Google',
+      email: email.toLowerCase(),
+      password: 'GoogleTemp123',
+      provider: 'google',
+      isEmailVerified: true,
+      isActive: true,
+      role: 'customer'
+    });
+
+    await user.save();
+    console.log(`💾 Usuario creado en MongoDB: ${email}`);
+
+    logger.audit('USER_REGISTERED_GOOGLE', {
+      userId: user._id,
+      email: user.email,
+      ip: req.ip
+    });
+
+    // 🎫 GENERAR TOKEN JWT
+    const token = user.generateAuthToken();
+    
+    // 📦 OBTENER PERFIL PÚBLICO
+    const publicProfile = user.getPublicProfile();
+
+    // ⭐ AGREGAR FITNESS PROFILE
+    const userResponse = {
+      ...publicProfile,
+      fitnessProfile: user.fitnessProfile || {
+        questionnaireCompleted: false
+      }
+    };
+
+    console.log(`✅ Registro con Google exitoso: ${email}`);
+
+    // ✅ DEVOLVER TOKEN Y USUARIO
+    return res.status(201).json({
+      success: true,
+      message: "Registro con Google exitoso",
+      token: token,
+      user: userResponse
+    });
+
+  } catch (err) {
+    console.error("❌ Error en googleRegister:", err);
+    res.status(500).json({ 
+      success: false,
+      message: "Error al registrarse con Google",
+      error: err.message 
+    });
+  }
+};
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || "smtp.gmail.com", // ej: smtp.gmail.com
   port: 587,
@@ -1026,6 +1106,7 @@ module.exports = {
     getProfile,
     updateProfile,
     googleLogin,
+    googleRegister,
     verifyRegistrationCode, 
     forgotPassword,
     resendVerificationCode,

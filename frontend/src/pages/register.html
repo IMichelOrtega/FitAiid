@@ -108,6 +108,16 @@
               src="https://png.pngtree.com/png-vector/20230817/ourmid/pngtree-google-internet-icon-vector-png-image_9183287.png"
               alt="Google"
             />
+            <img
+              src="https://static.xx.fbcdn.net/rsrc.php/v4/yG/r/pENh3y_2Pnw.png"
+              alt="Facebook"
+            />
+            <img
+              id="Apple"
+              src="https://img.icons8.com/ios_filled/512/FFFFFF/mac-os.png"
+              alt="Apple"
+            />
+          </div>
         </div>
       </form>
     </div>
@@ -135,47 +145,37 @@
         toggleConfirmPassword.classList.toggle("fa-eye-slash");
       });
     </script>
-<!-- ✅ Firebase Configuration -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import {
-    getAuth,
-    signInWithPopup,
-    GoogleAuthProvider,
-    FacebookAuthProvider,
-  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBzpmKxgVzx6qHgEAsz82xSHM8ANjF8HTI",
-    authDomain: "fitaiid-9c617.firebaseapp.com",
-    projectId: "fitaiid-9c617",
-    storageBucket: "fitaiid-9c617.firebasestorage.app",
-    messagingSenderId: "698827830015",
-    appId: "1:698827830015:web:ad141d6f1b8803edadd2ca",
-  };
+    <!-- 🔹 Firebase configuración GLOBAL (CORREGIDO) -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+      import {
+        getAuth,
+        GoogleAuthProvider,
+        signInWithPopup
+      } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+      const firebaseConfig = {
+        apiKey: "AIzaSyBzpmKxgVzx6qHgEAsz82xSHM8ANjF8HTI",
+        authDomain: "fitaiid-9c617.firebaseapp.com",
+        projectId: "fitaiid-9c617",
+        storageBucket: "fitaiid-9c617.firebasestorage.app",
+        messagingSenderId: "698827830015",
+        appId: "1:698827830015:web:ad141d6f1b8803edadd2ca",
+      };
 
-  // ✅ EXPORTAR GLOBALMENTE para que register.js pueda usarlos
-  window.firebaseAuth = auth;
-  window.GoogleAuthProvider = GoogleAuthProvider;
-  window.FacebookAuthProvider = FacebookAuthProvider;
-  window.signInWithPopup = signInWithPopup;
-  
-  console.log("✅ Firebase inicializado y exportado globalmente");
-  console.log("✅ Auth disponible:", !!window.firebaseAuth);
-  console.log("✅ GoogleAuthProvider disponible:", !!window.GoogleAuthProvider);
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
 
-  // ❌ ELIMINAMOS los listeners de Google y Facebook de aquí
-  // Ahora se manejan desde register.js
-</script>
+      // ✅ HACER DISPONIBLES GLOBALMENTE para register.js
+      window.firebaseAuth = auth;
+      window.GoogleAuthProvider = GoogleAuthProvider;
+      window.signInWithPopup = signInWithPopup;
 
-<!-- ✅ Toast Message -->
-<div id="toastMsg" style="position: fixed; bottom: 30px; right: 30px; background: #333; color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 9999; display: none; opacity: 0; transition: opacity 0.3s;"></div>
+      console.log("✅ Firebase inicializado y disponible globalmente");
+    </script>
 
-<script type="module" src="../scripts/register.js"></script>
-
+    <!-- 🔹 Script principal de registro -->
     <script type="module" src="../scripts/register.js"></script>
   </body>
 </html>

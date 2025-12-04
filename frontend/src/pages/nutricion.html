@@ -257,6 +257,12 @@
     grid-template-columns: 1fr;
   }
 }
+/* Centrar el tercer card */
+.grid .card:nth-child(3) {
+  grid-column: 1 / -1;
+  max-width: 540px;
+  margin: 0 auto;
+}
 
 
   </style>
@@ -274,7 +280,7 @@
      
 
       <nav class="nav">
-        <a href="home.html">Inicio</a>
+        <a href="#">Inicio</a>
         <a href="#">Entrenamientos</a>
         <a href="#">Coach Virtual</a>
         <a href="#" class="active"> Nutrición</a>
@@ -321,7 +327,7 @@
 <!-- GANAR MASA MUSCULAR -->
 <article class="card">
   <a href="ganar-masa-muscular.html" target="_blank" style="text-decoration:none;color:inherit;display:block;">
-    <div class="card-header" style="background-image:url('../img/nutricion/nutrición (1).webp');"></div>
+    <div class="card-header" style="background-image:url('../img/nutricion/nutrición\ \(1\).webp');"></div>
     <div class="card-body">
       <h3>Ganar Masa Muscular</h3>
       <p>Fortalece Tu Cuerpo Y Aumenta Tu Masa Muscular Con Nutrientes Esenciales. Diseñados Para Adaptarse A Tu Nivel, Te Ayudarán A Desarrollar Fuerza, Mejorar Tu Rendimiento Y Lograr Un Físico Más Definido Y Potente.</p>
@@ -330,17 +336,15 @@
 </article>
 
 <!-- VIDA SALUDABLE -->
-<div class="full-card">
-  <article class="card">
-    <a href="plan-vida-saludable.html" target="_blank" style="text-decoration:none;color:inherit;display:block;">
-      <div class="card-header" style="background-image:url('../img/nutricion/sport-city-nutricion-1024x700.jpg');"></div>
-      <div class="card-body">
-        <h3>Para Llevar Una Vida Saludable</h3>
-        <p>Aliméntate De Manera Equilibrada Para Cuidar Tu Bienestar General. Con Rutinas Adaptadas Y Planes Nutricionales Balanceados, Podrás Mantenerte Activo, Prevenir Enfermedades Y Mejorar Tu Calidad De Vida Día A Día.</p>
-      </div>
-    </a>
-  </article>
-</div>
+<article class="card">
+  <a href="plan-vida-saludable.html" target="_blank" style="text-decoration:none;color:inherit;display:block;">
+    <div class="card-header" style="background-image:url('../img/nutricion/sport-city-nutricion-1024x700.jpg');"></div>
+    <div class="card-body">
+      <h3>Para Llevar Una Vida Saludable</h3>
+      <p>Aliméntate De Manera Equilibrada Para Cuidar Tu Bienestar General. Con Rutinas Adaptadas Y Planes Nutricionales Balanceados, Podrás Mantenerte Activo, Prevenir Enfermedades Y Mejorar Tu Calidad De Vida Día A Día.</p>
+    </div>
+  </a>
+</article>
 
 
   </section>
@@ -410,7 +414,5 @@
 </footer>
 <!-- 🔒 Protección de autenticación -->
   <script src="../scripts/auth-guard.js"></script>
-
-
 </body>
 </html>

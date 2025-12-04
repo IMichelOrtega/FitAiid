@@ -16,9 +16,15 @@
 </head>
 <body class="min-h-screen text-white body-bg">
   <script>
-    // 🔒 Proteger página
-    if (!localStorage.getItem("token")) {
+    // 🔒 Proteger página - CORREGIDO para soportar ambos tokens
+    const token = localStorage.getItem("token") || localStorage.getItem("authToken");
+    const userId = localStorage.getItem("userId");
+    
+    if (!token) {
+      console.log("❌ No autenticado, redirigiendo a login...");
       window.location.replace("login.html");
+    } else {
+      console.log("✅ Usuario autenticado en perfil");
     }
   </script>
   <div class="max-w-6xl mx-auto px-6 py-10">
@@ -36,10 +42,10 @@
     <!-- Menú escritorio -->
     <nav class="hidden md:flex gap-8 text-sm lg:text-base font-semibold absolute left-1/2 -translate-x-1/2">
 
-      <a href="#" class="text-[#ff2a2a] border-b-2 border-[#ff2a2a] pb-1">Inicio</a>
+      <a href="home.html" class="hover:text-[#ff2a2a] transition">Inicio</a>
       <a href="#" class="hover:text-[#ff2a2a] transition">Entrenamiento</a>
-      <a href="#" class="hover:text-[#ff2a2a] transition">Coach Virtual</a>
-      <a href="#" class="hover:text-[#ff2a2a] transition">Nutricion</a>
+      <a href="chatbot.html" class="hover:text-[#ff2a2a] transition">Coach Virtual</a>
+      <a href="nutricion.html" class="hover:text-[#ff2a2a] transition">Nutricion</a>
       <a href="#" class="hover:text-[#ff2a2a] transition">Estadisticas</a>
     </nav>
     
@@ -346,12 +352,20 @@
   </div>
 </footer>
 
-  <script src="../scripts/home.js"></script>
+  <script src="../scripts/perfil.js"></script>
   <script src="../scripts/auth-guard.js"></script>
 <script>
   function logout() {
+    // Limpiar TODOS los datos de sesión
     localStorage.removeItem("token");
-    window.location.href = "index.html";
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("user");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userAvatar");
+    
+    console.log("🚪 Sesión cerrada");
+    window.location.href = "login.html";
   }
 </script>
 <script>
@@ -367,6 +381,6 @@
     }
   }
 </script>
-
+  
 </body>
 </html>

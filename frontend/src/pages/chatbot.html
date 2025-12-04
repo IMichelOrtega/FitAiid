@@ -3,131 +3,314 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FitAiid Chat</title>
+    <title>Fitty - Tu Coach Fitness | FitAiid</title>
     <link rel="stylesheet" href="../styles/chatbot.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   </head>
   <body>
-    <div class="chat-wrapper">
-      <div class="chat-header">
-        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712103.png" alt="FitAiid" />
-        <h1>FitAiid Asistente</h1>
-      </div>
-
-      <div id="chat-box" class="chat-box">
-        <div class="message ai">
-          <span class="avatar">🤖</span>
-          <p>¡Hola! Soy <b>Fitty</b>, tu coach personal fitness 💪. ¿Cómo te puedo ayudar hoy?</p>
+    <div class="chat-container">
+      <!-- Sidebar / Info Panel (visible en desktop) -->
+      <aside class="chat-sidebar">
+        <div class="sidebar-header">
+          <img src="../img/logo.png" alt="FitAiid Logo" class="sidebar-logo" />
+          <h2>Fit<span>Aiid</span></h2>
         </div>
-      </div>
+        
+        <div class="coach-profile">
+          <div class="coach-avatar">
+            <img src="../img/image-removebg-preview (23).png" alt="Fitty" />
+            <span class="status-dot"></span>
+          </div>
+          <h3>Fitty</h3>
+          <p>Tu Coach Personal con IA</p>
+        </div>
 
-      <div class="chat-input">
-        <input type="text" id="user-input" placeholder="Escribe tu mensaje..." />
-        <button id="send-btn">➤</button>
-      </div>
+        <div class="coach-capabilities">
+          <h4><i class="fas fa-magic"></i> Puedo ayudarte con:</h4>
+          <ul>
+            <li><i class="fas fa-dumbbell"></i> Rutinas personalizadas</li>
+            <li><i class="fas fa-apple-alt"></i> Consejos de nutrición</li>
+            <li><i class="fas fa-heartbeat"></i> Técnicas de ejercicios</li>
+            <li><i class="fas fa-fire"></i> Motivación diaria</li>
+            <li><i class="fas fa-question-circle"></i> Resolver tus dudas</li>
+          </ul>
+        </div>
+
+        <a href="home.html" class="back-home-btn">
+          <i class="fas fa-arrow-left"></i> Volver al inicio
+        </a>
+      </aside>
+
+      <!-- Main Chat Area -->
+      <main class="chat-main">
+        <!-- Chat Header -->
+        <header class="chat-header">
+          <a href="home.html" class="back-btn-mobile">
+            <i class="fas fa-arrow-left"></i>
+          </a>
+          
+          <div class="header-info">
+            <div class="header-avatar">
+              <img src="https://cdn-icons-png.flaticon.com/512/4712/4712103.png" alt="Fitty" />
+              <span class="status-indicator"></span>
+            </div>
+            <div class="header-text">
+              <h1>Fitty</h1>
+              <span class="status-text"><i class="fas fa-circle"></i> En línea</span>
+            </div>
+          </div>
+
+          <button class="menu-btn" id="menuBtn">
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+        </header>
+
+        <!-- Messages Container -->
+        <div id="chat-box" class="chat-box">
+          <!-- Fecha del chat -->
+          <div class="date-divider">
+            <span>Hoy</span>
+          </div>
+
+          <!-- Mensaje de bienvenida -->
+          <div class="message ai">
+            <div class="message-avatar">
+              <img src="https://cdn-icons-png.flaticon.com/512/4712/4712103.png" alt="Fitty" />
+            </div>
+            <div class="message-content">
+              <div class="message-bubble">
+                <p>¡Hola! 👋 Soy <strong>Fitty</strong>, tu coach personal fitness.</p>
+                <p>Estoy aquí para ayudarte a alcanzar tus metas. ¿En qué puedo asistirte hoy? 💪</p>
+              </div>
+              <span class="message-time">Ahora</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Suggestions -->
+        <div class="quick-suggestions" id="suggestions">
+          <span class="suggestion-label">Sugerencias:</span>
+          <div class="suggestions-scroll">
+            <button class="suggestion-btn" data-msg="Dame una rutina para hoy">
+              <i class="fas fa-dumbbell"></i> Rutina del día
+            </button>
+            <button class="suggestion-btn" data-msg="¿Qué debo comer antes de entrenar?">
+              <i class="fas fa-utensils"></i> Pre-entreno
+            </button>
+            <button class="suggestion-btn" data-msg="Necesito motivación">
+              <i class="fas fa-fire"></i> Motivación
+            </button>
+            <button class="suggestion-btn" data-msg="¿Cómo hago una sentadilla correcta?">
+              <i class="fas fa-running"></i> Técnica
+            </button>
+          </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="chat-input-container">
+          <div class="chat-input">
+            <input 
+              type="text" 
+              id="user-input" 
+              placeholder="Escribe tu mensaje..." 
+              autocomplete="off"
+            />
+            <button id="send-btn" class="send-btn" title="Enviar mensaje">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+          <p class="input-hint">
+            <i class="fas fa-shield-alt"></i> Fitty está diseñado para darte consejos fitness generales
+          </p>
+        </div>
+      </main>
     </div>
 
     <!-- PROTECCIÓN DE AUTENTICACIÓN -->
     <script src="../scripts/auth-guard.js"></script>
     
-  <script>
-  const chatBox = document.getElementById("chat-box");
-  const userInput = document.getElementById("user-input");
-  const sendBtn = document.getElementById("send-btn");
+    <script>
+      const chatBox = document.getElementById("chat-box");
+      const userInput = document.getElementById("user-input");
+      const sendBtn = document.getElementById("send-btn");
+      const suggestions = document.getElementById("suggestions");
 
-  // ✅ NO declarar userId aquí, ya existe desde auth-guard.js
-  // Ya tenemos acceso a: userId (viene de auth-guard.js)
-
-  if (!userId) {
-    addMessage("⚠️ Por favor inicia sesión para usar el chat.", "ai");
-    userInput.disabled = true;
-    sendBtn.disabled = true;
-  }
-
-  sendBtn.addEventListener("click", sendMessage);
-  userInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") sendMessage();
-  });
-
-  async function sendMessage() {
-    const text = userInput.value.trim();
-    if (!text) return;
-
-    addMessage(text, "user");
-    userInput.value = "";
-
-    const loading = document.createElement("div");
-    loading.classList.add("message", "ai", "loading");
-    loading.innerHTML = `<span class="avatar">🤖</span><p>Fitty está pensando...</p>`;
-    chatBox.appendChild(loading);
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    try {
-      const res = await fetch("http://localhost:5000/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          message: text,
-          user_id: userId  // ✅ Usando el userId de auth-guard.js
-        }),
-      });
-      
-      const data = await res.json();
-      chatBox.removeChild(loading);
-
-      if (data.reply) {
-        addMessage(data.reply, "ai");
-      } else if (data.error) {
-        addMessage(`⚠️ ${data.error}`, "ai");
-      } else {
-        addMessage("⚠️ No recibí una respuesta válida.", "ai");
+      // Verificar autenticación
+      if (!userId) {
+        addMessage("⚠️ Por favor inicia sesión para usar el chat.", "ai");
+        userInput.disabled = true;
+        sendBtn.disabled = true;
       }
 
-    } catch (error) {
-      console.error("Error:", error);
-      chatBox.removeChild(loading);
-      addMessage("❌ No pude conectarme con Fitty. Verifica tu conexión.", "ai");
-    }
-  }
+      // Event Listeners
+      sendBtn.addEventListener("click", sendMessage);
+      userInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendMessage();
+      });
 
-  function addMessage(text, sender) {
-    const div = document.createElement("div");
-    div.classList.add("message", sender);
-    
-    if (sender === "ai") {
-      const formattedText = text.replace(/\n/g, '<br>');
-      div.innerHTML = `<span class="avatar">🤖</span><p>${formattedText}</p>`;
-    } else {
-      div.innerHTML = `<p>${text}</p>`;
-    }
-    
-    chatBox.appendChild(div);
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
+      // Sugerencias rápidas
+      document.querySelectorAll(".suggestion-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const msg = btn.getAttribute("data-msg");
+          userInput.value = msg;
+          sendMessage();
+        });
+      });
 
-  // Mensaje inicial personalizado
-  window.addEventListener('load', async () => {
-    if (!userId) return;
+      // Ocultar sugerencias cuando hay mensajes
+      userInput.addEventListener("input", () => {
+        if (userInput.value.length > 0) {
+          suggestions.classList.add("hidden");
+        } else {
+          suggestions.classList.remove("hidden");
+        }
+      });
 
-    try {
-      const res = await fetch(`http://localhost:5000/api/questionnaire/${userId}`);
-      
-      if (res.ok) {
-        const data = await res.json();
+      async function sendMessage() {
+        const text = userInput.value.trim();
+        if (!text) return;
 
-        if (data.success && data.data && data.data.hasCompletedQuestionnaire) {
-          const profile = data.data.fitnessProfile;
-          setTimeout(() => {
-            addMessage(
-              `Veo que tu objetivo es "${profile.mainGoal}" y entrenas ${profile.trainingDaysPerWeek} días a la semana. ¡Estoy aquí para ayudarte! 💪`,
-              "ai"
-            );
-          }, 1000);
+        // Ocultar sugerencias después del primer mensaje
+        suggestions.style.display = "none";
+
+        addMessage(text, "user");
+        userInput.value = "";
+
+        // Mostrar indicador de escritura
+        const typingIndicator = createTypingIndicator();
+        chatBox.appendChild(typingIndicator);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        try {
+          const res = await fetch("http://localhost:5000/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+              message: text,
+              user_id: userId
+            }),
+          });
+          
+          const data = await res.json();
+          chatBox.removeChild(typingIndicator);
+
+          if (data.reply) {
+            addMessage(data.reply, "ai");
+          } else if (data.error) {
+            addMessage(`⚠️ ${data.error}`, "ai");
+          } else {
+            addMessage("⚠️ No recibí una respuesta válida.", "ai");
+          }
+
+        } catch (error) {
+          console.error("Error:", error);
+          chatBox.removeChild(typingIndicator);
+          addMessage("❌ No pude conectarme con Fitty. Verifica tu conexión.", "ai");
         }
       }
-    } catch (error) {
-      console.log("No se pudo cargar el perfil");
-    }
-  });
-</script>
+
+      function createTypingIndicator() {
+        const div = document.createElement("div");
+        div.classList.add("message", "ai", "typing-indicator");
+        div.innerHTML = `
+          <div class="message-avatar">
+            <img src="https://cdn-icons-png.flaticon.com/512/4712/4712103.png" alt="Fitty" />
+          </div>
+          <div class="message-content">
+            <div class="message-bubble typing">
+              <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          </div>
+        `;
+        return div;
+      }
+
+      function addMessage(text, sender) {
+        const div = document.createElement("div");
+        div.classList.add("message", sender);
+        
+        const time = new Date().toLocaleTimeString('es-ES', { 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        });
+
+        if (sender === "ai") {
+          const formattedText = formatMessage(text);
+          div.innerHTML = `
+            <div class="message-avatar">
+              <img src="https://cdn-icons-png.flaticon.com/512/4712/4712103.png" alt="Fitty" />
+            </div>
+            <div class="message-content">
+              <div class="message-bubble">
+                ${formattedText}
+              </div>
+              <span class="message-time">${time}</span>
+            </div>
+          `;
+        } else {
+          div.innerHTML = `
+            <div class="message-content">
+              <div class="message-bubble">
+                <p>${text}</p>
+              </div>
+              <span class="message-time">${time}</span>
+            </div>
+          `;
+        }
+        
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+
+      function formatMessage(text) {
+        // Convertir saltos de línea a <br>
+        let formatted = text.replace(/\n/g, '<br>');
+        
+        // Convertir **texto** a <strong>texto</strong>
+        formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        // Convertir listas con - a elementos de lista
+        if (formatted.includes('<br>- ')) {
+          const parts = formatted.split('<br>- ');
+          if (parts.length > 1) {
+            formatted = parts[0] + '<ul class="chat-list">' + 
+              parts.slice(1).map(item => `<li>${item}</li>`).join('') + 
+              '</ul>';
+          }
+        }
+
+        return `<p>${formatted}</p>`;
+      }
+
+      // Mensaje inicial personalizado
+      window.addEventListener('load', async () => {
+        if (!userId) return;
+
+        try {
+          const res = await fetch(`http://localhost:5000/api/questionnaire/${userId}`);
+          
+          if (res.ok) {
+            const data = await res.json();
+
+            if (data.success && data.data && data.data.hasCompletedQuestionnaire) {
+              const profile = data.data.fitnessProfile;
+              setTimeout(() => {
+                addMessage(
+                  `He revisado tu perfil 📋\n\nTu objetivo: **${profile.mainGoal}**\nDías de entreno: **${profile.trainingDaysPerWeek} por semana**\n\n¡Pregúntame lo que necesites para alcanzar tu meta! 🎯`,
+                  "ai"
+                );
+              }, 1500);
+            }
+          }
+        } catch (error) {
+          console.log("No se pudo cargar el perfil");
+        }
+      });
+    </script>
   </body>
 </html>
