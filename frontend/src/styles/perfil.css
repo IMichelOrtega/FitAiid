@@ -6,8 +6,9 @@
 body {
   font-family: 'Oswald', sans-serif;
 }
+
 .body-bg {
-  padding-top: 5rem; /* aumenta o reduce según lo que necesites */
+  padding-top: 5rem;
 }
 
 .body-bg {
@@ -65,6 +66,8 @@ body {
 .btn-outline {
   @apply py-2 rounded-lg border border-white/10 text-white hover:bg-white/10;
 }
+
+/* avatar */
 #uploadBtn {
   cursor: pointer;
   transition: 0.3s ease;
@@ -74,22 +77,22 @@ body {
   color: #ff6a1f;
   transform: scale(1.1);
 }
-/* estilos avatar (añádelo a home.css) */
-#uploadBtn { cursor: pointer; transition: 0.18s ease; }
-#uploadBtn:hover { color: #ff6a1f; transform: scale(1.06); }
-#avatarImg { cursor: pointer; transition: transform .18s ease; }
-#avatarImg:hover { transform: scale(1.02); }
 
-.brand-text h2 {
-  color: #ff2e00;
-  font-size: 22px;
+#uploadBtn {
+  cursor: pointer;
+  transition: 0.18s ease;
 }
 
-.brand-text p {
-  font-size: 12px;
-  color: #ccc;
+#uploadBtn:hover {
+  color: #ff6a1f;
+  transform: scale(1.06);
 }
 
-.user {
-  font-size: 30px;
+#avatarImg {
+  cursor: pointer;
+  transition: transform 0.18s ease;
+}
+
+#avatarImg:hover {
+  transform: scale(1.02);
 }
