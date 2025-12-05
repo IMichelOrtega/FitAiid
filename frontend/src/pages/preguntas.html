@@ -303,6 +303,8 @@
 
         if (data.success) {
           console.log('✅ Cuestionario guardado:', data);
+          localStorage.setItem('fitnessProfile', JSON.stringify(questionnaireData));
+          console.log('💾 Perfil guardado en localStorage:', questionnaireData);  
           document.getElementById('finishMessage').textContent = 
             '¡Perfil fitness guardado exitosamente! 🎉 Redirigiendo';
           // ⭐ REDIRECCIÓN AUTOMÁTICA

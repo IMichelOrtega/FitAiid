@@ -1,590 +1,595 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FitAiid - Panel Usuario</title>
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet" />
-
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Tu CSS personalizado -->
-  <link rel="stylesheet" href="../styles/perfil.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Perfil - FitAiid</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #0a0a0a;
+      --bg-card: #111111;
+      --bg-card-hover: #1a1a1a;
+      --accent: #ff3d00;
+      --accent-light: #ff6b3d;
+      --accent-glow: rgba(255, 61, 0, 0.3);
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0b0;
+      --text-muted: #707070;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --gradient-accent: linear-gradient(135deg, var(--accent), var(--accent-light));
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Oswald', 'Inter', system-ui, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+    /* NAVBAR */
+    .navbar-header {
+      width: 100%; padding: 20px 60px; display: flex; justify-content: space-between; align-items: center;
+      background: rgba(12, 12, 12, 0.85); backdrop-filter: blur(10px); position: fixed; top: 0; left: 0;
+      z-index: 9999; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    .navbar-header .logo { display: flex; align-items: center; gap: 10px; }
+    .navbar-header .logo img { width: 55px; height: 55px; }
+    .navbar-header .brand-text h2 { color: #ff2e00; font-size: 22px; font-weight: 700; margin: 0; }
+    .navbar-header .brand-text p { font-size: 12px; color: #ccc; margin: 0; }
+    .navbar-header .menu { display: flex; gap: 40px; align-items: center; }
+    .navbar-header .menu a { color: white; font-size: 18px; text-decoration: none; padding-bottom: 5px; transition: all 0.3s; border-bottom: 3px solid transparent; }
+    .navbar-header .menu a:hover { color: #ff2e00; }
+    .navbar-header .menu a.active { color: #ff2e00; border-bottom: 3px solid #ff2e00; }
+    .navbar-header .icons { display: flex; align-items: center; gap: 20px; }
+    .navbar-header .profile-link { text-decoration: none; color: #ff2e00; font-weight: 600; font-size: 16px; padding: 5px 10px; border-radius: 5px; }
+    .navbar-header .bell { font-size: 22px; cursor: pointer; position: relative; }
+    .navbar-header .bell::after { content: ''; position: absolute; top: 0; right: 0; width: 8px; height: 8px; background: #ff2e00; border-radius: 50%; }
+    .navbar-header .logout-btn { background: linear-gradient(135deg, #ff4444, #cc0000); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 14px; font-family: "Oswald", sans-serif; }
+    .navbar-header .logout-btn:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4); }
+    @media (max-width: 768px) { .navbar-header { padding: 15px 20px; flex-wrap: wrap; } .navbar-header .menu { order: 3; width: 100%; justify-content: center; gap: 20px; margin-top: 15px; } }
+    /* MAIN */
+    .main-container { max-width: 1400px; margin: 0 auto; padding: 120px 40px 80px; }
+    /* PROFILE HERO */
+    .profile-hero { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 24px; padding: 40px; margin-bottom: 30px; position: relative; overflow: hidden; }
+    .profile-hero::before { content: ''; position: absolute; top: 0; right: 0; width: 400px; height: 400px; background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); pointer-events: none; }
+    .profile-hero-content { display: flex; align-items: center; gap: 40px; position: relative; z-index: 1; }
+    .avatar-container { position: relative; }
+    .avatar { width: 150px; height: 150px; border-radius: 50%; background: var(--gradient-accent); padding: 4px; cursor: pointer; transition: all 0.3s; }
+    .avatar:hover { transform: scale(1.05); box-shadow: 0 0 40px var(--accent-glow); }
+    .avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: var(--bg-secondary); }
+    .avatar-edit { position: absolute; bottom: 5px; right: 5px; width: 40px; height: 40px; background: var(--gradient-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; cursor: pointer; border: 3px solid var(--bg-card); }
+    .profile-info { flex: 1; }
+    .profile-name { font-family: 'Oswald', sans-serif; font-size: 42px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+    .profile-name span { background: var(--gradient-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .profile-email { color: var(--text-muted); font-size: 14px; margin-bottom: 16px; }
+    .profile-badges { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
+    .badge-level { background: rgba(255, 61, 0, 0.15); color: var(--accent); border: 1px solid rgba(255, 61, 0, 0.3); }
+    .badge-goal { background: rgba(34, 197, 94, 0.15); color: var(--success); border: 1px solid rgba(34, 197, 94, 0.3); }
+    .badge-streak { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .profile-stats { display: flex; gap: 32px; }
+    .profile-stat { text-align: center; }
+    .profile-stat-value { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: var(--accent); }
+    .profile-stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; }
+    .profile-actions { display: flex; flex-direction: column; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 28px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; font-family: 'Oswald', sans-serif; text-transform: uppercase; text-decoration: none; }
+    .btn-primary { background: var(--gradient-accent); color: white; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px var(--accent-glow); }
+    .btn-outline { background: transparent; color: var(--text-secondary); border: 1px solid var(--border-color); }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    /* GRID */
+    .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+    .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 28px; transition: all 0.3s; }
+    .card:hover { border-color: rgba(255, 61, 0, 0.2); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .card-title { display: flex; align-items: center; gap: 12px; }
+    .card-title i { width: 40px; height: 40px; background: rgba(255, 61, 0, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent); }
+    .card-title h3 { font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 600; text-transform: uppercase; }
+    .card-action { color: var(--accent); font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; }
+    .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .data-item { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; transition: all 0.3s; }
+    .data-item:hover { border-color: var(--accent); }
+    .data-item-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+    .data-item-value { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; }
+    .data-item-value.accent { color: var(--accent); }
+    .progress-section { margin-top: 24px; }
+    .progress-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .progress-label { font-size: 13px; color: var(--text-secondary); }
+    .progress-value { font-family: 'Oswald', sans-serif; font-size: 14px; color: var(--accent); }
+    .progress-bar { height: 8px; background: var(--bg-secondary); border-radius: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--gradient-accent); border-radius: 10px; }
+    .activity-list { display: flex; flex-direction: column; gap: 12px; }
+    .activity-item { display: flex; align-items: center; gap: 16px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 14px; padding: 16px 20px; transition: all 0.3s; }
+    .activity-item:hover { border-color: var(--accent); transform: translateX(5px); }
+    .activity-icon { width: 45px; height: 45px; background: rgba(255, 61, 0, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .activity-info { flex: 1; }
+    .activity-title { font-weight: 600; font-size: 15px; }
+    .activity-date { font-size: 12px; color: var(--text-muted); }
+    .activity-badge { background: rgba(34, 197, 94, 0.1); color: var(--success); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 10px; }
+    .achievements-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .achievement { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; text-align: center; transition: all 0.3s; }
+    .achievement:hover { border-color: var(--accent); transform: translateY(-5px); }
+    .achievement.locked { opacity: 0.4; }
+    .achievement-icon { font-size: 32px; margin-bottom: 12px; }
+    .achievement-name { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; }
+    .sidebar-cards { display: flex; flex-direction: column; gap: 20px; }
+    .streak-card { background: linear-gradient(135deg, var(--bg-card), rgba(255, 61, 0, 0.08)); border-color: rgba(255, 61, 0, 0.2); text-align: center; }
+    .streak-icon { font-size: 40px; margin-bottom: 12px; }
+    .streak-value { font-family: 'Oswald', sans-serif; font-size: 48px; font-weight: 700; background: var(--gradient-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
+    .streak-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; }
+    .streak-days { display: flex; justify-content: center; gap: 6px; }
+    .streak-day { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-muted); }
+    .streak-day.completed { background: var(--gradient-accent); border-color: var(--accent); color: white; }
+    .streak-day.today { border-color: var(--accent); color: var(--accent); }
+    .quick-stat { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--border-color); }
+    .quick-stat:last-child { border-bottom: none; }
+    .quick-stat-label { font-size: 13px; color: var(--text-secondary); }
+    .quick-stat-value { font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 600; }
+    .tools-grid { display: flex; flex-direction: column; gap: 12px; }
+    .tool-item { display: flex; align-items: center; justify-content: space-between; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 14px; padding: 18px 20px; cursor: pointer; transition: all 0.3s; }
+    .tool-item:hover { border-color: var(--accent); }
+    .tool-left { display: flex; align-items: center; gap: 14px; }
+    .tool-icon { width: 42px; height: 42px; background: rgba(255, 61, 0, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent); }
+    .tool-name { font-weight: 600; font-size: 14px; }
+    .tool-value { font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 600; color: var(--accent); }
+    .motivation-text { font-size: 14px; color: var(--text-secondary); line-height: 1.6; font-style: italic; text-align: center; }
+    .motivation-text strong { color: var(--accent); }
+    /* MODAL */
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.9); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 20px; overflow-y: auto; }
+    .modal-overlay.active { display: flex; }
+    .modal { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 24px; padding: 32px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; margin: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .modal-title { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 600; text-transform: uppercase; }
+    .modal-close { width: 40px; height: 40px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); flex-shrink: 0; }
+    .modal-close:hover { background: var(--accent); color: white; }
+    /* Upload Section */
+    .upload-section { margin-bottom: 24px; text-align: center; }
+    .upload-btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; background: linear-gradient(135deg, #ff3d00, #ff6b3d); color: white; border-radius: 12px; cursor: pointer; font-weight: 600; font-family: 'Oswald', sans-serif; text-transform: uppercase; transition: all 0.3s; font-size: 14px; }
+    .upload-btn:hover { transform: scale(1.05); box-shadow: 0 5px 20px rgba(255, 61, 0, 0.4); }
+    .upload-hint { color: #707070; font-size: 11px; margin-top: 8px; }
+    .upload-preview { display: none; text-align: center; margin-bottom: 20px; }
+    .preview-container { position: relative; display: inline-block; }
+    .preview-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #ff3d00; }
+    .preview-remove { position: absolute; top: -5px; right: -5px; width: 22px; height: 22px; background: #ff4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 10px; color: white; transition: all 0.3s; }
+    .preview-remove:hover { background: #cc0000; transform: scale(1.1); }
+    .preview-text { color: #22c55e; font-size: 12px; margin-top: 8px; }
+    .divider-text { text-align: center; color: #505050; margin-bottom: 16px; font-size: 12px; }
+    .save-btn { width: 100%; margin-top: 20px; }
+    /* Avatar Grid */
+    .avatar-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .avatar-option { width: 100%; aspect-ratio: 1; border-radius: 50%; background: var(--bg-secondary); border: 3px solid var(--border-color); cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+    .avatar-option:hover { border-color: var(--accent); transform: scale(1.05); }
+    .avatar-option.selected { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+    /* Modal Responsive */
+    @media (max-width: 550px) {
+      .modal { padding: 24px 20px; border-radius: 20px; max-height: 85vh; }
+      .modal-title { font-size: 20px; }
+      .modal-close { width: 36px; height: 36px; }
+      .upload-btn { padding: 12px 20px; font-size: 13px; gap: 8px; }
+      .avatar-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+      .avatar-option { font-size: 30px; border-width: 2px; }
+      .preview-img { width: 70px; height: 70px; }
+    }
+    @media (max-width: 420px) {
+      .modal-overlay { padding: 15px; }
+      .modal { padding: 20px 16px; border-radius: 16px; }
+      .modal-title { font-size: 18px; }
+      .modal-close { width: 32px; height: 32px; font-size: 14px; }
+      .upload-btn { padding: 10px 16px; font-size: 12px; }
+      .upload-btn span { display: inline; }
+      .avatar-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+      .avatar-option { font-size: 26px; }
+      .divider-text { font-size: 11px; margin-bottom: 12px; }
+      .save-btn { padding: 12px 20px; font-size: 13px; margin-top: 16px; }
+      .preview-img { width: 60px; height: 60px; }
+    }
+    @media (max-width: 350px) {
+      .modal { padding: 16px 12px; }
+      .avatar-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .avatar-option { font-size: 24px; }
+      .upload-btn { padding: 10px 14px; font-size: 11px; }
+    }
+    /* FOOTER */
+    .footer { background: var(--bg-secondary); padding: 80px 60px 40px; border-top: 1px solid var(--border-color); margin-top: 80px; }
+    .footer-container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 50px; }
+    .footer-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .footer-brand img { width: 50px; height: 50px; }
+    .footer-brand h2 { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: var(--accent); }
+    .footer-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 24px; }
+    .footer-social { display: flex; gap: 12px; }
+    .footer-social a { width: 40px; height: 40px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-decoration: none; transition: all 0.3s; }
+    .footer-social a:hover { background: var(--accent); color: white; }
+    .footer-col h3 { font-family: 'Oswald', sans-serif; color: var(--text-primary); margin-bottom: 20px; font-size: 16px; text-transform: uppercase; }
+    .footer-col a, .footer-col p { display: block; color: var(--text-secondary); text-decoration: none; margin-bottom: 12px; font-size: 14px; }
+    .footer-col a:hover { color: var(--accent); padding-left: 5px; }
+    .footer-col p i { color: var(--accent); margin-right: 8px; }
+    .footer-bottom { max-width: 1400px; margin: 60px auto 0; padding-top: 30px; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-muted); font-size: 13px; }
+    .footer-bottom span { color: var(--accent); }
+    @media (max-width: 1100px) { .content-grid { grid-template-columns: 1fr; } .profile-hero-content { flex-direction: column; text-align: center; } .profile-stats, .profile-badges { justify-content: center; } .profile-actions { flex-direction: row; justify-content: center; } .data-grid, .achievements-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) { .main-container { padding: 100px 20px 60px; } .profile-hero { padding: 24px; } .profile-name { font-size: 28px; } .avatar { width: 120px; height: 120px; } .data-grid { grid-template-columns: 1fr; } .footer-container { grid-template-columns: 1fr; text-align: center; } .footer-brand, .footer-social { justify-content: center; } }
+  </style>
 </head>
-<body class="min-h-screen text-white body-bg">
+<body>
+  <header class="navbar-header">
+    <div class="logo"><img src="../img/logo.png" alt="FitAiid Logo"><div class="brand-text"><h2>FitAiid</h2><p>Transforma Tu Cuerpo</p></div></div>
+    <nav class="menu"><a href="home.html">Inicio</a><a href="#">Entrenamiento</a><a href="chatbot.html">Coach Virtual</a><a href="nutricion.html">Nutrición</a><a href="#">Estadísticas</a></nav>
+    <div class="icons"><a href="perfil.html" class="profile-link" style="font-weight:700;">   </a><span class="bell">🔔</span><button onclick="logout()" class="logout-btn">Cerrar Sesión</button></div>
+  </header>
+
+  <main class="main-container">
+    <section class="profile-hero">
+      <div class="profile-hero-content">
+        <div class="avatar-container">
+          <div class="avatar" onclick="openAvatarModal()"><img id="userAvatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=default" alt="Avatar"></div>
+          <div class="avatar-edit" onclick="openAvatarModal()"><i class="fas fa-camera"></i></div>
+        </div>
+        <div class="profile-info">
+          <h1 class="profile-name">HOLA, <span id="userName">USUARIO</span></h1>
+          <p class="profile-email" id="userEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4e3b3d3b2f3c27210e2b232f2722602d2123">[email&#160;protected]</a></p>
+          <div class="profile-badges">
+            <span class="badge badge-level"><i class="fas fa-star"></i> <span id="userLevel">Principiante</span></span>
+            <span class="badge badge-goal"><i class="fas fa-bullseye"></i> <span id="userGoal">Perder Peso</span></span>
+            <span class="badge badge-streak"><i class="fas fa-fire"></i> <span id="streakBadge">7 días</span></span>
+          </div>
+          <div class="profile-stats">
+            <div class="profile-stat"><div class="profile-stat-value" id="totalWorkouts">24</div><div class="profile-stat-label">Entrenamientos</div></div>
+            <div class="profile-stat"><div class="profile-stat-value" id="totalCalories">8,420</div><div class="profile-stat-label">Calorías Quemadas</div></div>
+            <div class="profile-stat"><div class="profile-stat-value" id="totalHours">18h</div><div class="profile-stat-label">Tiempo Activo</div></div>
+          </div>
+        </div>
+        <div class="profile-actions">
+          <button class="btn btn-primary" onclick="window.location.href='preguntas.html'"><i class="fas fa-edit"></i> Editar Perfil</button>
+          <button class="btn btn-outline" onclick="window.location.href='chatbot.html'"><i class="fas fa-dumbbell"></i> Entrenar</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="content-grid">
+      <div class="left-column">
+        <div class="card">
+          <div class="card-header"><div class="card-title"><i class="fas fa-user"></i><h3>Datos Personales</h3></div><a class="card-action" onclick="window.location.href='preguntas.html'">Editar</a></div>
+          <div class="data-grid">
+            <div class="data-item"><div class="data-item-label">Edad</div><div class="data-item-value" id="userAge">25 años</div></div>
+            <div class="data-item"><div class="data-item-label">Altura</div><div class="data-item-value" id="userHeight">170 cm</div></div>
+            <div class="data-item"><div class="data-item-label">Peso Actual</div><div class="data-item-value accent" id="userWeight">70 kg</div></div>
+            <div class="data-item"><div class="data-item-label">Objetivo</div><div class="data-item-value" id="userObjective">Perder Peso</div></div>
+            <div class="data-item"><div class="data-item-label">Nivel</div><div class="data-item-value" id="userFitnessLevel">Principiante</div></div>
+            <div class="data-item"><div class="data-item-label">Disponibilidad</div><div class="data-item-value" id="userAvailability">3-4 días</div></div>
+          </div>
+          <div class="progress-section"><div class="progress-item"><div class="progress-header"><span class="progress-label">Progreso hacia tu meta</span><span class="progress-value">65%</span></div><div class="progress-bar"><div class="progress-fill" style="width:65%;"></div></div></div></div>
+        </div>
+        <div class="card" style="margin-top:20px;">
+          <div class="card-header"><div class="card-title"><i class="fas fa-clock-rotate-left"></i><h3>Actividad Reciente</h3></div><a class="card-action">Ver Todo</a></div>
+          <div class="activity-list">
+            <div class="activity-item"><div class="activity-icon">🏋️</div><div class="activity-info"><div class="activity-title">Circuito Funcional</div><div class="activity-date">Hoy, 10:30 AM</div></div><span class="activity-badge">Completado</span></div>
+            <div class="activity-item"><div class="activity-icon">🥗</div><div class="activity-info"><div class="activity-title">Plan Nutricional Revisado</div><div class="activity-date">Ayer, 8:00 PM</div></div><span class="activity-badge">Completado</span></div>
+            <div class="activity-item"><div class="activity-icon">💬</div><div class="activity-info"><div class="activity-title">Consulta con Fitty</div><div class="activity-date">Hace 2 días</div></div><span class="activity-badge">Completado</span></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:20px;">
+          <div class="card-header"><div class="card-title"><i class="fas fa-trophy"></i><h3>Logros</h3></div><a class="card-action">Ver Todos</a></div>
+          <div class="achievements-grid">
+            <div class="achievement"><div class="achievement-icon">🔥</div><div class="achievement-name">7 Días Racha</div></div>
+            <div class="achievement"><div class="achievement-icon">💪</div><div class="achievement-name">Primer Entreno</div></div>
+            <div class="achievement"><div class="achievement-icon">🎯</div><div class="achievement-name">Meta Cumplida</div></div>
+            <div class="achievement locked"><div class="achievement-icon">🏆</div><div class="achievement-name">30 Días</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-cards">
+        <div class="card streak-card">
+          <div class="streak-icon">🔥</div><div class="streak-value" id="streakCount">7</div><div class="streak-label">Días consecutivos</div>
+          <div class="streak-days"><div class="streak-day completed">L</div><div class="streak-day completed">M</div><div class="streak-day completed">X</div><div class="streak-day completed">J</div><div class="streak-day completed">V</div><div class="streak-day completed">S</div><div class="streak-day today">D</div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title"><i class="fas fa-chart-simple"></i><h3>Resumen</h3></div></div>
+          <div class="quick-stat"><span class="quick-stat-label">Rutinas hoy</span><span class="quick-stat-value" style="color:var(--accent);">2</span></div>
+          <div class="quick-stat"><span class="quick-stat-label">Kcal quemadas</span><span class="quick-stat-value" style="color:var(--success);">420</span></div>
+          <div class="quick-stat"><span class="quick-stat-label">Última sesión</span><span class="quick-stat-value">Hoy</span></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title"><i class="fas fa-toolbox"></i><h3>Herramientas</h3></div></div>
+          <div class="tools-grid">
+            <div class="tool-item"><div class="tool-left"><div class="tool-icon"><i class="fas fa-calculator"></i></div><span class="tool-name">IMC Actual</span></div><span class="tool-value" id="userIMC">24.4</span></div>
+            <div class="tool-item"><div class="tool-left"><div class="tool-icon"><i class="fas fa-droplet"></i></div><span class="tool-name">Hidratación</span></div><span class="tool-value">2.4 L</span></div>
+            <div class="tool-item"><div class="tool-left"><div class="tool-icon"><i class="fas fa-weight-scale"></i></div><span class="tool-name">Registrar Peso</span></div><i class="fas fa-chevron-right" style="color:var(--text-muted);"></i></div>
+          </div>
+        </div>
+        <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-heart"></i><h3>Motivación</h3></div></div><p class="motivation-text">"Sigue así — llevas <strong id="streakMotivation">7 días</strong> seguidos. ¡No pierdas el ritmo!"</p></div>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="avatarModal">
+    <div class="modal">
+      <div class="modal-header"><h3 class="modal-title">Elige tu Avatar</h3><div class="modal-close" onclick="closeAvatarModal()"><i class="fas fa-times"></i></div></div>
+      
+      <!-- Sección para subir imagen -->
+      <div class="upload-section">
+        <label for="imageUpload" class="upload-btn">
+          <i class="fas fa-camera"></i> <span>Subir Mi Foto</span>
+        </label>
+        <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+        <p class="upload-hint">JPG, PNG o GIF</p>
+      </div>
+      
+      <!-- Preview de imagen subida -->
+      <div id="uploadPreview" class="upload-preview">
+        <div class="preview-container">
+          <img id="previewImg" src="" class="preview-img">
+          <div onclick="removeUploadedImage()" class="preview-remove">✕</div>
+        </div>
+        <p class="preview-text"><i class="fas fa-check"></i> Foto lista</p>
+      </div>
+      
+      <div class="divider-text">— o elige un avatar —</div>
+      
+      <div class="avatar-grid" id="avatarGrid"></div>
+      <button class="btn btn-primary save-btn" onclick="saveAvatar()">Guardar</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-col"><div class="footer-brand"><img src="../img/logo.png" alt="FitAiid"><h2>FitAiid</h2></div><p class="footer-desc">Transforma tu cuerpo con FitAiid, tu aliado de confianza en fitness.</p><div class="footer-social"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div></div>
+      <div class="footer-col"><h3>Nosotros</h3><a href="#">Sobre Nosotros</a><a href="#">Servicios</a><a href="#">Blog</a><a href="#">Contacto</a></div>
+      <div class="footer-col"><h3>Recursos</h3><a href="#">Herramientas</a><a href="#">Videos</a><a href="#">Guías</a><a href="#">FAQ</a></div>
+      <div class="footer-col"><h3>Programas</h3><a href="#">Pérdida De Peso</a><a href="#">Ganar Músculo</a><a href="#">Entreno Casa</a><a href="#">Plan Gimnasio</a></div>
+      <div class="footer-col"><h3>Contacto</h3><p><i class="fas fa-location-dot"></i> Colombia</p><p><i class="fas fa-phone"></i> 3202368622</p><p><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="83c5eaf7c2eaeae7c3e4eee2eaefade0ecee">[email&#160;protected]</a></p></div>
+    </div>
+    <div class="footer-bottom">© 2025 <span>FitAiid</span> — Todos los derechos reservados.</div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
-    // 🔒 Proteger página - CORREGIDO para soportar ambos tokens
     const token = localStorage.getItem("token") || localStorage.getItem("authToken");
     const userId = localStorage.getItem("userId");
-    
-    if (!token) {
-      console.log("❌ No autenticado, redirigiendo a login...");
-      window.location.replace("login.html");
-    } else {
-      console.log("✅ Usuario autenticado en perfil");
-    }
-  </script>
-  <div class="max-w-6xl mx-auto px-6 py-10">
-    <!-- Header -->
-<!-- HEADER -->
-<header class="navbar-header">
-  <div class="logo">
-    <img src="../img/logo.png" alt="FitAiid Logo">
-    <div class="brand-text">
-      <h2>FitAiid</h2>
-      <p>Transforma Tu Cuerpo</p>
-    </div>
-  </div>
+    if (!token || !userId) { window.location.replace("login.html"); }
 
-  <nav class="menu">
-    <a href="home.html">Inicio</a>
-    <a href="#">Entrenamiento</a>
-    <a href="chatbot.html">Coach Virtual</a>
-    <a href="nutricion.html">Nutrición</a>
-    <a href="#">Estadísticas</a>
-  </nav>
+    let selectedAvatar = null;
+    let uploadedImageData = null;
 
-  <div class="icons">
-    <span class="bell">🔔</span>
-    <button onclick="logout()" class="logout-btn">Cerrar Sesión</button>
-  </div>
-</header>
-
-<style>
-  /* ======== NAVBAR (específico para no conflictuar) ======== */
-  .navbar-header {
-    width: 100%;
-    padding: 20px 60px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(12, 12, 12, 0.85);
-    backdrop-filter: blur(10px);
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 9999;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  }
-  #userName {
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 30px;
-  }
-  body {
-    padding-top: 100px !important;
-  }
-
-  .navbar-header .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .navbar-header .logo img {
-    width: 55px;
-    height: 55px;
-  }
-
-  .navbar-header .brand-text h2 {
-    color: #ff2e00;
-    font-size: 22px;
-    font-weight: 700;
-    margin: 0;
-  }
-
-  .navbar-header .brand-text p {
-    font-size: 12px;
-    color: #ccc;
-    font-weight: 400;
-    margin: 0;
-  }
-
-  .navbar-header .menu {
-    display: flex;
-    gap: 40px;
-    align-items: center;
-  }
-
-  .navbar-header .menu a {
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-    text-decoration: none;
-    padding-bottom: 5px;
-    transition: all 0.3s ease;
-    border-bottom: 3px solid transparent;
-  }
-
-  .navbar-header .menu a:hover {
-    color: #ff2e00;
-  }
-
-  .navbar-header .menu a.active {
-    color: #ff2e00;
-    border-bottom: 3px solid #ff2e00;
-  }
-
-  .navbar-header .icons {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .navbar-header .profile-link {
-    text-decoration: none;
-    color: #ff2e00;
-    font-weight: 600;
-    font-size: 16px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    transition: background 0.3s;
-  }
-
-  .navbar-header .profile-link:hover {
-    background-color: rgba(255, 46, 0, 0.1);
-  }
-
-  .navbar-header .bell {
-    font-size: 22px;
-    cursor: pointer;
-    position: relative;
-    transition: transform 0.2s;
-  }
-
-  .navbar-header .bell:hover {
-    transform: scale(1.1);
-  }
-
-  .navbar-header .bell::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 8px;
-    height: 8px;
-    background: #ff2e00;
-    border-radius: 50%;
-  }
-
-  .navbar-header .logout-btn {
-    background: linear-gradient(135deg, #ff4444, #cc0000);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14px;
-    transition: all 0.3s;
-    font-family: "Oswald", sans-serif;
-  }
-
-  .navbar-header .logout-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .navbar-header {
-      padding: 15px 20px;
-      flex-wrap: wrap;
-    }
-
-    .navbar-header .menu {
-      order: 3;
-      width: 100%;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 15px;
-      overflow-x: auto;
-    }
-  }
-</style>
-
-<script>
-  // Marcar página activa automáticamente
-  document.addEventListener('DOMContentLoaded', function() {
-    const currentPage = window.location.pathname.split('/').pop();
-    const menuLinks = document.querySelectorAll('.navbar-header .menu a');
-    
-    menuLinks.forEach(link => {
-      link.classList.remove('active');
-      const linkPage = link.getAttribute('href');
-      if (linkPage === currentPage || (currentPage === 'perfil.html' && linkPage === 'perfil.html')) {
-        link.classList.add('active');
-      }
-    });
-
-    // Si estamos en perfil.html, marcar "Mi Perfil" como activo también
-    if (currentPage === 'perfil.html') {
-      document.querySelector('.navbar-header .profile-link').style.fontWeight = '700';
-    }
-  });
-
-  // Función logout
-  function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("user");
-    localStorage.removeItem("userEmail");
-    console.log("🚪 Sesión cerrada");
-    window.location.href = "login.html";
-  }
-</script>
-
-    <!-- Main panel -->
-    <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Left -->
-      <section class="lg:col-span-2">
-        <div class="frost-card card-shadow rounded-2xl p-6 lg:p-8">
-          <div class="flex flex-col lg:flex-row gap-6 items-center lg:items-start">
-            <div class="flex-shrink-0">
-              <!-- AVATAR: reemplaza el bloque anterior por este -->
-                <div class="relative w-32 h-32 group">
-  <!-- Imagen de avatar -->
-  <img 
-    id="avatarImg"
-    src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=600&auto=format&fit=crop"
-    alt="Foto de perfil"
-    class="w-32 h-32 rounded-full object-cover border-4 border-orange-500 shadow-lg"
-  />
-
-  <!-- Botón de edición -->
-  <label 
-    for="avatarInput" 
-    id="uploadBtn"
-    title="Cambiar foto de perfil"
-    class="absolute bottom-1 right-1 bg-black/70 text-white text-sm p-2.5 rounded-full cursor-pointer hover:bg-orange-500 transition-all duration-300 shadow-md"
-  >
-    ✎
-  </label>
-  
-  <!-- Input oculto para seleccionar archivo -->
-  <input 
-    type="file" 
-    id="avatarInput" 
-    accept="image/jpeg,image/png,image/jpg,image/webp" 
-    class="hidden" 
-  />
-  <!-- Botón para resetear (opcional - muestra al hacer hover) -->
-  <button
-    id="resetAvatarBtn"
-    title="Restaurar foto por defecto"
-    class="absolute top-1 right-1 bg-red-600/80 text-white text-xs p-2 rounded-full cursor-pointer hover:bg-red-500 transition-all duration-300 opacity-0 group-hover:opacity-100"
-  </button>
-</div>
-
-</div>
-            <div class="flex-1 w-full">
-              <div class="flex items-center justify-between">
-                <div>
-                  <h1><span class="user" id="userName">USUARIO</span></h1>
-                  <div class="text-sm text-gray-300 mt-1">Nivel De Progreso</div>
-                </div>
-              </div>
-
-              <div class="mt-4">
-                <div class="progress-track w-full">
-                  <div id="progressFill" class="progress-fill" style="width:40%"></div>
-                </div>
-                <div class="flex justify-between text-xs text-gray-300 mt-2">
-                  <span>Principiante</span>
-                  <span class="text-center">Intermedio</span>
-                  <span class="text-right">Avanzado</span>
-                </div>
-              </div>
-
-              <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-                <div>
-                  <h3 class="display-font text-lg text-white/90">OBJETIVO PRINCIPAL</h3>
-                  <div class="text-sm text-gray-200 mt-2" id="mainGoal">Bajar De Peso</div>
-                </div>
-
-                <div class="flex items-center justify-center">
-                  <div class="w-20 h-20 rounded-full flex items-center justify-center bg-gradient-to-br from-red-700 to-orange-500">
-                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none">
-                      <path d="M12 2s-3 4.5-3 7a3 3 0 006 0c0-2.5-3-7-3-7z" fill="white" opacity="0.95"/>
-                    </svg>
-                  </div>
-                </div>
-
-                <div class="text-right">
-                  <h3 class="display-font text-lg text-white/90">RUTINA CUMPLIDA</h3>
-                  <div class="text-sm text-gray-200 mt-2" id="streakCount">7 Días Seguidos</div>
-                </div>
-              </div>
-
-              <!-- Tarjetas -->
-              <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="rounded-xl p-4 frost-card card-shadow card-bg">
-                  <div class="text-xs text-gray-300">Peso Actual</div>
-                  <div class="text-2xl font-bold mt-2" id="currentWeight">70 Kg</div>
-                  <div class="w-full mt-3 progress-track">
-                    <div id="weightProgress" class="progress-fill" style="width:40%"></div>
-                  </div>
-                  <div class="text-xs text-gray-400 mt-2">Meta: <span id="weightTarget">62 Kg</span></div>
-                </div>
-
-                <div class="rounded-xl p-4 frost-card card-shadow card-bg">
-                  <div class="text-xs text-gray-300">De Avance</div>
-                  <div class="text-3xl font-bold mt-2" id="advancePercent">75%</div>
-                  <div class="text-xs text-gray-400 mt-2">Progreso general</div>
-                </div>
-
-                <div class="rounded-xl p-4 frost-card card-shadow card-bg">
-                  <div class="text-xs text-gray-300">Rutinas Completadas</div>
-                  <div class="text-2xl font-bold mt-2" id="routinesDone">3</div>
-                  <div class="text-xs text-gray-400 mt-2">Esta semana</div>
-                </div>
-
-                <div class="rounded-xl p-4 frost-card card-shadow card-bg">
-                  <div class="text-xs text-gray-300">Nivel De Motivación</div>
-                  <div class="mt-2 flex items-end h-16">
-                    <div class="w-6 h-6 bg-orange-500 rounded-sm mr-2"></div>
-                    <div class="w-6 h-10 bg-orange-500 rounded-sm mr-2"></div>
-                    <div class="w-6 h-14 bg-orange-500 rounded-sm mr-2"></div>
-                    <div class="w-6 h-20 bg-orange-500 rounded-sm"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Datos del usuario -->
-        <div class="mt-6 rounded-2xl frost-card card-shadow p-6">
-          <h4 class="font-bold text-white/90 mb-4">Datos del Usuario</h4>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-gray-300">
-            <div>
-              <div class="text-xs">Edad</div>
-              <div id="userAge" class="text-lg font-semibold mt-1">20</div>
-            </div>
-            <div>
-              <div class="text-xs">Condiciones Médicas</div>
-              <div id="userMed" class="text-lg font-semibold mt-1">Ninguna</div>
-            </div>
-            <div>
-              <div class="text-xs">Altura</div>
-              <div id="userHeight" class="text-lg font-semibold mt-1">170 cm</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Right column -->
-      <aside class="space-y-4">
-        <div class="rounded-2xl frost-card card-shadow p-4">
-          <h5 class="font-semibold text-white/90">Resumen Rápido</h5>
-          <div class="mt-3 text-sm text-gray-300">
-            <div class="flex justify-between py-2 border-b border-white/5">
-              <span>Rutinas hoy</span>
-              <span id="todayRoutines">2</span>
-            </div>
-            <div class="flex justify-between py-2 border-b border-white/5">
-              <span>Kcal quemadas</span>
-              <span id="kcalsBurned">420</span>
-            </div>
-            <div class="flex justify-between py-2">
-              <span>Última sesión</span>
-              <span id="lastSession">Hace 2 días</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="rounded-2xl frost-card card-shadow p-4">
-          <h5 class="font-semibold text-white/90">Acciones</h5>
-          <div class="mt-4 grid gap-3">
-            <button class="btn-primary">Iniciar Rutina</button>
-            <button class="btn-outline">Registrar Peso</button>
-            <button class="btn-outline">Ver Historial</button>
-          </div>
-        </div>
-
-        <div class="rounded-2xl frost-card card-shadow p-4 text-gray-300">
-          <h6 class="font-semibold text-white/90">Motivación</h6>
-          <p class="text-sm mt-3">Sigue así — llevas <span id="streakSmall">7</span> días seguidos. ¡No pierdas el ritmo!</p>
-        </div>
-      </aside>
-    </main>
-  </div>
-  <section class="bg-[#121212] text-white py-10">
-  <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10">
-    
-    <!-- Actividad Reciente -->
-    <div>
-      <h2 class="text-2xl font-gagalin mb-6">ACTIVIDAD RECIENTE</h2>
+    function loadUserData() {
+      const userString = localStorage.getItem('user');
+      const fitnessProfile = localStorage.getItem('fitnessProfile');
       
-      <div class="flex items-center gap-4 mb-4 bg-[#1E1E1E] p-3 rounded-lg">
-        <span class="text-orange-500 text-3xl">🏋️</span>
-        <div>
-          <p class="font-semibold">Rutina De Fuerza</p>
-          <p class="text-gray-400 text-sm">22/Agosto/2025</p>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-4 mb-6 bg-[#1E1E1E] p-3 rounded-lg">
-        <span class="text-orange-500 text-3xl">🎥</span>
-        <div>
-          <p class="font-semibold">Videos De Entrenamiento</p>
-          <p class="text-gray-400 text-sm">22/Agosto/2025</p>
-        </div>
-      </div>
-
-      <button 
-  onclick="logout()" 
-  class="bg-gradient-to-r from-red-600 to-orange-500 text-white font-semibold px-8 py-3 rounded-full hover:opacity-90 transition w-full sm:w-auto">
-  CERRAR SESIÓN
-</button>
-
-    </div>
-
-    <!-- Herramientas FitAiid -->
-    <div>
-      <h2 class="text-2xl font-gagalin mb-6">HERRAMIENTAS FITAIID</h2>
-
-      <div class="bg-[#1E1E1E] p-4 rounded-lg mb-4 flex items-center gap-4">
-        <span class="text-orange-500 text-3xl">🧮</span>
-        <p class="font-semibold">Calculadora Macronutrientes</p>
-      </div>
-
-      <div class="bg-[#1E1E1E] p-4 rounded-lg mb-4 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <span class="text-orange-500 text-3xl">⚫</span>
-          <p class="font-semibold">IMC Actual</p>
-        </div>
-        <span class="text-gray-300">24.4</span>
-      </div>
-
-      <div class="bg-[#1E1E1E] p-4 rounded-lg flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <span class="text-orange-500 text-3xl">💧</span>
-          <p class="font-semibold">Hidratacion</p>
-        </div>
-        <span class="text-gray-300">2.4 L</span>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- FOOTER -->
-<footer class="bg-gradient-to-b from-black via-[#1a232d] to-black text-gray-300 py-16 px-10 md:px-24 mt-24 text-[17px] w-full">
-  <div class="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-14">
-
-    <!-- LOGO + DESCRIPCIÓN -->
-    <div>
-      <div class="flex items-center space-x-3">
-        <img src="../img/logo.png" alt="FitAiid Logo" class="w-16 h-16 drop-shadow-[0_0_10px_#ff2727]">
-        <h2 class="text-4xl font-extrabold tracking-wide">
-          <span class="text-white">Fit</span><span class="text-[#ff2727]">Aiid</span>
-        </h2>
-      </div>
-      <p class="mt-2 text-base font-bold text-[#ff2727] uppercase tracking-wider">
-        Transforma tu cuerpo
-      </p>
-      <p class="mt-5 text-[15px] leading-relaxed text-gray-400">
-        Tu aliado inteligente en fitness. Planes personalizados, asesoramiento nutricional con IA
-        y acompañamiento virtual para alcanzar tu mejor versión.
-      </p>
-      <!-- REDES SOCIALES -->
-      <div class="flex space-x-6 mt-7">
-        <a href="#" class="hover:text-[#ff2727] transition-transform transform hover:scale-110">
-          <i class="fa-brands fa-facebook-f text-2xl"></i>
-        </a>
-        <a href="#" class="hover:text-[#ff2727] transition-transform transform hover:scale-110">
-          <i class="fa-brands fa-instagram text-2xl"></i>
-        </a>
-        <a href="#" class="hover:text-[#ff2727] transition-transform transform hover:scale-110">
-          <i class="fa-brands fa-x-twitter text-2xl"></i>
-        </a>
-      </div>
-    </div>
-
-    <!-- NOSOTROS -->
-    <div>
-      <h3 class="text-[#ff2727] font-bold text-2xl mb-5 uppercase tracking-wide">Nosotros</h3>
-      <ul class="space-y-3 text-[16px]">
-        <li><a href="#sobre-nosotros" class="hover:text-white transition-colors">Sobre Nosotros</a></li>
-        <li><a href="#servicios" class="hover:text-white transition-colors">Nuestros Servicios</a></li>
-        <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
-        <li><a href="#" class="hover:text-white transition-colors">Contáctanos</a></li>
-      </ul>
-    </div>
-
-    <!-- RECURSOS -->
-    <div>
-      <h3 class="text-[#ff2727] font-bold text-2xl mb-5 uppercase tracking-wide">Recursos</h3>
-      <ul class="space-y-3 text-[16px]">
-        <li><a href="#herramientas" class="hover:text-white transition-colors">Herramientas Fitness</a></li>
-        <li><a href="#" class="hover:text-white transition-colors">Guías de Nutrición</a></li>
-        <li><a href="#FAQS" class="hover:text-white transition-colors">Preguntas Frecuentes</a></li>
-        <li><a href="#plan" class="hover:text-white transition-colors">Membresías</a></li>
-      </ul>
-    </div>
-
-    <!-- CONTACTOS -->
-    <div>
-      <h3 class="text-[#ff2727] font-bold text-2xl mb-5 uppercase tracking-wide">Contáctanos</h3>
-      <ul class="space-y-4 text-[16px]">
-        <li class="flex items-center space-x-3">
-          <i class="fa-solid fa-location-dot text-[#ff2727] text-lg"></i>
-          <span>Colombia</span>
-        </li>
-        <li class="flex items-center space-x-3">
-          <i class="fa-solid fa-phone text-[#ff2727] text-lg"></i>
-          <span>+57 320 263 6622</span>
-        </li>
-        <li class="flex items-center space-x-3">
-          <i class="fa-solid fa-envelope text-[#ff2727] text-lg"></i>
-          <span>FitAiid@gmail.com</span>
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- COPYRIGHT -->
-  <div class="border-t border-gray-700 mt-14 pt-6 text-center text-[15px] text-gray-500">
-    © 2025 <span class="text-[#ff2727] font-semibold">FitAiid</span> – Todos los derechos reservados.
-  </div>
-</footer>
-
-<!-- FontAwesome (para los íconos) -->
-<script src="../scripts/avatar-system.js"></script>
-<script src="https://kit.fontawesome.com/a2e0e9d6a7.js" crossorigin="anonymous"></script>
-  <script src="../scripts/perfil.js"></script>
-  <script src="../scripts/auth-guard.js"></script>
-<script>
-  function logout() {
-    // Limpiar TODOS los datos de sesión
-    localStorage.removeItem("token");
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("user");
-    localStorage.removeItem("userEmail");
-    localStorage.removeItem("userAvatar");
-    
-    console.log("🚪 Sesión cerrada");
-    window.location.href = "login.html";
-  }
-</script>
-<script>
-  // Obtener nombre del usuario
-  const userString = localStorage.getItem('user');
-  if (userString) {
-    try {
-      const user = JSON.parse(userString);
-      const userName = user.firstName || 'USUARIO';
-      document.getElementById('userName').textContent = userName.toUpperCase();
-    } catch (e) {
-      console.error('Error al parsear usuario:', e);
+      console.log('🔍 Buscando datos del usuario...');
+      console.log('📦 fitnessProfile en localStorage:', fitnessProfile);
+      
+      // Cargar nombre y email del usuario
+      if (userString) {
+        try {
+          const user = JSON.parse(userString);
+          document.getElementById('userName').textContent = (user.firstName || 'USUARIO').toUpperCase();
+          document.getElementById('userEmail').textContent = user.email || localStorage.getItem('userEmail') || 'usuario@email.com';
+        } catch (e) { console.error('Error cargando usuario:', e); }
+      }
+      
+      // Cargar perfil fitness del cuestionario
+      if (fitnessProfile) {
+        try {
+          const p = JSON.parse(fitnessProfile);
+          console.log('📋 Perfil fitness cargado:', p);
+          
+          // Edad
+          if (p.age) {
+            document.getElementById('userAge').textContent = p.age + ' años';
+            console.log('✅ Edad cargada:', p.age);
+          }
+          
+          // Altura
+          if (p.height) {
+            document.getElementById('userHeight').textContent = p.height + ' cm';
+            console.log('✅ Altura cargada:', p.height);
+          }
+          
+          // Peso e IMC
+          if (p.weight) { 
+            document.getElementById('userWeight').textContent = p.weight + ' kg'; 
+            console.log('✅ Peso cargado:', p.weight);
+            
+            if (p.height) {
+              const imc = (p.weight / Math.pow(p.height/100, 2)).toFixed(1); 
+              document.getElementById('userIMC').textContent = imc;
+              console.log('✅ IMC calculado:', imc);
+            }
+          }
+          
+          // Objetivo principal
+          if (p.mainGoal) { 
+            const goalText = p.mainGoal.charAt(0).toUpperCase() + p.mainGoal.slice(1);
+            document.getElementById('userGoal').textContent = goalText; 
+            document.getElementById('userObjective').textContent = goalText;
+            console.log('✅ Objetivo cargado:', goalText);
+          }
+          
+          // Nivel de fitness
+          if (p.fitnessLevel) { 
+            const levelText = p.fitnessLevel.charAt(0).toUpperCase() + p.fitnessLevel.slice(1);
+            document.getElementById('userLevel').textContent = levelText; 
+            document.getElementById('userFitnessLevel').textContent = levelText;
+            console.log('✅ Nivel cargado:', levelText);
+          }
+          
+          // Días de entrenamiento por semana
+          if (p.trainingDaysPerWeek) {
+            document.getElementById('userAvailability').textContent = p.trainingDaysPerWeek + ' días/semana';
+            console.log('✅ Disponibilidad cargada:', p.trainingDaysPerWeek);
+          }
+          
+        } catch (e) { 
+          console.error('❌ Error cargando perfil fitness:', e); 
+        }
+      } else {
+        console.log('⚠️ No se encontró fitnessProfile en localStorage');
+      }
+      
+      // Cargar avatar guardado
+      const savedAvatar = localStorage.getItem('userAvatar');
+      if (savedAvatar) {
+        document.getElementById('userAvatar').src = savedAvatar;
+        console.log('✅ Avatar cargado');
+      }
     }
-  }
-</script>
 
-  
+    // Manejar subida de imagen desde el dispositivo
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      // Validar que sea imagen
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor selecciona una imagen válida.');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          // Redimensionar para optimizar almacenamiento
+          const canvas = document.createElement('canvas');
+          const maxSize = 150;
+          let width = img.width;
+          let height = img.height;
+          
+          if (width > height) {
+            if (width > maxSize) {
+              height *= maxSize / width;
+              width = maxSize;
+            }
+          } else {
+            if (height > maxSize) {
+              width *= maxSize / height;
+              height = maxSize;
+            }
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Guardar como base64
+          uploadedImageData = canvas.toDataURL('image/jpeg', 0.7);
+          
+          // Mostrar preview
+          document.getElementById('previewImg').src = uploadedImageData;
+          document.getElementById('uploadPreview').style.display = 'block';
+          
+          // Deseleccionar avatares
+          document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected'));
+          selectedAvatar = null;
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Remover imagen subida
+    function removeUploadedImage() {
+      uploadedImageData = null;
+      document.getElementById('uploadPreview').style.display = 'none';
+      document.getElementById('imageUpload').value = '';
+    }
+
+    function openAvatarModal() {
+      const grid = document.getElementById('avatarGrid');
+      grid.innerHTML = '';
+      
+      // Resetear estado
+      uploadedImageData = null;
+      selectedAvatar = null;
+      document.getElementById('uploadPreview').style.display = 'none';
+      document.getElementById('imageUpload').value = '';
+      
+      // Emojis
+      const emojis = ['💪','🏋️','🏃','🧘','⚡','🔥','🎯','🏆','👨‍💼','👩‍💼','🧔','👱‍♀️'];
+      emojis.forEach(e => { 
+        const d = document.createElement('div'); 
+        d.className = 'avatar-option'; 
+        d.innerHTML = e; 
+        d.onclick = () => selectAvatar(d, e); 
+        grid.appendChild(d); 
+      });
+      
+      // Avatares DiceBear
+      ['Felix','Aneka','Max','Luna','Rocky','Storm','Blaze','Nova'].forEach(n => { 
+        const d = document.createElement('div'); 
+        d.className = 'avatar-option'; 
+        d.innerHTML = '<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=' + n + '" style="width:100%;height:100%;border-radius:50%;">'; 
+        d.onclick = () => selectAvatar(d, 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + n); 
+        grid.appendChild(d); 
+      });
+      
+      document.getElementById('avatarModal').classList.add('active');
+    }
+
+    function closeAvatarModal() { 
+      document.getElementById('avatarModal').classList.remove('active'); 
+    }
+
+    function selectAvatar(el, av) { 
+      document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected')); 
+      el.classList.add('selected'); 
+      selectedAvatar = av;
+      
+      // Quitar imagen subida si selecciona avatar
+      uploadedImageData = null;
+      document.getElementById('uploadPreview').style.display = 'none';
+      document.getElementById('imageUpload').value = '';
+    }
+
+    function saveAvatar() {
+      let avatarToSave = null;
+      
+      // Prioridad: imagen subida > avatar seleccionado
+      if (uploadedImageData) {
+        avatarToSave = uploadedImageData;
+      } else if (selectedAvatar) {
+        if (selectedAvatar.startsWith('http')) {
+          avatarToSave = selectedAvatar;
+        } else {
+          // Es emoji, convertir a imagen
+          const c = document.createElement('canvas');
+          c.width = 100;
+          c.height = 100;
+          const ctx = c.getContext('2d');
+          ctx.fillStyle = '#1a1a1a';
+          ctx.fillRect(0, 0, 100, 100);
+          ctx.font = '60px Arial';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(selectedAvatar, 50, 55);
+          avatarToSave = c.toDataURL();
+        }
+      }
+      
+      if (avatarToSave) {
+        document.getElementById('userAvatar').src = avatarToSave;
+        localStorage.setItem('userAvatar', avatarToSave);
+        console.log('✅ Avatar guardado en localStorage');
+        closeAvatarModal();
+      } else {
+        alert('Selecciona un avatar o sube una foto.');
+      }
+    }
+
+    function logout() { 
+      localStorage.removeItem('token');
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userId');
+      window.location.href = 'login.html'; 
+    }
+
+    // Inicializar al cargar
+    loadUserData();
+  </script>
 </body>
-</html>                                                   
+</html>
