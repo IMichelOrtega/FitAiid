@@ -35,10 +35,12 @@
     }
 
     body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-family: 'Oswald', 'Inter', system-ui, -apple-system, sans-serif;
       background: var(--bg-primary);
       color: var(--text-primary);
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
       min-height: 100vh;
       overflow-x: hidden;
     }
@@ -46,7 +48,7 @@
     /* ============================================
        NAVBAR (ORIGINAL)
        ============================================ */
-    .navbar {
+    .navbar-header {
       width: 100%;
       padding: 20px 60px;
       display: flex;
@@ -61,38 +63,38 @@
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     }
 
-    .navbar .logo {
+    .navbar-header .logo {
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .navbar .logo img {
+    .navbar-header .logo img {
       width: 55px;
       height: 55px;
     }
 
-    .navbar .brand-text h2 {
+    .navbar-header .brand-text h2 {
       color: #ff2e00;
       font-size: 22px;
       font-weight: 700;
       margin: 0;
     }
 
-    .navbar .brand-text p {
+    .navbar-header .brand-text p {
       font-size: 12px;
       color: #ccc;
       font-weight: 400;
       margin: 0;
     }
 
-    .navbar .menu {
+    .navbar-header .menu {
       display: flex;
       gap: 40px;
       align-items: center;
     }
 
-    .navbar .menu a {
+    .navbar-header .menu a {
       color: white;
       font-size: 18px;
       cursor: pointer;
@@ -102,22 +104,22 @@
       border-bottom: 3px solid transparent;
     }
 
-    .navbar .menu a:hover {
+    .navbar-header .menu a:hover {
       color: #ff2e00;
     }
 
-    .navbar .menu a.active {
+    .navbar-header .menu a.active {
       color: #ff2e00;
       border-bottom: 3px solid #ff2e00;
     }
 
-    .navbar .icons {
+    .navbar-header .icons {
       display: flex;
       align-items: center;
       gap: 20px;
     }
 
-    .navbar .profile-link {
+    .navbar-header .profile-link {
       text-decoration: none;
       color: #ff2e00;
       font-weight: 600;
@@ -127,22 +129,22 @@
       transition: background 0.3s;
     }
 
-    .navbar .profile-link:hover {
-      background-color: rgba(255, 47, 0, 0.25);
+    .navbar-header .profile-link:hover {
+      background-color: rgba(255, 46, 0, 0.1);
     }
 
-    .navbar .bell {
+    .navbar-header .bell {
       font-size: 22px;
       cursor: pointer;
       position: relative;
       transition: transform 0.2s;
     }
 
-    .navbar .bell:hover {
+    .navbar-header .bell:hover {
       transform: scale(1.1);
     }
 
-    .navbar .bell::after {
+    .navbar-header .bell::after {
       content: '';
       position: absolute;
       top: 0;
@@ -153,7 +155,7 @@
       border-radius: 50%;
     }
 
-    .navbar .logout-btn {
+    .navbar-header .logout-btn {
       background: linear-gradient(135deg, #ff4444, #cc0000);
       color: white;
       border: none;
@@ -166,19 +168,19 @@
       font-family: "Oswald", sans-serif;
     }
 
-    .navbar .logout-btn:hover {
+    .navbar-header .logout-btn:hover {
       transform: scale(1.05);
       box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);
     }
 
     /* Responsive del header */
     @media (max-width: 768px) {
-      .navbar {
+      .navbar-header {
         padding: 15px 20px;
         flex-wrap: wrap;
       }
 
-      .navbar .menu {
+      .navbar-header .menu {
         order: 3;
         width: 100%;
         justify-content: center;
@@ -1243,7 +1245,7 @@
 <body>
 
   <!-- NAVBAR -->
-  <header class="navbar">
+  <header class="navbar-header">
     <div class="logo">
       <img src="../img/logo.png" alt="FitAiid Logo">
       <div class="brand-text">
@@ -1409,7 +1411,7 @@
           <p>Rutinas diseñadas para tu nivel</p>
         </a>
 
-        <a href="#entrenamiento.html" class="quick-card">
+        <a href="#" class="quick-card">
           <div class="quick-card-icon">
             <i class="fas fa-chart-line"></i>
           </div>
@@ -1432,59 +1434,83 @@
         <div class="workout-card">
           <div class="workout-header">
             <div class="workout-info">
-              <h3>Entrenamiento Full Body</h3>
-              <p>Rutina completa para todo el cuerpo</p>
+              <h3>Circuito Funcional</h3>
+              <p>Entreno completo para cualquier objetivo</p>
             </div>
-            <span class="workout-badge">Intermedio</span>
+            <span class="workout-badge">Todos los niveles</span>
           </div>
 
           <div class="workout-exercises">
             <div class="exercise-item">
               <div class="exercise-number">1</div>
               <div class="exercise-info">
-                <h4>Calentamiento dinámico</h4>
-                <p>Prepara tu cuerpo para el entreno</p>
+                <h4>Jumping Jacks</h4>
+                <p>Activa tu cuerpo y eleva el ritmo cardíaco</p>
               </div>
-              <span class="exercise-duration">5 min</span>
+              <span class="exercise-duration">3 min</span>
             </div>
             <div class="exercise-item">
               <div class="exercise-number">2</div>
               <div class="exercise-info">
-                <h4>Sentadillas con peso</h4>
-                <p>4 series x 12 repeticiones</p>
+                <h4>Sentadillas + Salto</h4>
+                <p>3 series x 15 repeticiones</p>
               </div>
-              <span class="exercise-duration">10 min</span>
+              <span class="exercise-duration">6 min</span>
             </div>
             <div class="exercise-item">
               <div class="exercise-number">3</div>
               <div class="exercise-info">
-                <h4>Press de banca</h4>
-                <p>4 series x 10 repeticiones</p>
+                <h4>Flexiones (rodillas o completas)</h4>
+                <p>3 series x 10-15 repeticiones</p>
               </div>
-              <span class="exercise-duration">10 min</span>
+              <span class="exercise-duration">5 min</span>
             </div>
             <div class="exercise-item">
               <div class="exercise-number">4</div>
               <div class="exercise-info">
-                <h4>Remo con mancuernas</h4>
-                <p>3 series x 12 repeticiones</p>
+                <h4>Plancha abdominal</h4>
+                <p>3 series x 30-45 segundos</p>
               </div>
-              <span class="exercise-duration">8 min</span>
+              <span class="exercise-duration">4 min</span>
+            </div>
+            <div class="exercise-item">
+              <div class="exercise-number">5</div>
+              <div class="exercise-info">
+                <h4>Zancadas alternadas</h4>
+                <p>3 series x 12 cada pierna</p>
+              </div>
+              <span class="exercise-duration">6 min</span>
+            </div>
+            <div class="exercise-item">
+              <div class="exercise-number">6</div>
+              <div class="exercise-info">
+                <h4>Burpees</h4>
+                <p>3 series x 8-10 repeticiones</p>
+              </div>
+              <span class="exercise-duration">5 min</span>
+            </div>
+            <div class="exercise-item">
+              <div class="exercise-number">7</div>
+              <div class="exercise-info">
+                <h4>Estiramientos</h4>
+                <p>Recuperación y flexibilidad</p>
+              </div>
+              <span class="exercise-duration">3 min</span>
             </div>
           </div>
 
           <div class="workout-footer">
             <div class="workout-stats">
               <div class="workout-stat">
-                <div class="workout-stat-value">45</div>
+                <div class="workout-stat-value">32</div>
                 <div class="workout-stat-label">Minutos</div>
               </div>
               <div class="workout-stat">
-                <div class="workout-stat-value">350</div>
+                <div class="workout-stat-value">300</div>
                 <div class="workout-stat-label">Calorías</div>
               </div>
               <div class="workout-stat">
-                <div class="workout-stat-value">4</div>
+                <div class="workout-stat-value">7</div>
                 <div class="workout-stat-label">Ejercicios</div>
               </div>
             </div>
@@ -1566,7 +1592,7 @@
         <h3>Contacto</h3>
         <p><i class="fas fa-location-dot"></i> Colombia</p>
         <p><i class="fas fa-phone"></i> 3202368622</p>
-        <p><i class="fas fa-envelope"></i> FitAiid@gmail.com</p>
+        <p><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bcfad5c8fdd5d5d8fcdbd1ddd5d092dfd3d1">[email&#160;protected]</a></p>
       </div>
     </div>
 
@@ -1576,7 +1602,7 @@
   </footer>
 
   <!-- SCRIPTS -->
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // 🔒 Proteger página
     const token = localStorage.getItem("token") || localStorage.getItem("authToken");
     const userId = localStorage.getItem("userId");
