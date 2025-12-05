@@ -4,368 +4,1204 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Plan Mensual - Vida Saludable | FitAiid</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    :root{
-      --bg:#0f0f0f;
-      --card:#0f0f10;
-      --accent:#ff5a00;
-      --muted:#bfbfbf;
-      --glass: rgba(255,255,255,0.03);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-      background: radial-gradient(1200px 400px at 20% 10%, rgba(255,90,0,0.06), transparent), var(--bg);
-      color:#fff; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-      padding-bottom:60px;
+    :root {
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #111111;
+      --bg-card: #161616;
+      --bg-card-hover: #1c1c1c;
+      --accent: #22c55e;
+      --accent-light: #4ade80;
+      --accent-dark: #16a34a;
+      --accent-glow: rgba(34, 197, 94, 0.3);
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0b0;
+      --text-muted: #707070;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --gradient-accent: linear-gradient(135deg, var(--accent), var(--accent-light));
     }
 
-    .topbar{
-      background:#0d0d0d;
-      padding:18px 28px;
-      display:flex;
-      align-items:center;
-      gap:16px;
-      box-shadow:0 3px 10px rgba(0,0,0,0.6);
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    .topbar img{width:48px;}
-    .topbar h2{margin:0;color:var(--accent);font-size:18px}
 
-    .wrap{max-width:980px;margin:28px auto;padding:20px;}
-
-    .hero{
-      display:flex;
-      gap:20px;
-      align-items:center;
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      padding:22px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.6);
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
     }
-    .hero .hero-img{
-      width:170px;height:110px;border-radius:10px;overflow:hidden;flex:0 0 170px;
-      border:4px solid rgba(255,90,0,0.06);
+
+    /* ============================================
+       TOP BAR
+       ============================================ */
+    .topbar {
+      background: var(--bg-secondary);
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
     }
-    .hero .hero-img img{width:100%;height:100%;object-fit:cover;display:block}
-    .hero .hero-body h1{margin:0;color:var(--accent);font-size:20px}
-    .hero .hero-body p{color:var(--muted);margin:6px 0 0 0}
 
-    .controls{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
-    .btn{
-      background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;color:#fff;
-      cursor:pointer;font-size:14px;
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
-    .btn.primary{background:var(--accent);color:#0f0f0f;border:0}
 
-    .weeks{margin-top:18px;display:flex;flex-direction:column;gap:12px}
-    .week{
-      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));
-      border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,0.03);
-      overflow:hidden;
+    .topbar img {
+      width: 45px;
+      height: 45px;
+      filter: drop-shadow(0 0 10px var(--accent-glow));
     }
-    .week .head{
-      display:flex;justify-content:space-between;align-items:center;cursor:pointer;
+
+    .topbar-title {
+      display: flex;
+      flex-direction: column;
     }
-    .week .head h3{margin:0;color:var(--accent);font-size:16px}
-    .week .content{margin-top:10px;color:#eaeaea;display:none;line-height:1.45}
 
-    .day-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:10px}
-    .day{
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);
+    .topbar-title h2 {
+      margin: 0;
+      color: var(--accent);
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 1px;
     }
-    .day h4{margin:0 0 6px 0;font-size:14px;color:#fff}
-    .day p{margin:0;font-size:13px;color:var(--muted)}
 
-    .shop{margin-top:18px;padding:14px;background:#0b0b0b;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
-    .shop pre{white-space:pre-wrap;color:#eaeaea;margin:0;font-size:14px}
-
-    .tips{margin-top:16px;color:var(--muted);font-size:14px}
-
-    @media (max-width:820px){
-      .day-grid{grid-template-columns:1fr}
-      .hero{flex-direction:column;align-items:flex-start}
+    .topbar-title span {
+      font-size: 12px;
+      color: var(--text-muted);
     }
-      /* === BOTÓN SUPERIOR ALINEADO A LA IZQUIERDA === */
-.btn-back-top {
-  display: inline-block;
-  margin: 10px 0 20px 0;
-  padding: 8px 14px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--accent);
-  background: var(--glass);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(6px);
-  border-radius: 8px;
-  text-decoration: none;
-  transition: 0.25s ease;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
-}
 
-.btn-back-top:hover {
-  background: rgba(255, 90, 0, 0.12);
-  color: #fff;
-  border-color: rgba(255, 90, 0, 0.4);
-  box-shadow: 0 0 12px rgba(255, 90, 0, 0.35);
-  transform: translateX(-3px);
-}
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      transform: translateX(-3px);
+    }
+
+    /* ============================================
+       MAIN CONTAINER
+       ============================================ */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* ============================================
+       HERO SECTION
+       ============================================ */
+    .hero {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      background: var(--bg-card);
+      padding: 40px;
+      border-radius: 24px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-image {
+      width: 280px;
+      height: 180px;
+      border-radius: 16px;
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .hero-image:hover img {
+      transform: scale(1.05);
+    }
+
+    .hero-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid rgba(34, 197, 94, 0.3);
+      border-radius: 16px;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .hero-content h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .hero-content h1 span {
+      color: var(--accent);
+    }
+
+    .hero-content p {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 24px;
+      max-width: 500px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--gradient-accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px var(--accent-glow);
+    }
+
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ============================================
+       STATS BAR
+       ============================================ */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-5px);
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(34, 197, 94, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .stat-value {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+
+    /* ============================================
+       WEEKS SECTION
+       ============================================ */
+    .section-header {
+      margin-bottom: 24px;
+    }
+
+    .section-header h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-header h2 i {
+      color: var(--accent);
+    }
+
+    .weeks {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .week {
+      background: var(--bg-card);
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .week:hover {
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    .week.active {
+      border-color: var(--accent);
+      box-shadow: 0 10px 40px rgba(34, 197, 94, 0.1);
+    }
+
+    .week-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 28px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .week-header:hover {
+      background: var(--bg-card-hover);
+    }
+
+    .week-header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .week-number {
+      width: 50px;
+      height: 50px;
+      background: var(--gradient-accent);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .week-info h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .week-info p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .week-toggle {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+    }
+
+    .week.active .week-toggle {
+      background: var(--accent);
+      color: white;
+      transform: rotate(180deg);
+    }
+
+    .week-content {
+      display: none;
+      padding: 0 28px 28px;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .week.active .week-content {
+      display: block;
+    }
+
+    .week-objective {
+      background: rgba(34, 197, 94, 0.08);
+      border-left: 3px solid var(--accent);
+      padding: 16px 20px;
+      border-radius: 0 12px 12px 0;
+      margin-bottom: 24px;
+    }
+
+    .week-objective p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .week-objective strong {
+      color: var(--accent);
+    }
+
+    .meals-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .meal-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .meal-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+
+    .meal-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .meal-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(34, 197, 94, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .meal-card h4 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .meal-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ============================================
+       SHOPPING LIST
+       ============================================ */
+    .shopping-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 40px;
+    }
+
+    .shopping-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .shopping-header i {
+      font-size: 24px;
+      color: var(--accent);
+    }
+
+    .shopping-header h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .shopping-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+    }
+
+    .shopping-category h4 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .shopping-category ul {
+      list-style: none;
+    }
+
+    .shopping-category li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .shopping-category li::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ============================================
+       TIPS SECTION
+       ============================================ */
+    .tips-section {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05));
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      border-radius: 20px;
+      padding: 32px;
+    }
+
+    .tips-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .tips-header i {
+      font-size: 24px;
+      color: var(--accent);
+    }
+
+    .tips-header h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .tips-section p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .tips-section strong {
+      color: var(--text-primary);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 900px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px;
+      }
+
+      .hero-content p {
+        max-width: 100%;
+      }
+
+      .hero-actions {
+        justify-content: center;
+      }
+
+      .hero-image {
+        width: 100%;
+        max-width: 350px;
+        height: 200px;
+      }
+
+      .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .meals-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .topbar {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .container {
+        padding: 20px 15px 60px;
+      }
+
+      .hero {
+        padding: 24px;
+      }
+
+      .hero-content h1 {
+        font-size: 28px;
+      }
+
+      .stats-bar {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .stat-card {
+        padding: 16px;
+      }
+
+      .stat-value {
+        font-size: 24px;
+      }
+
+      .week-header {
+        padding: 18px 20px;
+      }
+
+      .week-content {
+        padding: 0 20px 20px;
+      }
+
+      .shopping-section {
+        padding: 24px;
+      }
+
+      .shopping-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      .topbar, .btn-back, .hero-actions {
+        display: none !important;
+      }
+      .week-content {
+        display: block !important;
+      }
+      body {
+        background: white;
+        color: black;
+      }
+    }
   </style>
 </head>
-
 <body>
 
-  <div class="topbar">
-    <img src="img_nutricion/logo.png">
-    <h2>Plan Mensual — Vida Saludable</h2>
-  </div>
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <img src="../img/logo.png" alt="FitAiid">
+      <div class="topbar-title">
+        <h2>Plan Vida Saludable</h2>
+        <span>Programa mensual de bienestar</span>
+      </div>
+    </div>
+    <a href="nutricion.html" class="btn-back">
+      <i class="fas fa-arrow-left"></i> Volver
+    </a>
+  </header>
 
-  <main class="wrap">
-    <!-- BOTÓN DE VOLVER -->
-  <a href="nutricion.html" class="btn-back-top">← Volver</a>
+  <!-- MAIN CONTENT -->
+  <main class="container">
+
+    <!-- HERO -->
     <section class="hero">
-      <div class="hero-img">
-        <img src="../img/nutricion/sport-city-nutricion-1024x700.jpg" alt="hero">
+      <div class="hero-image">
+        <img src="../img/nutricion/sport-city-nutricion-1024x700.jpg" alt="Vida Saludable">
       </div>
-
-      <div class="hero-body">
-        <h1>Plan Mensual (Apto para todos)</h1>
+      <div class="hero-content">
+        <div class="hero-badge">
+          <i class="fas fa-heart-pulse"></i>
+          Bienestar Integral
+        </div>
+        <h1>Plan Mensual <span>Vida Saludable</span></h1>
         <p>Un plan diseñado para ayudarte a construir hábitos saludables, equilibrados y sostenibles: alimentación consciente, energía estable, bienestar emocional y organización diaria.</p>
-
-        <div class="controls">
-          <button class="btn primary" id="printBtn">Imprimir Plan</button>
-          <button class="btn" id="downloadShop">Descargar Lista de Compras</button>
-          
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="printBtn">
+            <i class="fas fa-print"></i> Imprimir Plan
+          </button>
+          <button class="btn btn-secondary" id="downloadShop">
+            <i class="fas fa-download"></i> Descargar Lista
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- SEMANAS VIDA SALUDABLE -->
-    <section class="weeks" id="weeks">
-
-      <!-- Semana 1 -->
-      <div class="week">
-        <div class="head" data-toggle>
-          <h3>Semana 1 — Construyendo bases</h3>
-          <span class="chev">+</span>
+    <!-- STATS BAR -->
+    <section class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-calendar-week"></i>
         </div>
-        <div class="content">
-          <p style="color:var(--muted)">Objetivo: comenzar con hábitos simples y consistentes que mejoren energía y bienestar general.</p>
-
-          <div class="day-grid">
-            <div class="day"><h4>Desayuno</h4><p>Avena con fruta fresca y semillas (chia o linaza).</p></div>
-            <div class="day"><h4>Media mañana</h4><p>Fruta o yogurt natural sin azúcar.</p></div>
-            <div class="day"><h4>Almuerzo</h4><p>Plato equilibrado: proteína (pollo/pescado), carbohidrato integral y vegetales.</p></div>
-            <div class="day"><h4>Merienda</h4><p>Hummus con verduras o frutos secos.</p></div>
-            <div class="day"><h4>Cena</h4><p>Verduras + proteína ligera (huevos, atún, tofu).</p></div>
-            <div class="day"><h4>Hábito clave</h4><p>Tomar 2 litros de agua diarios.</p></div>
-          </div>
-        </div>
+        <div class="stat-value">4</div>
+        <div class="stat-label">Semanas</div>
       </div>
-
-      <!-- Semana 2 -->
-      <div class="week">
-        <div class="head" data-toggle>
-          <h3>Semana 2 — Energía y equilibrio</h3>
-          <span class="chev">+</span>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-utensils"></i>
         </div>
-
-        <div class="content">
-          <p style="color:var(--muted)">Objetivo: mejorar digestión, energía y calidad nutricional aumentando fibra y buenas grasas.</p>
-
-          <div class="day-grid">
-            <div class="day"><h4>Desayuno</h4><p>Huevos + pan integral + aguacate.</p></div>
-            <div class="day"><h4>Media mañana</h4><p>Frutos secos (20 g) + fruta.</p></div>
-            <div class="day"><h4>Almuerzo</h4><p>Ensalada grande con garbanzos o pollo y aceite de oliva.</p></div>
-            <div class="day"><h4>Merienda</h4><p>Yogur griego con miel ligera.</p></div>
-            <div class="day"><h4>Cena</h4><p>Sopa natural + vegetales al vapor.</p></div>
-            <div class="day"><h4>Hábito clave</h4><p>Caminar 20 minutos diarios.</p></div>
-          </div>
-        </div>
+        <div class="stat-value">5</div>
+        <div class="stat-label">Comidas/Día</div>
       </div>
-
-      <!-- Semana 3 -->
-      <div class="week">
-        <div class="head" data-toggle>
-          <h3>Semana 3 — Organización y progresos</h3>
-          <span class="chev">+</span>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-droplet"></i>
         </div>
-
-        <div class="content">
-          <p style="color:var(--muted)">Objetivo: crear estructura en comidas y moverse más para mejorar bienestar físico.</p>
-
-          <div class="day-grid">
-            <div class="day"><h4>Desayuno</h4><p>Batido con fruta + proteína ligera + avena.</p></div>
-            <div class="day"><h4>Media mañana</h4><p>1 fruta + infusión.</p></div>
-            <div class="day"><h4>Almuerzo</h4><p>Pasta integral con verduras y pollo o atún.</p></div>
-            <div class="day"><h4>Merienda</h4><p>Queso fresco + pepino.</p></div>
-            <div class="day"><h4>Cena</h4><p>Ensalada templada con legumbres.</p></div>
-            <div class="day"><h4>Hábito clave</h4><p>Reducir comida procesada.</p></div>
-          </div>
-        </div>
+        <div class="stat-value">2L</div>
+        <div class="stat-label">Agua Diaria</div>
       </div>
-
-      <!-- Semana 4 -->
-      <div class="week">
-        <div class="head" data-toggle>
-          <h3>Semana 4 — Optimización del bienestar</h3>
-          <span class="chev">+</span>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-bed"></i>
         </div>
-        <div class="content">
-          <p style="color:var(--muted)">Objetivo: consolidar hábitos y mejorar descanso y energía estable.</p>
-
-          <div class="day-grid">
-            <div class="day"><h4>Desayuno</h4><p>Yogur griego + frutos rojos + avena.</p></div>
-            <div class="day"><h4>Media mañana</h4><p>Palitos de zanahoria + hummus.</p></div>
-            <div class="day"><h4>Almuerzo</h4><p>Pescado + arroz integral + ensalada.</p></div>
-            <div class="day"><h4>Merienda</h4><p>Batido natural sin azúcar.</p></div>
-            <div class="day"><h4>Cena</h4><p>Verduras + proteína ligera.</p></div>
-            <div class="day"><h4>Hábito clave</h4><p>Dormir 7–8 horas.</p></div>
-          </div>
-        </div>
+        <div class="stat-value">7-8h</div>
+        <div class="stat-label">Sueño</div>
       </div>
     </section>
 
-    <!-- LISTA DE COMPRAS VIDA SALUDABLE -->
-    <section class="shop" id="shopList">
-      <h3 style="color:var(--accent);margin:0 0 8px 0">Lista de compras (vida saludable)</h3>
-
-<pre>
-Proteínas:
- - Pollo, pescado blanco
- - Huevos
- - Yogur natural / griego
- - Garbanzos y lentejas
-
-Carbohidratos saludables:
- - Avena
- - Arroz integral
- - Quinoa
- - Pasta integral
- - Pan integral
-
-Frutas y verduras:
- - Manzana, plátano, frutos rojos
- - Espinaca, lechuga, tomate
- - Zanahoria, pepino, brócoli
- - Calabacín, pimiento, cebolla
-
-Grasas saludables:
- - Aguacate
- - Aceite de oliva extra virgen
- - Almendras, nueces
- - Semillas (chia, linaza)
-
-Otros:
- - Hummus
- - Infusiones
- - Especias naturales
- - Miel ligera
-</pre>
-    </section>
-
-    <div class="tips">
-      <p><strong>Consejos rápidos:</strong> Mantén hidratación, mueve tu cuerpo todos los días, reduce procesados, aumenta verduras, cuida tu salud mental y duerme bien. La consistencia vale más que la perfección.</p>
+    <!-- WEEKS -->
+    <div class="section-header">
+      <h2><i class="fas fa-list-check"></i> Plan Semanal</h2>
     </div>
 
+    <section class="weeks" id="weeks">
+
+      <!-- SEMANA 1 -->
+      <div class="week">
+        <div class="week-header" data-toggle>
+          <div class="week-header-left">
+            <div class="week-number">1</div>
+            <div class="week-info">
+              <h3>Construyendo Bases</h3>
+              <p>Hábitos simples y consistentes</p>
+            </div>
+          </div>
+          <div class="week-toggle">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+        <div class="week-content">
+          <div class="week-objective">
+            <p><strong>Objetivo:</strong> Comenzar con hábitos simples y consistentes que mejoren energía y bienestar general.</p>
+          </div>
+          <div class="meals-grid">
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🌅</div>
+                <h4>Desayuno</h4>
+              </div>
+              <p>Avena con fruta fresca y semillas (chía o linaza).</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🍎</div>
+                <h4>Media Mañana</h4>
+              </div>
+              <p>Fruta o yogurt natural sin azúcar.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🍽️</div>
+                <h4>Almuerzo</h4>
+              </div>
+              <p>Plato equilibrado: proteína (pollo/pescado), carbohidrato integral y vegetales.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🥜</div>
+                <h4>Merienda</h4>
+              </div>
+              <p>Hummus con verduras o frutos secos.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🌙</div>
+                <h4>Cena</h4>
+              </div>
+              <p>Verduras + proteína ligera (huevos, atún, tofu).</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">💡</div>
+                <h4>Hábito Clave</h4>
+              </div>
+              <p>Tomar 2 litros de agua diarios.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEMANA 2 -->
+      <div class="week">
+        <div class="week-header" data-toggle>
+          <div class="week-header-left">
+            <div class="week-number">2</div>
+            <div class="week-info">
+              <h3>Energía y Equilibrio</h3>
+              <p>Mejorar digestión y calidad nutricional</p>
+            </div>
+          </div>
+          <div class="week-toggle">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+        <div class="week-content">
+          <div class="week-objective">
+            <p><strong>Objetivo:</strong> Mejorar digestión, energía y calidad nutricional aumentando fibra y buenas grasas.</p>
+          </div>
+          <div class="meals-grid">
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🌅</div>
+                <h4>Desayuno</h4>
+              </div>
+              <p>Huevos + pan integral + aguacate.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🍎</div>
+                <h4>Media Mañana</h4>
+              </div>
+              <p>Frutos secos (20 g) + fruta.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🍽️</div>
+                <h4>Almuerzo</h4>
+              </div>
+              <p>Ensalada grande con garbanzos o pollo y aceite de oliva.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🥜</div>
+                <h4>Merienda</h4>
+              </div>
+              <p>Yogur griego con miel ligera.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🌙</div>
+                <h4>Cena</h4>
+              </div>
+              <p>Sopa natural + vegetales al vapor.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">💡</div>
+                <h4>Hábito Clave</h4>
+              </div>
+              <p>Caminar 20 minutos diarios.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEMANA 3 -->
+      <div class="week">
+        <div class="week-header" data-toggle>
+          <div class="week-header-left">
+            <div class="week-number">3</div>
+            <div class="week-info">
+              <h3>Organización y Progresos</h3>
+              <p>Estructura y movimiento</p>
+            </div>
+          </div>
+          <div class="week-toggle">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+        <div class="week-content">
+          <div class="week-objective">
+            <p><strong>Objetivo:</strong> Crear estructura en comidas y moverse más para mejorar bienestar físico.</p>
+          </div>
+          <div class="meals-grid">
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🌅</div>
+                <h4>Desayuno</h4>
+              </div>
+              <p>Batido con fruta + proteína ligera + avena.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🍎</div>
+                <h4>Media Mañana</h4>
+              </div>
+              <p>1 fruta + infusión.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🍽️</div>
+                <h4>Almuerzo</h4>
+              </div>
+              <p>Pasta integral con verduras y pollo o atún.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🥜</div>
+                <h4>Merienda</h4>
+              </div>
+              <p>Queso fresco + pepino.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🌙</div>
+                <h4>Cena</h4>
+              </div>
+              <p>Ensalada templada con legumbres.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">💡</div>
+                <h4>Hábito Clave</h4>
+              </div>
+              <p>Reducir comida procesada.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEMANA 4 -->
+      <div class="week">
+        <div class="week-header" data-toggle>
+          <div class="week-header-left">
+            <div class="week-number">4</div>
+            <div class="week-info">
+              <h3>Optimización del Bienestar</h3>
+              <p>Consolidar hábitos y mejorar descanso</p>
+            </div>
+          </div>
+          <div class="week-toggle">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+        <div class="week-content">
+          <div class="week-objective">
+            <p><strong>Objetivo:</strong> Consolidar hábitos y mejorar descanso y energía estable.</p>
+          </div>
+          <div class="meals-grid">
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🌅</div>
+                <h4>Desayuno</h4>
+              </div>
+              <p>Yogur griego + frutos rojos + avena.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🍎</div>
+                <h4>Media Mañana</h4>
+              </div>
+              <p>Palitos de zanahoria + hummus.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🍽️</div>
+                <h4>Almuerzo</h4>
+              </div>
+              <p>Pescado + arroz integral + ensalada.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🥜</div>
+                <h4>Merienda</h4>
+              </div>
+              <p>Batido natural sin azúcar.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🌙</div>
+                <h4>Cena</h4>
+              </div>
+              <p>Verduras + proteína ligera.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">💡</div>
+                <h4>Hábito Clave</h4>
+              </div>
+              <p>Dormir 7–8 horas.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- SHOPPING LIST -->
+    <section class="shopping-section" id="shopList">
+      <div class="shopping-header">
+        <i class="fas fa-cart-shopping"></i>
+        <h3>Lista de Compras</h3>
+      </div>
+      <div class="shopping-grid">
+        <div class="shopping-category">
+          <h4>Proteínas</h4>
+          <ul>
+            <li>Pollo, pescado blanco</li>
+            <li>Huevos</li>
+            <li>Yogur natural / griego</li>
+            <li>Garbanzos y lentejas</li>
+          </ul>
+        </div>
+        <div class="shopping-category">
+          <h4>Carbohidratos</h4>
+          <ul>
+            <li>Avena</li>
+            <li>Arroz integral</li>
+            <li>Quinoa</li>
+            <li>Pasta integral</li>
+            <li>Pan integral</li>
+          </ul>
+        </div>
+        <div class="shopping-category">
+          <h4>Frutas y Verduras</h4>
+          <ul>
+            <li>Manzana, plátano, frutos rojos</li>
+            <li>Espinaca, lechuga, tomate</li>
+            <li>Zanahoria, pepino, brócoli</li>
+            <li>Calabacín, pimiento, cebolla</li>
+          </ul>
+        </div>
+        <div class="shopping-category">
+          <h4>Grasas Saludables</h4>
+          <ul>
+            <li>Aguacate</li>
+            <li>Aceite de oliva extra virgen</li>
+            <li>Almendras, nueces</li>
+            <li>Semillas (chía, linaza)</li>
+          </ul>
+        </div>
+        <div class="shopping-category">
+          <h4>Otros</h4>
+          <ul>
+            <li>Hummus</li>
+            <li>Infusiones</li>
+            <li>Especias naturales</li>
+            <li>Miel ligera</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIPS -->
+    <section class="tips-section">
+      <div class="tips-header">
+        <i class="fas fa-lightbulb"></i>
+        <h3>Consejos Rápidos</h3>
+      </div>
+      <p><strong>Mantén hidratación</strong>, mueve tu cuerpo todos los días, <strong>reduce procesados</strong>, aumenta verduras, <strong>cuida tu salud mental</strong> y duerme bien. La consistencia vale más que la perfección.</p>
+    </section>
+
   </main>
-  <!-- 🔒 Protección de autenticación -->
+
+  <!-- SCRIPTS -->
   <script src="../scripts/auth-guard.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script>
-  // Acordeón
-  document.querySelectorAll('.week .head').forEach(head => {
-    head.addEventListener('click', () => {
-      const content = head.nextElementSibling;
-      const chev = head.querySelector('.chev');
-      const open = content.style.display === 'block';
-
-      document.querySelectorAll('.week .content').forEach(c=>c.style.display='none');
-      document.querySelectorAll('.week .chev').forEach(ch=>ch.textContent='+');
-
-      if(!open){
-        content.style.display = 'block';
-        chev.textContent = '−';
-        content.scrollIntoView({behavior:'smooth', block:'center'});
-      }
-    });
-  });
-
-  // Imprimir
-  document.getElementById('printBtn').addEventListener('click', () => {
-    window.print();
-  });
-
- // Descargar PLAN NUTRICIONAL COMPLETO (4 semanas)
-document.getElementById('downloadShop').addEventListener('click', async () => {
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: "mm", format: "a4" });
-
-  // ===== TÍTULO =====
-  doc.setFont("Helvetica", "bold");
-  doc.setFontSize(22);
-  doc.setTextColor(255, 90, 0);
-  doc.text("Plan Nutricional • Vida saludable • FitAiid", 15, 20);
-
-  // ===== LÍNEA =====
-  doc.setDrawColor(255, 90, 0);
-  doc.setLineWidth(2);
-  doc.line(15, 25, 195, 25);
-
-  // ===== LOGO =====
-  const logoUrl = "/mnt/data/logo.png";
-
-  try {
-    const res = await fetch(logoUrl);
-    if (res.ok) {
-      const blob = await res.blob();
-      const reader = new FileReader();
-      await new Promise((resolve) => {
-        reader.onloadend = resolve;
-        reader.readAsDataURL(blob);
+  <script>
+    // Acordeón para las semanas
+    document.querySelectorAll('.week-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const week = header.parentElement;
+        const wasActive = week.classList.contains('active');
+        
+        // Cerrar todos
+        document.querySelectorAll('.week').forEach(w => w.classList.remove('active'));
+        
+        // Abrir el clickeado si no estaba activo
+        if (!wasActive) {
+          week.classList.add('active');
+          week.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       });
-      doc.addImage(reader.result, "PNG", 150, 8, 40, 40);
-    }
-  } catch (e) {
-    console.warn("No se cargó el logo");
-  }
-
-  // ===== EXTRAER TODO EL PLAN =====
-  const semanas = document.querySelectorAll(".week");
-  let textoCompleto = "";
-
-  semanas.forEach((week, i) => {
-
-    const titulo = week.querySelector("h3").innerText.trim();
-    const objetivo = week.querySelector(".content p")?.innerText.trim() || "";
-
-    textoCompleto += `${titulo}\n${objetivo}\n\n`;
-
-    const bloques = week.querySelectorAll(".day");
-
-    bloques.forEach(b => {
-      const comida = b.querySelector("h4").innerText.trim();
-      const detalle = b.querySelector("p").innerText.trim();
-      textoCompleto += `• ${comida}: ${detalle}\n`;
     });
 
-    textoCompleto += `\n\n`;
-  });
+    // Imprimir
+    document.getElementById('printBtn').addEventListener('click', () => {
+      window.print();
+    });
 
-  // ===== TEXTO PDF =====
-  doc.setFont("Helvetica", "normal");
-  doc.setFontSize(12);
-  doc.setTextColor(40, 40, 40);
+    // Descargar PDF
+    document.getElementById('downloadShop').addEventListener('click', async () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: "mm", format: "a4" });
 
-  const lineas = doc.splitTextToSize(textoCompleto, 180);
-  doc.text(lineas, 15, 50);
+      // Título
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(22);
+      doc.setTextColor(34, 197, 94);
+      doc.text("Plan Nutricional • Vida Saludable • FitAiid", 15, 20);
 
-  // ===== GUARDAR =====
-  doc.save("plan_vida saludable_fitaiid.pdf");
-});
+      // Línea
+      doc.setDrawColor(34, 197, 94);
+      doc.setLineWidth(2);
+      doc.line(15, 25, 195, 25);
 
-</script>
+      // Extraer todo el plan
+      const semanas = document.querySelectorAll(".week");
+      let textoCompleto = "";
+
+      semanas.forEach((week) => {
+        const titulo = week.querySelector("h3").innerText.trim();
+        const objetivo = week.querySelector(".week-objective p")?.innerText.trim() || "";
+
+        textoCompleto += `${titulo}\n${objetivo}\n\n`;
+
+        const bloques = week.querySelectorAll(".meal-card");
+        bloques.forEach(b => {
+          const comida = b.querySelector("h4").innerText.trim();
+          const detalle = b.querySelector("p").innerText.trim();
+          textoCompleto += `• ${comida}: ${detalle}\n`;
+        });
+
+        textoCompleto += `\n\n`;
+      });
+
+      // Texto PDF
+      doc.setFont("Helvetica", "normal");
+      doc.setFontSize(12);
+      doc.setTextColor(40, 40, 40);
+
+      const lineas = doc.splitTextToSize(textoCompleto, 180);
+      doc.text(lineas, 15, 40);
+
+      // Guardar
+      doc.save("plan_vida_saludable_fitaiid.pdf");
+    });
+  </script>
 
 </body>
 </html>

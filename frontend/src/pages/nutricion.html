@@ -898,27 +898,27 @@
     <div class="hero-content">
       <div class="hero-badge">
         <i class="fas fa-leaf"></i>
-        Planes de alimentación 
+        Planes de alimentación
       </div>
       <h1 class="hero-title">
         NUTRICIÓN<br>
-        <span>INTELIGENTE</span>
+        <span>SALUDABLE</span>
       </h1>
       <p class="hero-description">
         Una alimentación adecuada es la base de todo progreso. Descubre planes nutricionales adaptados a tus metas, tu estilo de vida y tus gustos personales.
       </p>
       <div class="hero-stats">
         <div class="stat-item">
-          <div class="stat-number">+100</div>
-          <div class="stat-label">Recetas Saludables</div>
+          <div class="stat-number">3</div>
+          <div class="stat-label">Planes Nutricionales</div>
         </div>
         <div class="stat-item">
-          <div class="stat-number">3</div>
-          <div class="stat-label">Planes Disponibles</div>
+          <div class="stat-number"></div>
+          <div class="stat-label">ㅤㅤㅤ</div>
         </div>
         <div class="stat-item">
           <div class="stat-number">100%</div>
-          <div class="stat-label">Personalizado</div>
+          <div class="stat-label">Adecuado a tus necesidades</div>
         </div>
       </div>
     </div>
@@ -944,7 +944,7 @@
 
     <div class="plans-grid">
       <!-- BAJAR DE PESO -->
-      <a href="bajar-de-peso.html" target="_blank" class="plan-card">
+      <a href="bajar-de-peso.html" class="plan-card">
         <div class="plan-card-image">
           <img src="../img/nutricion/SJNEFMOMBVBDDDVOQTULAESDPI.jpg" alt="Bajar de Peso" />
           <div class="plan-card-icon">
@@ -964,7 +964,7 @@
       </a>
 
       <!-- GANAR MASA MUSCULAR -->
-      <a href="ganar-masa-muscular.html" target="_blank" class="plan-card">
+      <a href="ganar-masa-muscular.html" class="plan-card">
         <div class="plan-card-image">
           <img src="../img/nutricion/nutrición (1).jpg" alt="Ganar Masa Muscular" />
           <div class="plan-card-icon">
@@ -984,7 +984,7 @@
       </a>
 
       <!-- VIDA SALUDABLE -->
-      <a href="plan-vida-saludable.html" target="_blank" class="plan-card">
+      <a href="plan-vida-saludable.html" class="plan-card">
         <div class="plan-card-image">
           <img src="../img/nutricion/sport-city-nutricion-1024x700.jpg" alt="Vida Saludable" />
           <div class="plan-card-icon">
@@ -1104,7 +1104,7 @@
       <h3>Contacto</h3>
       <p><i class="fas fa-location-dot"></i> Colombia</p>
       <p><i class="fas fa-phone"></i> 3202363622</p>
-      <p><i class="fas fa-envelope"></i> FitAiid@gmail.com</p>
+      <p><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0c4a65784d6565684c6b616d6560226f6361">[email&#160;protected]</a></p>
     </div>
   </div>
 
@@ -1114,6 +1114,7 @@
 </footer>
 
 <!-- SCRIPTS -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 <script>
   // Protección de autenticación
   const token = localStorage.getItem("token") || localStorage.getItem("authToken");
@@ -1137,17 +1138,21 @@
       }
     });
   });
-
-  // Función logout
+  // Función de cierre de sesión
   function logout() {
+    // Limpiar TODOS los datos de sesión
     localStorage.removeItem("token");
     localStorage.removeItem("authToken");
     localStorage.removeItem("userId");
     localStorage.removeItem("user");
     localStorage.removeItem("userEmail");
+    localStorage.removeItem("userAvatar");
+    
     console.log("🚪 Sesión cerrada");
     window.location.href = "login.html";
   }
+
+    
 </script>
 
 </body>

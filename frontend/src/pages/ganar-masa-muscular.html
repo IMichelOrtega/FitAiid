@@ -13,17 +13,15 @@
       --bg-secondary: #111111;
       --bg-card: #161616;
       --bg-card-hover: #1c1c1c;
-      --accent: #ff3d00;
-      --accent-light: #ff6b3d;
-      --accent-dark: #cc3100;
-      --accent-glow: rgba(255, 61, 0, 0.3);
+      --accent: #e53935;
+      --accent-light: #ff6659;
+      --accent-dark: #ab000d;
+      --accent-glow: rgba(229, 57, 53, 0.3);
       --text-primary: #ffffff;
       --text-secondary: #b0b0b0;
       --text-muted: #707070;
       --border-color: rgba(255, 255, 255, 0.08);
       --gradient-accent: linear-gradient(135deg, var(--accent), var(--accent-light));
-      --success: #22c55e;
-      --info: #3b82f6;
     }
 
     * {
@@ -40,10 +38,12 @@
       min-height: 100vh;
     }
 
-    /* TOP BAR */
+    /* ============================================
+       TOP BAR
+       ============================================ */
     .topbar {
       background: var(--bg-secondary);
-      padding: 16px 40px;
+      padding: 20px 40px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -107,25 +107,29 @@
       transform: translateX(-3px);
     }
 
-    /* MAIN CONTAINER */
-    .main-container {
+    /* ============================================
+       MAIN CONTAINER
+       ============================================ */
+    .container {
       max-width: 1100px;
       margin: 0 auto;
       padding: 40px 20px 80px;
     }
 
-    /* HERO SECTION */
+    /* ============================================
+       HERO SECTION
+       ============================================ */
     .hero {
       display: flex;
       gap: 40px;
       align-items: center;
-      background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
+      background: var(--bg-card);
       padding: 40px;
       border-radius: 24px;
       border: 1px solid var(--border-color);
+      margin-bottom: 40px;
       position: relative;
       overflow: hidden;
-      margin-bottom: 40px;
     }
 
     .hero::before {
@@ -140,28 +144,33 @@
     }
 
     .hero-image {
-      width: 200px;
-      height: 200px;
-      border-radius: 20px;
+      width: 280px;
+      height: 180px;
+      border-radius: 16px;
       overflow: hidden;
       flex-shrink: 0;
       position: relative;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     }
 
-    .hero-image::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border: 2px solid var(--accent);
-      border-radius: 20px;
-      opacity: 0.3;
-    }
-
     .hero-image img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .hero-image:hover img {
+      transform: scale(1.05);
+    }
+
+    .hero-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid rgba(229, 57, 53, 0.3);
+      border-radius: 16px;
+      pointer-events: none;
     }
 
     .hero-content {
@@ -174,19 +183,19 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(255, 61, 0, 0.15);
-      border: 1px solid rgba(255, 61, 0, 0.3);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 11px;
+      background: rgba(229, 57, 53, 0.15);
+      border: 1px solid rgba(229, 57, 53, 0.3);
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--accent);
+      margin-bottom: 16px;
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-bottom: 16px;
     }
 
-    .hero-title {
+    .hero-content h1 {
       font-family: 'Oswald', sans-serif;
       font-size: 36px;
       font-weight: 700;
@@ -195,22 +204,19 @@
       letter-spacing: 1px;
     }
 
-    .hero-title span {
-      background: var(--gradient-accent);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .hero-content h1 span {
+      color: var(--accent);
     }
 
-    .hero-description {
+    .hero-content p {
+      color: var(--text-secondary);
       font-size: 15px;
       line-height: 1.7;
-      color: var(--text-secondary);
       margin-bottom: 24px;
       max-width: 500px;
     }
 
-    .hero-controls {
+    .hero-actions {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
@@ -221,9 +227,9 @@
       align-items: center;
       gap: 8px;
       padding: 12px 24px;
+      border-radius: 12px;
       font-size: 14px;
       font-weight: 600;
-      border-radius: 12px;
       cursor: pointer;
       transition: all 0.3s ease;
       border: none;
@@ -241,18 +247,19 @@
     }
 
     .btn-secondary {
-      background: var(--bg-card);
-      color: var(--text-secondary);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
       border: 1px solid var(--border-color);
     }
 
     .btn-secondary:hover {
-      background: var(--bg-card-hover);
-      color: var(--text-primary);
       border-color: var(--accent);
+      color: var(--accent);
     }
 
-    /* STATS BAR */
+    /* ============================================
+       STATS BAR
+       ============================================ */
     .stats-bar {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -264,20 +271,20 @@
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 20px;
+      padding: 24px;
       text-align: center;
       transition: all 0.3s ease;
     }
 
     .stat-card:hover {
       border-color: var(--accent);
-      transform: translateY(-3px);
+      transform: translateY(-5px);
     }
 
     .stat-icon {
       width: 50px;
       height: 50px;
-      background: rgba(255, 61, 0, 0.1);
+      background: rgba(229, 57, 53, 0.1);
       border-radius: 12px;
       display: flex;
       align-items: center;
@@ -298,18 +305,20 @@
       font-size: 12px;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
       margin-top: 4px;
     }
 
-    /* WEEKS */
+    /* ============================================
+       WEEKS SECTION
+       ============================================ */
     .section-header {
       margin-bottom: 24px;
     }
 
-    .section-title {
+    .section-header h2 {
       font-family: 'Oswald', sans-serif;
-      font-size: 24px;
+      font-size: 28px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -318,7 +327,7 @@
       gap: 12px;
     }
 
-    .section-title i {
+    .section-header h2 i {
       color: var(--accent);
     }
 
@@ -331,28 +340,28 @@
 
     .week {
       background: var(--bg-card);
-      border-radius: 16px;
+      border-radius: 20px;
       border: 1px solid var(--border-color);
       overflow: hidden;
       transition: all 0.3s ease;
     }
 
     .week:hover {
-      border-color: rgba(255, 61, 0, 0.3);
+      border-color: rgba(229, 57, 53, 0.3);
     }
 
     .week.active {
       border-color: var(--accent);
-      box-shadow: 0 10px 40px rgba(255, 61, 0, 0.1);
+      box-shadow: 0 10px 40px rgba(229, 57, 53, 0.1);
     }
 
     .week-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 24px;
+      padding: 24px 28px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: background 0.3s ease;
     }
 
     .week-header:hover {
@@ -366,15 +375,15 @@
     }
 
     .week-number {
-      width: 45px;
-      height: 45px;
+      width: 50px;
+      height: 50px;
       background: var(--gradient-accent);
-      border-radius: 12px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: 'Oswald', sans-serif;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 700;
       color: white;
     }
@@ -383,7 +392,7 @@
       font-family: 'Oswald', sans-serif;
       font-size: 18px;
       font-weight: 600;
-      margin: 0 0 4px 0;
+      margin-bottom: 4px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -391,7 +400,6 @@
     .week-info p {
       font-size: 13px;
       color: var(--text-muted);
-      margin: 0;
     }
 
     .week-toggle {
@@ -414,13 +422,19 @@
 
     .week-content {
       display: none;
-      padding: 0 24px 24px;
+      padding: 0 28px 28px;
       animation: slideDown 0.3s ease;
     }
 
     @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .week.active .week-content {
@@ -428,13 +442,21 @@
     }
 
     .week-objective {
-      background: rgba(255, 61, 0, 0.08);
+      background: rgba(229, 57, 53, 0.08);
       border-left: 3px solid var(--accent);
-      padding: 12px 16px;
-      border-radius: 0 10px 10px 0;
-      margin-bottom: 20px;
-      font-size: 14px;
+      padding: 16px 20px;
+      border-radius: 0 12px 12px 0;
+      margin-bottom: 24px;
+    }
+
+    .week-objective p {
       color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .week-objective strong {
+      color: var(--accent);
     }
 
     .meals-grid {
@@ -446,57 +468,56 @@
     .meal-card {
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 18px;
+      border-radius: 16px;
+      padding: 20px;
       transition: all 0.3s ease;
     }
 
     .meal-card:hover {
       border-color: var(--accent);
-      transform: translateY(-2px);
+      transform: translateY(-3px);
     }
 
     .meal-header {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
+      gap: 12px;
+      margin-bottom: 12px;
     }
 
     .meal-icon {
-      width: 32px;
-      height: 32px;
-      background: rgba(255, 61, 0, 0.1);
-      border-radius: 8px;
+      width: 36px;
+      height: 36px;
+      background: rgba(229, 57, 53, 0.1);
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
-      color: var(--accent);
+      font-size: 16px;
     }
 
     .meal-card h4 {
       font-family: 'Oswald', sans-serif;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin: 0;
     }
 
     .meal-card p {
       font-size: 13px;
       color: var(--text-secondary);
       line-height: 1.6;
-      margin: 0;
     }
 
-    /* SHOPPING LIST */
+    /* ============================================
+       SHOPPING LIST
+       ============================================ */
     .shopping-section {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 20px;
-      padding: 30px;
+      padding: 32px;
       margin-bottom: 40px;
     }
 
@@ -518,7 +539,6 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin: 0;
     }
 
     .shopping-grid {
@@ -535,9 +555,8 @@
       text-transform: uppercase;
       letter-spacing: 1px;
       margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
     }
 
     .shopping-category ul {
@@ -545,31 +564,31 @@
     }
 
     .shopping-category li {
-      font-size: 14px;
-      color: var(--text-secondary);
-      padding: 8px 0;
-      border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
-      gap: 8px;
-    }
-
-    .shopping-category li:last-child {
-      border-bottom: none;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 14px;
+      color: var(--text-secondary);
     }
 
     .shopping-category li::before {
-      content: '•';
-      color: var(--accent);
-      font-weight: bold;
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      flex-shrink: 0;
     }
 
-    /* TIPS SECTION */
+    /* ============================================
+       TIPS SECTION
+       ============================================ */
     .tips-section {
-      background: linear-gradient(135deg, rgba(255, 61, 0, 0.1) 0%, rgba(255, 61, 0, 0.05) 100%);
-      border: 1px solid rgba(255, 61, 0, 0.2);
+      background: linear-gradient(135deg, rgba(229, 57, 53, 0.1), rgba(229, 57, 53, 0.05));
+      border: 1px solid rgba(229, 57, 53, 0.2);
       border-radius: 20px;
-      padding: 30px;
+      padding: 32px;
     }
 
     .tips-header {
@@ -590,137 +609,151 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin: 0;
     }
 
-    .tips-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-    }
-
-    .tip-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 12px;
-      background: var(--bg-card);
-      border-radius: 12px;
-    }
-
-    .tip-item i {
-      color: var(--accent);
-      font-size: 18px;
-      margin-top: 2px;
-    }
-
-    .tip-item p {
-      font-size: 13px;
+    .tips-section p {
       color: var(--text-secondary);
-      line-height: 1.5;
-      margin: 0;
+      font-size: 14px;
+      line-height: 1.7;
     }
 
-    /* RESPONSIVE */
+    .tips-section strong {
+      color: var(--text-primary);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
     @media (max-width: 900px) {
-      .stats-bar {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 768px) {
-      .topbar {
-        padding: 12px 20px;
-        flex-direction: column;
-        gap: 12px;
-      }
-
       .hero {
         flex-direction: column;
-        padding: 24px;
         text-align: center;
+        padding: 30px;
+      }
+
+      .hero-content p {
+        max-width: 100%;
+      }
+
+      .hero-actions {
+        justify-content: center;
       }
 
       .hero-image {
-        width: 150px;
-        height: 150px;
+        width: 100%;
+        max-width: 350px;
+        height: 200px;
       }
 
-      .hero-title {
-        font-size: 28px;
-      }
-
-      .hero-description {
-        margin: 0 auto 24px;
-      }
-
-      .hero-controls {
-        justify-content: center;
+      .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .meals-grid {
         grid-template-columns: 1fr;
       }
+    }
+
+    @media (max-width: 600px) {
+      .topbar {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .container {
+        padding: 20px 15px 60px;
+      }
+
+      .hero {
+        padding: 24px;
+      }
+
+      .hero-content h1 {
+        font-size: 28px;
+      }
 
       .stats-bar {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr 1fr;
         gap: 12px;
+      }
+
+      .stat-card {
+        padding: 16px;
+      }
+
+      .stat-value {
+        font-size: 24px;
+      }
+
+      .week-header {
+        padding: 18px 20px;
+      }
+
+      .week-content {
+        padding: 0 20px 20px;
+      }
+
+      .shopping-section {
+        padding: 24px;
       }
 
       .shopping-grid {
         grid-template-columns: 1fr;
       }
-
-      .tips-grid {
-        grid-template-columns: 1fr;
-      }
     }
 
     @media print {
-      .topbar, .btn-back, .hero-controls { display: none !important; }
-      .week-content { display: block !important; }
-      body { background: white; color: black; }
+      .topbar, .btn-back, .hero-actions {
+        display: none !important;
+      }
+      .week-content {
+        display: block !important;
+      }
+      body {
+        background: white;
+        color: black;
+      }
     }
   </style>
 </head>
 <body>
 
   <!-- TOP BAR -->
-  <div class="topbar">
+  <header class="topbar">
     <div class="topbar-left">
       <img src="../img/logo.png" alt="FitAiid">
       <div class="topbar-title">
-        <h2>Plan Mensual — Ganar Masa Muscular</h2>
-        <span>Programa de 4 semanas</span>
+        <h2>Plan Ganar Masa Muscular</h2>
+        <span>Programa mensual de hipertrofia</span>
       </div>
     </div>
     <a href="nutricion.html" class="btn-back">
       <i class="fas fa-arrow-left"></i> Volver
     </a>
-  </div>
+  </header>
 
   <!-- MAIN CONTENT -->
-  <main class="main-container">
+  <main class="container">
 
-    <!-- HERO SECTION -->
+    <!-- HERO -->
     <section class="hero">
       <div class="hero-image">
-        <img src="../img/nutricion/nutrición (1).jpg" alt="Ganar Masa Muscular">
+        <img src="../img/nutricion/nutrición (1).webp" alt="Ganar Masa Muscular">
       </div>
       <div class="hero-content">
         <div class="hero-badge">
-          <i class="fas fa-dumbbell"></i> Hipertrofia
+          <i class="fas fa-dumbbell"></i>
+          Hipertrofia Muscular
         </div>
-        <h1 class="hero-title">Plan <span>Ganar Masa</span></h1>
-        <p class="hero-description">
-          Un plan diseñado para construir masa muscular con una alimentación rica en proteínas, carbohidratos estratégicos y hábitos saludables sostenibles.
-        </p>
-        <div class="hero-controls">
+        <h1>Plan Mensual <span>Ganar Masa</span></h1>
+        <p>Un plan diseñado para construir masa muscular con una alimentación rica en proteínas, carbohidratos estratégicos y hábitos saludables sostenibles.</p>
+        <div class="hero-actions">
           <button class="btn btn-primary" id="printBtn">
             <i class="fas fa-print"></i> Imprimir Plan
           </button>
           <button class="btn btn-secondary" id="downloadShop">
-            <i class="fas fa-download"></i> Descargar PDF
+            <i class="fas fa-download"></i> Descargar Lista
           </button>
         </div>
       </div>
@@ -729,88 +762,99 @@
     <!-- STATS BAR -->
     <section class="stats-bar">
       <div class="stat-card">
-        <div class="stat-icon"><i class="fas fa-calendar-week"></i></div>
+        <div class="stat-icon">
+          <i class="fas fa-calendar-week"></i>
+        </div>
         <div class="stat-value">4</div>
         <div class="stat-label">Semanas</div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon"><i class="fas fa-utensils"></i></div>
+        <div class="stat-icon">
+          <i class="fas fa-utensils"></i>
+        </div>
         <div class="stat-value">6</div>
-        <div class="stat-label">Comidas/día</div>
+        <div class="stat-label">Comidas/Día</div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon"><i class="fas fa-bolt"></i></div>
-        <div class="stat-value">2500+</div>
-        <div class="stat-label">Kcal aprox.</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon"><i class="fas fa-drumstick-bite"></i></div>
+        <div class="stat-icon">
+          <i class="fas fa-drumstick-bite"></i>
+        </div>
         <div class="stat-value">2g/kg</div>
         <div class="stat-label">Proteína</div>
       </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-bed"></i>
+        </div>
+        <div class="stat-value">7-9h</div>
+        <div class="stat-label">Descanso</div>
+      </div>
     </section>
 
-    <!-- WEEKS SECTION -->
-    <section class="section-header">
-      <h2 class="section-title"><i class="fas fa-list-check"></i> Plan Semanal</h2>
-    </section>
+    <!-- WEEKS -->
+    <div class="section-header">
+      <h2><i class="fas fa-list-check"></i> Plan Semanal</h2>
+    </div>
 
-    <div class="weeks" id="weeks">
-      <!-- Semana 1 -->
+    <section class="weeks" id="weeks">
+
+      <!-- SEMANA 1 -->
       <div class="week">
         <div class="week-header" data-toggle>
           <div class="week-header-left">
             <div class="week-number">1</div>
             <div class="week-info">
               <h3>Activación Muscular</h3>
-              <p>Aumentar proteína diaria y regular horarios</p>
+              <p>Aumentar proteína y regular horarios</p>
             </div>
           </div>
-          <div class="week-toggle"><i class="fas fa-chevron-down"></i></div>
+          <div class="week-toggle">
+            <i class="fas fa-chevron-down"></i>
+          </div>
         </div>
         <div class="week-content">
           <div class="week-objective">
-            <strong>🎯 Objetivo:</strong> Aumentar proteína diaria y regular horarios.
+            <p><strong>Objetivo:</strong> Aumentar proteína diaria y regular horarios de comidas para maximizar la síntesis muscular.</p>
           </div>
           <div class="meals-grid">
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-sun"></i></div>
+                <div class="meal-icon">🌅</div>
                 <h4>Desayuno</h4>
               </div>
               <p>Avena (60 g) + leche (200 ml) + proteína + fresas.</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-apple-alt"></i></div>
+                <div class="meal-icon">🍎</div>
                 <h4>Media Mañana</h4>
               </div>
               <p>Yogur griego + almendras (15 g).</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-drumstick-bite"></i></div>
+                <div class="meal-icon">🍽️</div>
                 <h4>Almuerzo</h4>
               </div>
               <p>Pollo (180 g) + arroz (120 g) + ensalada.</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-cookie"></i></div>
+                <div class="meal-icon">💪</div>
                 <h4>Merienda</h4>
               </div>
               <p>Batido de proteína + fruta.</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-moon"></i></div>
+                <div class="meal-icon">🌙</div>
                 <h4>Cena</h4>
               </div>
               <p>Carne magra (180 g) + batata (150 g).</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-star"></i></div>
+                <div class="meal-icon">🧀</div>
                 <h4>Snack Nocturno</h4>
               </div>
               <p>Queso cottage (100 g).</p>
@@ -819,7 +863,7 @@
         </div>
       </div>
 
-      <!-- Semana 2 -->
+      <!-- SEMANA 2 -->
       <div class="week">
         <div class="week-header" data-toggle>
           <div class="week-header-left">
@@ -829,51 +873,53 @@
               <p>Subir carbohidratos complejos</p>
             </div>
           </div>
-          <div class="week-toggle"><i class="fas fa-chevron-down"></i></div>
+          <div class="week-toggle">
+            <i class="fas fa-chevron-down"></i>
+          </div>
         </div>
         <div class="week-content">
           <div class="week-objective">
-            <strong>🎯 Objetivo:</strong> Subir carbohidratos complejos para mejorar rendimiento.
+            <p><strong>Objetivo:</strong> Subir carbohidratos complejos para mejorar rendimiento en entrenamientos intensos.</p>
           </div>
           <div class="meals-grid">
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-sun"></i></div>
+                <div class="meal-icon">🌅</div>
                 <h4>Desayuno</h4>
               </div>
               <p>Huevos (3) + pan integral (2) + fruta.</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-apple-alt"></i></div>
+                <div class="meal-icon">🍎</div>
                 <h4>Media Mañana</h4>
               </div>
               <p>Proteína + avena (40 g).</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-drumstick-bite"></i></div>
+                <div class="meal-icon">🍽️</div>
                 <h4>Almuerzo</h4>
               </div>
               <p>Pasta integral (180 g) + pollo (150 g).</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-cookie"></i></div>
+                <div class="meal-icon">🥑</div>
                 <h4>Merienda</h4>
               </div>
               <p>Sandwich integral con aguacate.</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-moon"></i></div>
+                <div class="meal-icon">🌙</div>
                 <h4>Cena</h4>
               </div>
               <p>Salmón (180 g) + quinoa (120 g).</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-star"></i></div>
+                <div class="meal-icon">🍯</div>
                 <h4>Snack</h4>
               </div>
               <p>Yogur + miel.</p>
@@ -882,7 +928,7 @@
         </div>
       </div>
 
-      <!-- Semana 3 -->
+      <!-- SEMANA 3 -->
       <div class="week">
         <div class="week-header" data-toggle>
           <div class="week-header-left">
@@ -892,51 +938,53 @@
               <p>Reforzar construcción muscular</p>
             </div>
           </div>
-          <div class="week-toggle"><i class="fas fa-chevron-down"></i></div>
+          <div class="week-toggle">
+            <i class="fas fa-chevron-down"></i>
+          </div>
         </div>
         <div class="week-content">
           <div class="week-objective">
-            <strong>🎯 Objetivo:</strong> Reforzar construcción muscular.
+            <p><strong>Objetivo:</strong> Reforzar construcción muscular con mayor ingesta proteica y nutrientes esenciales.</p>
           </div>
           <div class="meals-grid">
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-sun"></i></div>
+                <div class="meal-icon">🌅</div>
                 <h4>Desayuno</h4>
               </div>
               <p>Smoothie: proteína + avena + frutos rojos.</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-apple-alt"></i></div>
+                <div class="meal-icon">🥚</div>
                 <h4>Media Mañana</h4>
               </div>
               <p>Huevo + frutos secos.</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-drumstick-bite"></i></div>
+                <div class="meal-icon">🍽️</div>
                 <h4>Almuerzo</h4>
               </div>
               <p>Carne magra (200 g) + arroz (150 g).</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-cookie"></i></div>
+                <div class="meal-icon">🧀</div>
                 <h4>Merienda</h4>
               </div>
               <p>Queso cottage + fruta.</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-moon"></i></div>
+                <div class="meal-icon">🌙</div>
                 <h4>Cena</h4>
               </div>
               <p>Pollo (180 g) + pasta integral.</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-star"></i></div>
+                <div class="meal-icon">🥛</div>
                 <h4>Snack</h4>
               </div>
               <p>Caseína nocturna.</p>
@@ -945,61 +993,63 @@
         </div>
       </div>
 
-      <!-- Semana 4 -->
+      <!-- SEMANA 4 -->
       <div class="week">
         <div class="week-header" data-toggle>
           <div class="week-header-left">
             <div class="week-number">4</div>
             <div class="week-info">
               <h3>Optimización Final</h3>
-              <p>Aumentar calorías limpias y estabilizar</p>
+              <p>Aumentar calorías limpias</p>
             </div>
           </div>
-          <div class="week-toggle"><i class="fas fa-chevron-down"></i></div>
+          <div class="week-toggle">
+            <i class="fas fa-chevron-down"></i>
+          </div>
         </div>
         <div class="week-content">
           <div class="week-objective">
-            <strong>🎯 Objetivo:</strong> Aumentar calorías limpias y estabilizar progreso.
+            <p><strong>Objetivo:</strong> Aumentar calorías limpias y estabilizar progreso para máximas ganancias musculares.</p>
           </div>
           <div class="meals-grid">
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-sun"></i></div>
+                <div class="meal-icon">🌅</div>
                 <h4>Desayuno</h4>
               </div>
               <p>Pancakes de avena + proteína + miel.</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-apple-alt"></i></div>
+                <div class="meal-icon">🥑</div>
                 <h4>Media Mañana</h4>
               </div>
               <p>Aguacate + pan integral.</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-drumstick-bite"></i></div>
+                <div class="meal-icon">🍽️</div>
                 <h4>Almuerzo</h4>
               </div>
               <p>Pavo (200 g) + puré de batata.</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-cookie"></i></div>
+                <div class="meal-icon">🍌</div>
                 <h4>Merienda</h4>
               </div>
               <p>Batido + banana.</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-moon"></i></div>
+                <div class="meal-icon">🌙</div>
                 <h4>Cena</h4>
               </div>
               <p>Salmón (200 g) + pasta (150 g).</p>
             </div>
             <div class="meal-card">
               <div class="meal-header">
-                <div class="meal-icon"><i class="fas fa-star"></i></div>
+                <div class="meal-icon">🥣</div>
                 <h4>Snack</h4>
               </div>
               <p>Yogur griego + granola.</p>
@@ -1007,17 +1057,18 @@
           </div>
         </div>
       </div>
-    </div>
+
+    </section>
 
     <!-- SHOPPING LIST -->
     <section class="shopping-section" id="shopList">
       <div class="shopping-header">
-        <i class="fas fa-shopping-cart"></i>
-        <h3>Lista de Compras Semanal</h3>
+        <i class="fas fa-cart-shopping"></i>
+        <h3>Lista de Compras</h3>
       </div>
       <div class="shopping-grid">
         <div class="shopping-category">
-          <h4><i class="fas fa-drumstick-bite"></i> Proteínas</h4>
+          <h4>Proteínas</h4>
           <ul>
             <li>Pollo</li>
             <li>Carne magra</li>
@@ -1029,7 +1080,7 @@
           </ul>
         </div>
         <div class="shopping-category">
-          <h4><i class="fas fa-bread-slice"></i> Carbohidratos</h4>
+          <h4>Carbohidratos</h4>
           <ul>
             <li>Avena</li>
             <li>Pan integral</li>
@@ -1040,15 +1091,16 @@
           </ul>
         </div>
         <div class="shopping-category">
-          <h4><i class="fas fa-carrot"></i> Frutas y Verduras</h4>
+          <h4>Frutas y Verduras</h4>
           <ul>
             <li>Bananas, fresas, manzana</li>
+            <li>Frutos rojos</li>
             <li>Brócoli, espinaca</li>
             <li>Zanahoria</li>
           </ul>
         </div>
         <div class="shopping-category">
-          <h4><i class="fas fa-seedling"></i> Grasas Saludables</h4>
+          <h4>Grasas Saludables</h4>
           <ul>
             <li>Aguacate</li>
             <li>Almendras y nueces</li>
@@ -1056,56 +1108,44 @@
           </ul>
         </div>
         <div class="shopping-category">
-          <h4><i class="fas fa-jar"></i> Otros</h4>
+          <h4>Otros</h4>
           <ul>
             <li>Miel</li>
             <li>Especias</li>
             <li>Yogur griego</li>
             <li>Granola</li>
+            <li>Caseína</li>
           </ul>
         </div>
       </div>
     </section>
 
-    <!-- TIPS SECTION -->
+    <!-- TIPS -->
     <section class="tips-section">
       <div class="tips-header">
         <i class="fas fa-lightbulb"></i>
-        <h3>Consejos para Ganar Masa</h3>
+        <h3>Consejos para Ganar Músculo</h3>
       </div>
-      <div class="tips-grid">
-        <div class="tip-item">
-          <i class="fas fa-drumstick-bite"></i>
-          <p><strong>Proteína:</strong> Consume 2g de proteína por kg de peso corporal.</p>
-        </div>
-        <div class="tip-item">
-          <i class="fas fa-bed"></i>
-          <p><strong>Descanso:</strong> Duerme 7-9 horas para recuperación muscular.</p>
-        </div>
-        <div class="tip-item">
-          <i class="fas fa-dumbbell"></i>
-          <p><strong>Entreno:</strong> Entrena fuerza 3-5 veces por semana.</p>
-        </div>
-        <div class="tip-item">
-          <i class="fas fa-chart-line"></i>
-          <p><strong>Progresión:</strong> Aumenta calorías progresivamente.</p>
-        </div>
-      </div>
+      <p><strong>Consume 2 g de proteína por kg</strong> de peso corporal, <strong>descansa 7–9 horas</strong> cada noche, <strong>entrena fuerza 3–5 veces por semana</strong> y aumenta calorías progresivamente. La consistencia y el descanso son clave para el crecimiento muscular.</p>
     </section>
 
   </main>
 
-  <!-- Scripts -->
+  <!-- SCRIPTS -->
   <script src="../scripts/auth-guard.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script>
-    // Acordeón
+    // Acordeón para las semanas
     document.querySelectorAll('.week-header').forEach(header => {
       header.addEventListener('click', () => {
         const week = header.parentElement;
         const wasActive = week.classList.contains('active');
+        
+        // Cerrar todos
         document.querySelectorAll('.week').forEach(w => w.classList.remove('active'));
+        
+        // Abrir el clickeado si no estaba activo
         if (!wasActive) {
           week.classList.add('active');
           week.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1114,28 +1154,34 @@
     });
 
     // Imprimir
-    document.getElementById('printBtn').addEventListener('click', () => window.print());
+    document.getElementById('printBtn').addEventListener('click', () => {
+      window.print();
+    });
 
     // Descargar PDF
     document.getElementById('downloadShop').addEventListener('click', async () => {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({ unit: "mm", format: "a4" });
 
+      // Título
       doc.setFont("Helvetica", "bold");
       doc.setFontSize(22);
-      doc.setTextColor(255, 61, 0);
+      doc.setTextColor(229, 57, 53);
       doc.text("Plan Nutricional • Ganar Masa Muscular • FitAiid", 15, 20);
 
-      doc.setDrawColor(255, 61, 0);
-      doc.setLineWidth(1);
+      // Línea
+      doc.setDrawColor(229, 57, 53);
+      doc.setLineWidth(2);
       doc.line(15, 25, 195, 25);
 
+      // Extraer todo el plan
       const semanas = document.querySelectorAll(".week");
       let textoCompleto = "";
 
       semanas.forEach((week) => {
         const titulo = week.querySelector("h3").innerText.trim();
-        const objetivo = week.querySelector(".week-objective")?.innerText.trim() || "";
+        const objetivo = week.querySelector(".week-objective p")?.innerText.trim() || "";
+
         textoCompleto += `${titulo}\n${objetivo}\n\n`;
 
         const bloques = week.querySelectorAll(".meal-card");
@@ -1144,16 +1190,19 @@
           const detalle = b.querySelector("p").innerText.trim();
           textoCompleto += `• ${comida}: ${detalle}\n`;
         });
+
         textoCompleto += `\n\n`;
       });
 
+      // Texto PDF
       doc.setFont("Helvetica", "normal");
-      doc.setFontSize(11);
+      doc.setFontSize(12);
       doc.setTextColor(40, 40, 40);
 
       const lineas = doc.splitTextToSize(textoCompleto, 180);
-      doc.text(lineas, 15, 35);
+      doc.text(lineas, 15, 40);
 
+      // Guardar
       doc.save("plan_ganar_masa_muscular_fitaiid.pdf");
     });
   </script>
