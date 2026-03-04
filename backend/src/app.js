@@ -77,8 +77,7 @@ const app = express();
 const allowedOrigins = process.env.NODE_ENV === 'production'
   ? [
     process.env.FRONTEND_URL,
-    'https://techstore-pro.vercel.app',
-    'https://www.techstore-pro.com'
+    'https://fit-aiid.vercel.app',
   ].filter(Boolean)
   : [
     'http://localhost:3000',
@@ -543,33 +542,33 @@ app.post("/api/generar-rutina", protect, catchAsync(async (req, res) => {
 
   console.log('🏋️ Generando rutina para usuario:', userId);
 
-    // Obtener perfil del usuario si no viene en el request
-    let userProfile = profile;
+  // Obtener perfil del usuario si no viene en el request
+  let userProfile = profile;
 
-    if (!userProfile && userId && userId !== 'anonymous') {
-      try {
-        const user = await User.findById(userId).select('firstName fitnessProfile');
-        if (user && user.fitnessProfile) {
-          userProfile = user.fitnessProfile;
-        }
-      } catch (error) {
-        console.log('⚠️ No se pudo cargar perfil desde DB');
+  if (!userProfile && userId && userId !== 'anonymous') {
+    try {
+      const user = await User.findById(userId).select('firstName fitnessProfile');
+      if (user && user.fitnessProfile) {
+        userProfile = user.fitnessProfile;
       }
+    } catch (error) {
+      console.log('⚠️ No se pudo cargar perfil desde DB');
     }
+  }
 
-    // Perfil por defecto si no hay datos
-    if (!userProfile) {
-      userProfile = {
-        mainGoal: 'tonificar',
-        fitnessLevel: 'principiante',
-        trainingDaysPerWeek: 3,
-        trainingLocation: 'casa',
-        sessionDuration: '45 min',
-        medicalConditions: 'ninguna'
-      };
-    }
-    //Prompt de la IA
-    const prompt = `
+  // Perfil por defecto si no hay datos
+  if (!userProfile) {
+    userProfile = {
+      mainGoal: 'tonificar',
+      fitnessLevel: 'principiante',
+      trainingDaysPerWeek: 3,
+      trainingLocation: 'casa',
+      sessionDuration: '45 min',
+      medicalConditions: 'ninguna'
+    };
+  }
+  //Prompt de la IA
+  const prompt = `
 Eres un ENTRENADOR PERSONAL PROFESIONAL.
 
 Genera una rutina semanal de entrenamiento.
@@ -647,82 +646,82 @@ NO incluyas texto fuera del JSON.
 `;
 
 
-    // Llamar a OpenAI (con fallback en caso de fallo)
-    let rutina;
+  // Llamar a OpenAI (con fallback en caso de fallo)
+  let rutina;
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "Eres un entrenador personal experto. Siempre respondes con JSON válido sin ningún texto adicional, sin markdown, sin explicaciones. Solo el JSON puro."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      temperature: 0.3,
+      max_tokens: 4000
+    });
+
+    const responseText = completion.choices[0].message.content;
+
     try {
-      const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: "Eres un entrenador personal experto. Siempre respondes con JSON válido sin ningún texto adicional, sin markdown, sin explicaciones. Solo el JSON puro."
-          },
-          {
-            role: "user",
-            content: prompt
-          }
-        ],
-        temperature: 0.3,
-        max_tokens: 4000
-      });
+      // Limpiar la respuesta de posibles marcadores de código
+      let cleanResponse = responseText
+        .replace(/```json\n?/g, '')
+        .replace(/```\n?/g, '')
+        .trim();
+      console.log('🧠 RESPUESTA IA RAW:\n', responseText);
 
-      const responseText = completion.choices[0].message.content;
+      rutina = JSON.parse(cleanResponse);
+    } catch (parseError) {
+      console.error('❌ Error parseando JSON de la IA:', parseError);
+      console.log('Respuesta raw:', responseText);
 
-      try {
-        // Limpiar la respuesta de posibles marcadores de código
-        let cleanResponse = responseText
-          .replace(/```json\n?/g, '')
-          .replace(/```\n?/g, '')
-          .trim();
-        console.log('🧠 RESPUESTA IA RAW:\n', responseText);
-
-        rutina = JSON.parse(cleanResponse);
-      } catch (parseError) {
-        console.error('❌ Error parseando JSON de la IA:', parseError);
-        console.log('Respuesta raw:', responseText);
-
-        // Generar rutina de fallback
-        rutina = generarRutinaFallback(userProfile);
-      }
-    } catch (openaiError) {
-      console.error('⚠️ Error calling OpenAI API:', openaiError.message);
-      console.log('Usando rutina fallback');
-      // Generar rutina de fallback cuando OpenAI falla
+      // Generar rutina de fallback
       rutina = generarRutinaFallback(userProfile);
     }
+  } catch (openaiError) {
+    console.error('⚠️ Error calling OpenAI API:', openaiError.message);
+    console.log('Usando rutina fallback');
+    // Generar rutina de fallback cuando OpenAI falla
+    rutina = generarRutinaFallback(userProfile);
+  }
 
-    // Guardar la rutina en el usuario (opcional)
-    if (userId && userId !== 'anonymous') {
-      try {
-        await User.findByIdAndUpdate(userId, {
-          $set: { 'currentRoutine': rutina },
-          $push: {
-            'routineHistory': {
-              rutina: rutina,
-              generatedAt: new Date()
-            }
+  // Guardar la rutina en el usuario (opcional)
+  if (userId && userId !== 'anonymous') {
+    try {
+      await User.findByIdAndUpdate(userId, {
+        $set: { 'currentRoutine': rutina },
+        $push: {
+          'routineHistory': {
+            rutina: rutina,
+            generatedAt: new Date()
           }
-        });
-      } catch (error) {
-        console.log('⚠️ No se pudo guardar rutina en DB');
-      }
+        }
+      });
+    } catch (error) {
+      console.log('⚠️ No se pudo guardar rutina en DB');
     }
+  }
 
-    // 🔥 CONSTRUIR SEMANA COMPLETA (ENTRENO + DESCANSO)
-    const semanaCompleta = construirSemanaCompleta(
-      rutina,
-      userProfile.trainingDaysPerWeek
-    );
+  // 🔥 CONSTRUIR SEMANA COMPLETA (ENTRENO + DESCANSO)
+  const semanaCompleta = construirSemanaCompleta(
+    rutina,
+    userProfile.trainingDaysPerWeek
+  );
 
-    rutina.dias = semanaCompleta;
+  rutina.dias = semanaCompleta;
 
-    console.log('✅ Rutina generada exitosamente (semana completa)');
+  console.log('✅ Rutina generada exitosamente (semana completa)');
 
-    res.json({
-      success: true,
-      message: "Rutina generada exitosamente",
-      rutina: rutina
-    });
+  res.json({
+    success: true,
+    message: "Rutina generada exitosamente",
+    rutina: rutina
+  });
 }));
 
 // =============================================
@@ -846,10 +845,10 @@ function generarRutinaFallback(profile) {
         esDescanso: false,
         enfoque: enfoquesObjetivo[contadorEntreno % enfoquesObjetivo.length],
         descripcion: `Entrenamiento enfocado en ${enfoquesObjetivo[contadorEntreno % enfoquesObjetivo.length].toLowerCase()}`,
-          duracionTotal: 45,
-          caloriasEstimadas: 300,
-          ejercicios: ejercicios[tipoHoy]
-        });
+        duracionTotal: 45,
+        caloriasEstimadas: 300,
+        ejercicios: ejercicios[tipoHoy]
+      });
       contadorEntreno++;
     } else {
       dias.push({
