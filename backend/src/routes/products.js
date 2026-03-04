@@ -4,6 +4,7 @@
 
 const express = require('express');
 const router = express.Router();
+const catchAsync = require('../utils/catchAsync');
 
 // Importar controladores
 const {
@@ -30,7 +31,7 @@ console.log('🛣️ Inicializando rutas de productos TechStore Pro');
  * @params  ?category=laptops&brand=apple&minPrice=1000000&maxPrice=10000000
  *          ?search=MacBook&sortBy=price_asc&page=1&limit=12
  */
-router.get('/', getAllProducts);
+router.get('/', catchAsync(getAllProducts));
 
 /**
  * @route   GET /api/products/:id
@@ -38,7 +39,7 @@ router.get('/', getAllProducts);
  * @access  Público
  * @params  id (MongoDB ObjectId)
  */
-router.get('/:id', getProductById);
+router.get('/:id', catchAsync(getProductById));
 
 // =============================================
 // RUTAS DE ADMINISTRACIÓN (PROTEGIDAS - SOLO ADMIN)
@@ -50,7 +51,7 @@ router.get('/:id', getProductById);
  * @access  Privado (Admin)
  * @body    { name, description, price, category, brand, etc. }
  */
-router.post('/', protect, authorize('admin'), createProduct);
+router.post('/', protect, authorize('admin'), catchAsync(createProduct));
 
 /**
  * @route   PUT /api/products/:id
@@ -58,7 +59,7 @@ router.post('/', protect, authorize('admin'), createProduct);
  * @access  Privado (Admin)
  * @body    { name?, description?, price?, etc. }
  */
-router.put('/:id', protect, authorize('admin'), updateProduct);
+router.put('/:id', protect, authorize('admin'), catchAsync(updateProduct));
 
 /**
  * @route   DELETE /api/products/:id
@@ -66,7 +67,7 @@ router.put('/:id', protect, authorize('admin'), updateProduct);
  * @access  Privado (Admin)
  * @params  id (MongoDB ObjectId)
  */
-router.delete('/:id', protect, authorize('admin'), deleteProduct);
+router.delete('/:id', protect, authorize('admin'), catchAsync(deleteProduct));
 
 // =============================================
 // RUTAS ESPECIALES PARA ECOMMERCE
@@ -78,11 +79,11 @@ router.delete('/:id', protect, authorize('admin'), deleteProduct);
  * @access  Público
  * @params  category: laptops|smartphones|tablets|components
  */
-router.get('/category/:category', (req, res, next) => {
+router.get('/category/:category', catchAsync((req, res, next) => {
     // Agregar categoría a query params y usar controlador principal
     req.query.category = req.params.category;
-    getAllProducts(req, res, next);
-});
+    return getAllProducts(req, res, next);
+}));
 
 /**
  * @route   GET /api/products/brand/:brand
@@ -90,10 +91,10 @@ router.get('/category/:category', (req, res, next) => {
  * @access  Público
  * @params  brand: apple|samsung|asus|etc
  */
-router.get('/brand/:brand', (req, res, next) => {
+router.get('/brand/:brand', catchAsync((req, res, next) => {
     req.query.brand = req.params.brand;
-    getAllProducts(req, res, next);
-});
+    return getAllProducts(req, res, next);
+}));
 
 /**
  * @route   GET /api/products/search/:query
@@ -101,10 +102,10 @@ router.get('/brand/:brand', (req, res, next) => {
  * @access  Público
  * @params  query: texto a buscar
  */
-router.get('/search/:query', (req, res, next) => {
+router.get('/search/:query', catchAsync((req, res, next) => {
     req.query.search = req.params.query;
-    getAllProducts(req, res, next);
-});
+    return getAllProducts(req, res, next);
+}));
 
 console.log('✅ Rutas de productos configuradas:');
 console.log('   📱 GET /api/products - Lista con filtros');

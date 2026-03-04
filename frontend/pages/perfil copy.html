@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Perfil - FitAiid</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="../scripts/config.js"></script>
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #0a0a0a;
+      --bg-card: #111111;
+      --bg-card-hover: #1a1a1a;
+      --accent: #ff3d00;
+      --accent-light: #ff6b3d;
+      --accent-glow: rgba(255, 61, 0, 0.3);
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0b0;
+      --text-muted: #707070;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --gradient-accent: linear-gradient(135deg, var(--accent), var(--accent-light));
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Oswald', 'Inter', system-ui, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+    /* NAVBAR */
+    .navbar-header {
+      width: 100%; padding: 20px 60px; display: flex; justify-content: space-between; align-items: center;
+      background: rgba(12, 12, 12, 0.85); backdrop-filter: blur(10px); position: fixed; top: 0; left: 0;
+      z-index: 9999; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    .navbar-header .logo { display: flex; align-items: center; gap: 10px; }
+    .navbar-header .logo img { width: 55px; height: 55px; }
+    .navbar-header .brand-text h2 { color: #ff2e00; font-size: 22px; font-weight: 700; margin: 0; }
+    .navbar-header .brand-text p { font-size: 12px; color: #ccc; margin: 0; }
+    .navbar-header .menu { display: flex; gap: 40px; align-items: center; }
+    .navbar-header .menu a { color: white; font-size: 18px; text-decoration: none; padding-bottom: 5px; transition: all 0.3s; border-bottom: 3px solid transparent; }
+    .navbar-header .menu a:hover { color: #ff2e00; }
+    .navbar-header .menu a.active { color: #ff2e00; border-bottom: 3px solid #ff2e00; }
+    .navbar-header .icons { display: flex; align-items: center; gap: 20px; }
+    .navbar-header .profile-link { text-decoration: none; color: #ff2e00; font-weight: 600; font-size: 16px; padding: 5px 10px; border-radius: 5px; }
+    .navbar-header .bell { font-size: 22px; cursor: pointer; position: relative; }
+    .navbar-header .bell::after { content: ''; position: absolute; top: 0; right: 0; width: 8px; height: 8px; background: #ff2e00; border-radius: 50%; }
+    .navbar-header .logout-btn { background: linear-gradient(135deg, #ff4444, #cc0000); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 14px; font-family: "Oswald", sans-serif; }
+    .navbar-header .logout-btn:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4); }
+    @media (max-width: 768px) { .navbar-header { padding: 15px 20px; flex-wrap: wrap; } .navbar-header .menu { order: 3; width: 100%; justify-content: center; gap: 20px; margin-top: 15px; } }
+    /* MAIN */
+    .main-container { max-width: 1400px; margin: 0 auto; padding: 120px 40px 80px; }
+    /* PROFILE HERO */
+    .profile-hero { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 24px; padding: 40px; margin-bottom: 30px; position: relative; overflow: hidden; }
+    .profile-hero::before { content: ''; position: absolute; top: 0; right: 0; width: 400px; height: 400px; background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); pointer-events: none; }
+    .profile-hero-content { display: flex; align-items: center; gap: 40px; position: relative; z-index: 1; }
+    .avatar-container { position: relative; }
+    .avatar { width: 150px; height: 150px; border-radius: 50%; background: var(--gradient-accent); padding: 4px; cursor: pointer; transition: all 0.3s; }
+    .avatar:hover { transform: scale(1.05); box-shadow: 0 0 40px var(--accent-glow); }
+    .avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: var(--bg-secondary); }
+    .avatar-edit { position: absolute; bottom: 5px; right: 5px; width: 40px; height: 40px; background: var(--gradient-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; cursor: pointer; border: 3px solid var(--bg-card); }
+    .profile-info { flex: 1; }
+    .profile-name { font-family: 'Oswald', sans-serif; font-size: 42px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+    .profile-name span { background: var(--gradient-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .profile-email { color: var(--text-muted); font-size: 14px; margin-bottom: 16px; }
+    .profile-badges { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
+    .badge-level { background: rgba(255, 61, 0, 0.15); color: var(--accent); border: 1px solid rgba(255, 61, 0, 0.3); }
+    .badge-goal { background: rgba(34, 197, 94, 0.15); color: var(--success); border: 1px solid rgba(34, 197, 94, 0.3); }
+    .badge-streak { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .profile-stats { display: flex; gap: 32px; }
+    .profile-stat { text-align: center; }
+    .profile-stat-value { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: var(--accent); }
+    .profile-stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; }
+    .profile-actions { display: flex; flex-direction: column; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 28px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; font-family: 'Oswald', sans-serif; text-transform: uppercase; text-decoration: none; }
+    .btn-primary { background: var(--gradient-accent); color: white; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px var(--accent-glow); }
+    .btn-outline { background: transparent; color: var(--text-secondary); border: 1px solid var(--border-color); }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    /* GRID */
+    .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+    .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 28px; transition: all 0.3s; }
+    .card:hover { border-color: rgba(255, 61, 0, 0.2); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .card-title { display: flex; align-items: center; gap: 12px; }
+    .card-title i { width: 40px; height: 40px; background: rgba(255, 61, 0, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent); }
+    .card-title h3 { font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 600; text-transform: uppercase; }
+    .card-action { color: var(--accent); font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; }
+    .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .data-item { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; transition: all 0.3s; }
+    .data-item:hover { border-color: var(--accent); }
+    .data-item-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+    .data-item-value { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; }
+    .data-item-value.accent { color: var(--accent); }
+    .progress-section { margin-top: 24px; }
+    .progress-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .progress-label { font-size: 13px; color: var(--text-secondary); }
+    .progress-value { font-family: 'Oswald', sans-serif; font-size: 14px; color: var(--accent); }
+    .progress-bar { height: 8px; background: var(--bg-secondary); border-radius: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--gradient-accent); border-radius: 10px; }
+    .activity-list { display: flex; flex-direction: column; gap: 12px; }
+    .activity-item { display: flex; align-items: center; gap: 16px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 14px; padding: 16px 20px; transition: all 0.3s; }
+    .activity-item:hover { border-color: var(--accent); transform: translateX(5px); }
+    .activity-icon { width: 45px; height: 45px; background: rgba(255, 61, 0, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .activity-info { flex: 1; }
+    .activity-title { font-weight: 600; font-size: 15px; }
+    .activity-date { font-size: 12px; color: var(--text-muted); }
+    .activity-badge { background: rgba(34, 197, 94, 0.1); color: var(--success); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 10px; }
+    .achievements-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .achievement { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; text-align: center; transition: all 0.3s; }
+    .achievement:hover { border-color: var(--accent); transform: translateY(-5px); }
+    .achievement.locked { opacity: 0.4; }
+    .achievement-icon { font-size: 32px; margin-bottom: 12px; }
+    .achievement-name { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; }
+    .sidebar-cards { display: flex; flex-direction: column; gap: 20px; }
+    .streak-card { background: linear-gradient(135deg, var(--bg-card), rgba(255, 61, 0, 0.08)); border-color: rgba(255, 61, 0, 0.2); text-align: center; }
+    .streak-icon { font-size: 40px; margin-bottom: 12px; }
+    .streak-value { font-family: 'Oswald', sans-serif; font-size: 48px; font-weight: 700; background: var(--gradient-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
+    .streak-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; }
+    .streak-days { display: flex; justify-content: center; gap: 6px; }
+    .streak-day { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-muted); }
+    .streak-day.completed { background: var(--gradient-accent); border-color: var(--accent); color: white; }
+    .streak-day.today { border-color: var(--accent); color: var(--accent); }
+    .quick-stat { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--border-color); }
+    .quick-stat:last-child { border-bottom: none; }
+    .quick-stat-label { font-size: 13px; color: var(--text-secondary); }
+    .quick-stat-value { font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 600; }
+    .tools-grid { display: flex; flex-direction: column; gap: 12px; }
+    .tool-item { display: flex; align-items: center; justify-content: space-between; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 14px; padding: 18px 20px; cursor: pointer; transition: all 0.3s; }
+    .tool-item:hover { border-color: var(--accent); }
+    .tool-left { display: flex; align-items: center; gap: 14px; }
+    .tool-icon { width: 42px; height: 42px; background: rgba(255, 61, 0, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent); }
+    .tool-name { font-weight: 600; font-size: 14px; }
+    .tool-value { font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 600; color: var(--accent); }
+    .motivation-text { font-size: 14px; color: var(--text-secondary); line-height: 1.6; font-style: italic; text-align: center; }
+    .motivation-text strong { color: var(--accent); }
+    /* MODAL */
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.9); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 20px; overflow-y: auto; }
+    .modal-overlay.active { display: flex; }
+    .modal { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 24px; padding: 32px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; margin: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .modal-title { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 600; text-transform: uppercase; }
+    .modal-close { width: 40px; height: 40px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); flex-shrink: 0; }
+    .modal-close:hover { background: var(--accent); color: white; }
+    
+    /* CALCULADORAS - Estilos de modales */
+    .calc-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 20px;
+    }
+    .calc-modal.active {
+      display: flex;
+    }
+    .calc-modal-content {
+      background: #1a1a1a;
+      width: 100%;
+      max-width: 420px;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      border: 2px solid #ff3d00;
+      color: white;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .calc-modal-close {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      color: #ff3d00;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      background: none;
+      border: none;
+      transition: color 0.3s;
+    }
+    .calc-modal-close:hover {
+      color: #ff6b3d;
+    }
+    .calc-modal-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: #ff3d00;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      font-family: 'Oswald', sans-serif;
+    }
+    .calc-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .calc-form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .calc-form-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ff3d00;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .calc-form-input,
+    .calc-form-select {
+      width: 100%;
+      height: 42px;
+      background: transparent;
+      border: 2px solid #ff3d00;
+      border-radius: 8px;
+      padding: 0 12px;
+      color: white;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+    .calc-form-input:focus,
+    .calc-form-select:focus {
+      outline: none;
+      border-color: #ff6b3d;
+    }
+    .calc-form-input::placeholder {
+      color: #707070;
+    }
+    .calc-form-select option {
+      background: #1a1a1a;
+      color: white;
+    }
+    .calc-radio-group {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-top: 8px;
+    }
+    .calc-radio-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #b0b0b0;
+    }
+    .calc-radio-label input[type="radio"] {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ff3d00;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .calc-radio-label input[type="radio"]:checked {
+      background: #ff3d00;
+    }
+    .calc-submit-btn {
+      width: 100%;
+      height: 48px;
+      background: linear-gradient(135deg, #ff3d00, #ff6b3d);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Oswald', sans-serif;
+      margin-top: 8px;
+    }
+    .calc-submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 61, 0, 0.4);
+    }
+    .calc-result {
+      display: none;
+      text-align: center;
+      margin-top: 24px;
+    }
+    .calc-result.active {
+      display: block;
+    }
+    .calc-result-title {
+      font-size: 18px;
+      color: #ff6b3d;
+      margin-bottom: 16px;
+    }
+    .calc-result-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: #ff3d00;
+      margin-bottom: 12px;
+      font-family: 'Oswald', sans-serif;
+    }
+    .calc-result-label {
+      font-size: 14px;
+      color: #b0b0b0;
+      margin-bottom: 20px;
+    }
+    .calc-reset-btn {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #ff6b3d, #ff3d00);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .calc-reset-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Upload Section */
+    .upload-section { margin-bottom: 24px; text-align: center; }
+    .upload-btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; background: linear-gradient(135deg, #ff3d00, #ff6b3d); color: white; border-radius: 12px; cursor: pointer; font-weight: 600; font-family: 'Oswald', sans-serif; text-transform: uppercase; transition: all 0.3s; font-size: 14px; }
+    .upload-btn:hover { transform: scale(1.05); box-shadow: 0 5px 20px rgba(255, 61, 0, 0.4); }
+    .upload-hint { color: #707070; font-size: 11px; margin-top: 8px; }
+    .upload-preview { display: none; text-align: center; margin-bottom: 20px; }
+    .preview-container { position: relative; display: inline-block; }
+    .preview-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #ff3d00; }
+    .preview-remove { position: absolute; top: -5px; right: -5px; width: 22px; height: 22px; background: #ff4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 10px; color: white; transition: all 0.3s; }
+    .preview-remove:hover { background: #cc0000; transform: scale(1.1); }
+    .preview-text { color: #22c55e; font-size: 12px; margin-top: 8px; }
+    .divider-text { text-align: center; color: #505050; margin-bottom: 16px; font-size: 12px; }
+    .save-btn { width: 100%; margin-top: 20px; }
+    /* Avatar Grid */
+    .avatar-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .avatar-option { width: 100%; aspect-ratio: 1; border-radius: 50%; background: var(--bg-secondary); border: 3px solid var(--border-color); cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+    .avatar-option:hover { border-color: var(--accent); transform: scale(1.05); }
+    .avatar-option.selected { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+    
+    /* FOOTER */
+    .footer {
+      background: var(--bg-primary);
+      padding: 80px 60px 40px;
+      border-top: 1px solid var(--border-color);
+    }
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      gap: 50px;
+    }
+    .footer-col h3 {
+      font-family: 'Oswald', sans-serif;
+      color: var(--accent);
+      margin-bottom: 20px;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .footer-col a {
+      display: block;
+      color: var(--text-secondary);
+      text-decoration: none;
+      margin-bottom: 12px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    .footer-col a:hover {
+      color: var(--accent);
+      padding-left: 5px;
+    }
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .footer-logo img {
+      height: 50px;
+      filter: drop-shadow(0 0 10px var(--accent-glow));
+    }
+    .footer-logo span {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .footer-desc {
+      line-height: 1.7;
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    .footer-social {
+      display: flex;
+      gap: 12px;
+    }
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .footer-social a:hover {
+      background: var(--accent);
+      color: white;
+    }
+    .footer-col p {
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    .footer-col p i {
+      color: var(--accent);
+      margin-right: 8px;
+    }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 60px auto 0;
+      padding-top: 30px;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    .footer-bottom span {
+      color: var(--accent);
+    }
+    
+    @media (max-width: 1100px) {
+      .content-grid { grid-template-columns: 1fr; }
+      .footer-container { grid-template-columns: repeat(2, 1fr); }
+      .profile-hero-content { flex-direction: column; text-align: center; }
+      .profile-stats, .profile-badges { justify-content: center; }
+      .profile-actions { flex-direction: row; justify-content: center; }
+      .data-grid, .achievements-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .main-container { padding: 100px 20px 60px; }
+      .profile-hero { padding: 24px; }
+      .profile-name { font-size: 28px; }
+      .avatar { width: 120px; height: 120px; }
+      .data-grid { grid-template-columns: 1fr; }
+      .footer { padding: 60px 20px 30px; }
+      .footer-container { grid-template-columns: 1fr; gap: 30px; }
+      .avatar-grid { grid-template-columns: repeat(3, 1fr); }
+      .avatar-option { font-size: 24px; }
+      .upload-btn { padding: 10px 14px; font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar-header">
+    <div class="logo"><img src="../img/logo.png" alt="FitAiid Logo"><div class="brand-text"><h2>FitAiid</h2><p>Transforma Tu Cuerpo</p></div></div>
+    <nav class="menu"><a href="home.html">Inicio</a><a href="entrenador.html">Entrenamiento</a><a href="chatbot.html">Coach Virtual</a><a href="nutricion.html">Nutrición</a><a href="estadisticas.html">Estadísticas</a></nav>
+    <div class="icons"><a href="perfil.html" class="profile-link" style="font-weight:700;">   </a><span class="bell"></span><button onclick="logout()" class="logout-btn">Cerrar Sesión</button></div>
+  </header>
+
+  <main class="main-container">
+    <section class="profile-hero">
+      <div class="profile-hero-content">
+        <div class="avatar-container">
+          <div class="avatar" onclick="openAvatarModal()"><img id="userAvatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=default" alt="Avatar"></div>
+          <div class="avatar-edit" onclick="openAvatarModal()"><i class="fas fa-camera"></i></div>
+        </div>
+        <div class="profile-info">
+          <h1 class="profile-name">HOLA, <span id="userName">USUARIO</span></h1>
+          <p class="profile-email" id="userEmail">usuario@email.com</p>
+          <div class="profile-badges">
+            <span class="badge badge-level"><i class="fas fa-star"></i> <span id="userLevel">Principiante</span></span>
+            <span class="badge badge-goal"><i class="fas fa-bullseye"></i> <span id="userGoal">Perder Peso</span></span>
+            <span class="badge badge-streak"><i class="fas fa-fire"></i> <span id="streakBadge">7 días</span></span>
+          </div>
+          <div class="profile-stats">
+            <div class="profile-stat"><div class="profile-stat-value" id="totalWorkouts">24</div><div class="profile-stat-label">Entrenamientos</div></div>
+            <div class="profile-stat"><div class="profile-stat-value" id="totalCalories">8,420</div><div class="profile-stat-label">Calorías Quemadas</div></div>
+            <div class="profile-stat"><div class="profile-stat-value" id="totalHours">18h</div><div class="profile-stat-label">Tiempo Activo</div></div>
+          </div>
+        </div>
+        <div class="profile-actions">
+          <button class="btn btn-primary" onclick="window.location.href='preguntas.html'"><i class="fas fa-edit"></i> Editar Perfil</button>
+          <button class="btn btn-outline" onclick="window.location.href='chatbot.html'"><i class="fas fa-dumbbell"></i> Entrenar</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="content-grid">
+      <div class="left-column">
+        <div class="card">
+          <div class="card-header"><div class="card-title"><i class="fas fa-user"></i><h3>Datos Personales</h3></div><a class="card-action" onclick="window.location.href='preguntas.html'">Editar</a></div>
+          <div class="data-grid">
+            <div class="data-item"><div class="data-item-label">Edad</div><div class="data-item-value" id="userAge">25 años</div></div>
+            <div class="data-item"><div class="data-item-label">Altura</div><div class="data-item-value" id="userHeight">170 cm</div></div>
+            <div class="data-item"><div class="data-item-label">Peso Actual</div><div class="data-item-value accent" id="userWeight">70 kg</div></div>
+            <div class="data-item"><div class="data-item-label">Objetivo</div><div class="data-item-value" id="userObjective">Perder Peso</div></div>
+            <div class="data-item"><div class="data-item-label">Nivel</div><div class="data-item-value" id="userFitnessLevel">Principiante</div></div>
+            <div class="data-item"><div class="data-item-label">Disponibilidad</div><div class="data-item-value" id="userAvailability">3-4 días</div></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:20px;">
+          <div class="card-header"><div class="card-title"><i class="fas fa-clock-rotate-left"></i><h3>Actividad Reciente</h3></div><a class="card-action"></a></div>
+          <div class="activity-list">
+            <div class="activity-item"><div class="activity-icon">🏋️</div><div class="activity-info"><div class="activity-title">Circuito Funcional</div><div class="activity-date">Hoy, 10:30 AM</div></div><span class="activity-badge">Completado</span></div>
+            <div class="activity-item"><div class="activity-icon">🥗</div><div class="activity-info"><div class="activity-title">Plan Nutricional Revisado</div><div class="activity-date">Ayer, 8:00 PM</div></div><span class="activity-badge">Completado</span></div>
+            <div class="activity-item"><div class="activity-icon">💬</div><div class="activity-info"><div class="activity-title">Consulta con Fitty</div><div class="activity-date">Hace 2 días</div></div><span class="activity-badge">Completado</span></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:20px;">
+          <div class="card-header"><div class="card-title"><i class="fas fa-trophy"></i><h3>Logros</h3></div><a class="card-action">Ver Todos</a></div>
+          <div class="achievements-grid">
+            <div class="achievement"><div class="achievement-icon">🔥</div><div class="achievement-name">7 Días Racha</div></div>
+            <div class="achievement"><div class="achievement-icon">💪</div><div class="achievement-name">Primer Entreno</div></div>
+            <div class="achievement"><div class="achievement-icon">🎯</div><div class="achievement-name">Meta Cumplida</div></div>
+            <div class="achievement locked"><div class="achievement-icon">🏆</div><div class="achievement-name">30 Días</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-cards">
+        <div class="card streak-card">
+          <div class="streak-icon">🔥</div><div class="streak-value" id="streakCount">7</div><div class="streak-label">Días consecutivos</div>
+          <div class="streak-days"><div class="streak-day completed">L</div><div class="streak-day completed">M</div><div class="streak-day completed">X</div><div class="streak-day completed">J</div><div class="streak-day completed">V</div><div class="streak-day completed">S</div><div class="streak-day today">D</div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title"><i class="fas fa-chart-simple"></i><h3>Resumen</h3></div></div>
+          <div class="quick-stat"><span class="quick-stat-label">Rutinas hoy</span><span class="quick-stat-value" style="color:var(--accent);">2</span></div>
+          <div class="quick-stat"><span class="quick-stat-label">Kcal quemadas</span><span class="quick-stat-value" style="color:var(--success);">420</span></div>
+          <div class="quick-stat"><span class="quick-stat-label">Última sesión</span><span class="quick-stat-value">Hoy</span></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title"><i class="fas fa-toolbox"></i><h3>Calculadoras</h3></div></div>
+          <div class="tools-grid">
+            <div class="tool-item" onclick="abrirModalIMC()">
+              <div class="tool-left">
+                <div class="tool-icon"><i class="fas fa-calculator"></i></div>
+                <span class="tool-name">Calcular IMC</span>
+              </div>
+              <i class="fas fa-chevron-right" style="color:var(--text-muted);"></i>
+            </div>
+            <div class="tool-item" onclick="abrirModalAgua()">
+              <div class="tool-left">
+                <div class="tool-icon"><i class="fas fa-droplet"></i></div>
+                <span class="tool-name">Consumo de Agua</span>
+              </div>
+              <i class="fas fa-chevron-right" style="color:var(--text-muted);"></i>
+            </div>
+            <div class="tool-item" onclick="abrirModalMacronutrientes()">
+              <div class="tool-left">
+                <div class="tool-icon"><i class="fas fa-utensils"></i></div>
+                <span class="tool-name">Macronutrientes</span>
+              </div>
+              <i class="fas fa-chevron-right" style="color:var(--text-muted);"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-heart"></i><h3>Motivación</h3></div></div><p class="motivation-text">"Cada dia es una <strong id="streakMotivation">oportunidad</strong> para ser mas fuerte que ayer"</p></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL DE AVATAR -->
+  <div class="modal-overlay" id="avatarModal">
+    <div class="modal">
+      <div class="modal-header"><h3 class="modal-title">Elige tu Avatar</h3><div class="modal-close" onclick="closeAvatarModal()"><i class="fas fa-times"></i></div></div>
+      
+      <!-- Sección para subir imagen -->
+      <div class="upload-section">
+        <label for="imageUpload" class="upload-btn">
+          <i class="fas fa-camera"></i> <span>Subir Mi Foto</span>
+        </label>
+        <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+        <p class="upload-hint">JPG, PNG o GIF</p>
+      </div>
+      
+      <!-- Preview de imagen subida -->
+      <div id="uploadPreview" class="upload-preview">
+        <div class="preview-container">
+          <img id="previewImg" src="" class="preview-img">
+          <div onclick="removeUploadedImage()" class="preview-remove">✕</div>
+        </div>
+        <p class="preview-text"><i class="fas fa-check"></i> Foto lista</p>
+      </div>
+      
+      <div class="divider-text">— o elige un avatar —</div>
+      
+      <div class="avatar-grid" id="avatarGrid"></div>
+      <button class="btn btn-primary save-btn" onclick="saveAvatar()">Guardar</button>
+    </div>
+  </div>
+
+  <!-- MODAL CALCULADORA IMC -->
+  <div id="modalIMC" class="calc-modal">
+    <div class="calc-modal-content">
+      <button onclick="cerrarModalIMC()" class="calc-modal-close">&times;</button>
+      <h2 class="calc-modal-title">Calculadora de IMC</h2>
+      
+      <form id="formIMC" class="calc-form">
+        <div class="calc-form-group">
+          <label class="calc-form-label">Peso (kg)</label>
+          <input type="number" id="pesoIMC" class="calc-form-input" min="40" max="300" step="0.1" placeholder="Ej: 70">
+        </div>
+        <div class="calc-form-group">
+          <label class="calc-form-label">Altura (cm)</label>
+          <input type="number" id="alturaIMC" class="calc-form-input" min="120" max="210" placeholder="Ej: 170">
+        </div>
+        <button type="button" onclick="calcularIMC()" class="calc-submit-btn">Calcular</button>
+      </form>
+      
+      <div id="resultadoIMC" class="calc-result">
+        <p class="calc-result-title">Tu IMC es:</p>
+        <p id="valorIMC" class="calc-result-value"></p>
+        <p id="clasificacionIMC" class="calc-result-label"></p>
+        <button onclick="reiniciarIMC()" class="calc-reset-btn">Calcular nuevamente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CALCULADORA DE AGUA -->
+  <div id="modalAgua" class="calc-modal">
+    <div class="calc-modal-content">
+      <button onclick="cerrarModalAgua()" class="calc-modal-close">&times;</button>
+      <h2 class="calc-modal-title">Calculadora de Consumo de Agua</h2>
+      
+      <form id="formAgua" class="calc-form">
+        <div class="calc-form-group">
+          <label class="calc-form-label">Peso (kg)</label>
+          <input type="number" id="pesoAgua" class="calc-form-input" min="30" max="300" step="0.1" placeholder="Ej: 70">
+        </div>
+        <div class="calc-form-group">
+          <label class="calc-form-label">Edad (años)</label>
+          <input type="number" id="edadAgua" class="calc-form-input" min="1" max="120" placeholder="Ej: 25">
+        </div>
+        <button type="button" onclick="calcularAgua()" class="calc-submit-btn">Calcular</button>
+      </form>
+      
+      <div id="resultadoAgua" class="calc-result">
+        <p class="calc-result-title">Debes tomar aproximadamente:</p>
+        <p id="valorAgua" class="calc-result-value"></p>
+        <p class="calc-result-label">de agua al día</p>
+        <button onclick="reiniciarAgua()" class="calc-reset-btn">Calcular nuevamente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CALCULADORA DE MACRONUTRIENTES -->
+  <div id="modalMacronutrientes" class="calc-modal">
+    <div class="calc-modal-content">
+      <button onclick="cerrarModalMacronutrientes()" class="calc-modal-close">&times;</button>
+      <h2 class="calc-modal-title">Calculadora de Macronutrientes</h2>
+      
+      <form id="formMacronutrientes" class="calc-form">
+        <div class="calc-form-group">
+          <label class="calc-form-label">Edad</label>
+          <input type="number" id="edad" class="calc-form-input" min="14" max="90" placeholder="Ej: 25">
+        </div>
+        
+        <div class="calc-form-group">
+          <label class="calc-form-label">Género</label>
+          <div class="calc-radio-group">
+            <label class="calc-radio-label">
+              <input type="radio" name="genero" value="masculino">
+              <span>Masculino</span>
+            </label>
+            <label class="calc-radio-label">
+              <input type="radio" name="genero" value="femenino">
+              <span>Femenino</span>
+            </label>
+          </div>
+        </div>
+        
+        <div class="calc-form-group">
+          <label class="calc-form-label">Altura (cm)</label>
+          <input type="number" id="altura" class="calc-form-input" min="120" max="210" placeholder="Ej: 170">
+        </div>
+        
+        <div class="calc-form-group">
+          <label class="calc-form-label">Peso (kg)</label>
+          <input type="number" id="peso" class="calc-form-input" min="30" max="200" placeholder="Ej: 70">
+        </div>
+        
+        <div class="calc-form-group">
+          <label class="calc-form-label">Nivel de Actividad</label>
+          <select id="actividad" class="calc-form-select">
+            <option value="">Selecciona tu nivel</option>
+            <option value="sedentario">Sedentario</option>
+            <option value="ligero">Ligero</option>
+            <option value="moderado">Moderado</option>
+            <option value="intenso">Intenso</option>
+          </select>
+        </div>
+        
+        <div class="calc-form-group">
+          <label class="calc-form-label">Tu Meta</label>
+          <select id="meta" class="calc-form-select">
+            <option value="">Selecciona tu meta</option>
+            <option value="bajar">Bajar peso</option>
+            <option value="mantener">Mantener peso</option>
+            <option value="subir">Subir masa</option>
+          </select>
+        </div>
+        
+        <button type="button" onclick="calcularMacronutrientes()" class="calc-submit-btn">Calcular</button>
+      </form>
+      
+      <div id="resultadoMacronutrientes" class="calc-result">
+        <p class="calc-result-title">Tu requerimiento diario estimado es:</p>
+        <p id="valorKcal" class="calc-result-value"></p>
+        <p class="calc-result-label">calorías al día</p>
+        <button onclick="reiniciarMacronutrientes()" class="calc-reset-btn">Volver</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- COLUMNA 1 — LOGO + DESCRIPCIÓN -->
+      <div class="footer-col">
+        <div class="footer-logo">
+          <img src="../img/logo.png" alt="logo">
+          <span>FitAiid</span>
+        </div>
+        <p class="footer-desc">
+          Transforma tu cuerpo con FitAiid, tu aliado de confianza en fitness. 
+          Ofrecemos coach virtual, planes de entrenamiento a medida y asesoramiento 
+          nutricional integral basado en IA.
+        </p>
+        <div class="footer-social">
+          <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <!-- COLUMNA 2 — NOSOTROS -->
+      <div class="footer-col">
+        <h3>Nosotros</h3>
+        <a href="sobre-nosotros.html">Sobre Nosotros</a>
+        <a href="servicios.html">Nuestros Servicios</a>
+        <a href="blog.html">Blog</a>
+        <a href="contacto.html">Contacto</a>
+      </div>
+
+      <!-- COLUMNA 3 — RECURSOS -->
+      <div class="footer-col">
+        <h3>Recursos</h3>
+        <a href="herramientas.html">Herramientas Fitness</a>
+        <a href="videos.html">Videos</a>
+        <a href="nutricion.html">Guías de Nutrición</a>
+        <a href="faq.html">FAQ</a>
+      </div>
+
+      <!-- COLUMNA 4 — PROGRAMAS -->
+      <div class="footer-col">
+        <h3>Programas</h3>
+        <a href="bajar-de-peso.html">Pérdida De Peso</a>
+        <a href="ganar-masa-muscular.html">Ganar Músculo</a>
+        <a href="entrena.html">Entreno En Casa</a>
+        <a href="entrena.html">Plan Gimnasio</a>
+      </div>
+
+      <!-- COLUMNA 5 — CONTACTO -->
+      <div class="footer-col">
+        <h3>Contacto</h3>
+        <p><i class="fas fa-location-dot"></i> Colombia</p>
+        <p><i class="fas fa-phone"></i> 3202363622</p>
+        <p><i class="fas fa-envelope"></i> info@fitaiid.com</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 <span>FitAiid</span>. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+<script src="../scripts/perfil.js"></script>
+<script src="../scripts/perfil-stats-addon.js"></script>
+<script src="../scripts/perfil-datos.js"></script>
+  <script>
+    const token = localStorage.getItem("token") || localStorage.getItem("authToken");
+    const userId = localStorage.getItem("userId");
+    if (!token || !userId) { window.location.replace("login.html"); }
+
+    let selectedAvatar = null;
+    let uploadedImageData = null;
+
+    function loadUserData() {
+      const userString = localStorage.getItem('user');
+      const fitnessProfile = localStorage.getItem('fitnessProfile');
+      
+      console.log('🔍 Buscando datos del usuario...');
+      console.log('📦 fitnessProfile en localStorage:', fitnessProfile);
+      
+      // Cargar nombre y email del usuario
+      if (userString) {
+        try {
+          const user = JSON.parse(userString);
+          document.getElementById('userName').textContent = (user.firstName || 'USUARIO').toUpperCase();
+          document.getElementById('userEmail').textContent = user.email || localStorage.getItem('userEmail') || 'usuario@email.com';
+        } catch (e) { console.error('Error cargando usuario:', e); }
+      }
+      
+      // Cargar perfil fitness del cuestionario
+      if (fitnessProfile) {
+        try {
+          const p = JSON.parse(fitnessProfile);
+          console.log('📋 Perfil fitness cargado:', p);
+          
+          // Edad
+          if (p.age) {
+            document.getElementById('userAge').textContent = p.age + ' años';
+            console.log('✅ Edad cargada:', p.age);
+          }
+          
+          // Altura
+          if (p.height) {
+            document.getElementById('userHeight').textContent = p.height + ' cm';
+            console.log('✅ Altura cargada:', p.height);
+          }
+          
+          // Peso e IMC
+          if (p.weight) { 
+            document.getElementById('userWeight').textContent = p.weight + ' kg'; 
+            console.log('✅ Peso cargado:', p.weight);
+          }
+          
+          // Objetivo principal
+          if (p.mainGoal) { 
+            const goalText = p.mainGoal.charAt(0).toUpperCase() + p.mainGoal.slice(1);
+            document.getElementById('userGoal').textContent = goalText; 
+            document.getElementById('userObjective').textContent = goalText;
+            console.log('✅ Objetivo cargado:', goalText);
+          }
+          
+          // Nivel de experiencia
+          if (p.fitnessLevel) { 
+            const levelText = p.fitnessLevel.charAt(0).toUpperCase() + p.fitnessLevel.slice(1);
+            document.getElementById('userLevel').textContent = levelText; 
+            document.getElementById('userFitnessLevel').textContent = levelText;
+            console.log('✅ Nivel cargado:', levelText);
+          }
+          
+          // Disponibilidad
+          if (p.availability) { 
+            document.getElementById('userAvailability').textContent = p.availability; 
+            console.log('✅ Disponibilidad cargada:', p.availability);
+          }
+          
+        } catch (e) { console.error('❌ Error cargando perfil fitness:', e); }
+      } else {
+        console.log('⚠️ No hay fitnessProfile en localStorage');
+      }
+    }
+
+    function handleImageUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        uploadedImageData = ev.target.result;
+        document.getElementById('previewImg').src = uploadedImageData;
+        document.getElementById('uploadPreview').style.display = 'block';
+        
+        // Deseleccionar avatares
+        document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected'));
+        selectedAvatar = null;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeUploadedImage() {
+      uploadedImageData = null;
+      document.getElementById('uploadPreview').style.display = 'none';
+      document.getElementById('imageUpload').value = '';
+    }
+
+    function openAvatarModal() {
+      const avatars = [
+        '😎', '🤩', '😁', '🥳', '🤓', '😇', '🥰', '😊',
+        'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
+        'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka',
+        'https://api.dicebear.com/7.x/avataaars/svg?seed=Coco',
+        'https://api.dicebear.com/7.x/avataaars/svg?seed=Milo'
+      ];
+      
+      const grid = document.getElementById('avatarGrid');
+      grid.innerHTML = '';
+      avatars.forEach(av => {
+        const d = document.createElement('div');
+        d.className = 'avatar-option';
+        d.onclick = () => selectAvatar(d, av);
+        if (av.startsWith('http')) {
+          const img = document.createElement('img');
+          img.src = av;
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.borderRadius = '50%';
+          d.appendChild(img);
+        } else {
+          d.textContent = av;
+        }
+        grid.appendChild(d); 
+      });
+      
+      document.getElementById('avatarModal').classList.add('active');
+    }
+
+    function closeAvatarModal() { 
+      document.getElementById('avatarModal').classList.remove('active'); 
+    }
+
+    function selectAvatar(el, av) { 
+      document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected')); 
+      el.classList.add('selected'); 
+      selectedAvatar = av;
+      
+      // Quitar imagen subida si selecciona avatar
+      uploadedImageData = null;
+      document.getElementById('uploadPreview').style.display = 'none';
+      document.getElementById('imageUpload').value = '';
+    }
+
+    function saveAvatar() {
+      let avatarToSave = null;
+      
+      // Prioridad: imagen subida > avatar seleccionado
+      if (uploadedImageData) {
+        avatarToSave = uploadedImageData;
+      } else if (selectedAvatar) {
+        if (selectedAvatar.startsWith('http')) {
+          avatarToSave = selectedAvatar;
+        } else {
+          // Es emoji, convertir a imagen
+          const c = document.createElement('canvas');
+          c.width = 100;
+          c.height = 100;
+          const ctx = c.getContext('2d');
+          ctx.fillStyle = '#1a1a1a';
+          ctx.fillRect(0, 0, 100, 100);
+          ctx.font = '60px Arial';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(selectedAvatar, 50, 55);
+          avatarToSave = c.toDataURL();
+        }
+      }
+      
+      if (avatarToSave) {
+        document.getElementById('userAvatar').src = avatarToSave;
+        closeAvatarModal();
+      } else {
+        alert('Selecciona un avatar o sube una foto.');
+      }
+    }
+
+    function logout() { 
+      localStorage.removeItem('token');
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userId');
+      window.location.href = 'login.html'; 
+    }
+
+    // FUNCIONES CALCULADORA IMC
+    function abrirModalIMC() {
+      document.getElementById('modalIMC').classList.add('active');
+    }
+
+    function cerrarModalIMC() {
+      document.getElementById('modalIMC').classList.remove('active');
+      reiniciarIMC();
+    }
+
+    function calcularIMC() {
+      const peso = parseFloat(document.getElementById('pesoIMC').value);
+      const altura = parseFloat(document.getElementById('alturaIMC').value);
+
+      if (!peso || !altura || peso <= 0 || altura <= 0) {
+        alert('Por favor ingresa peso y altura válidos.');
+        return;
+      }
+
+      const alturaM = altura / 100;
+      const imc = peso / (alturaM * alturaM);
+
+      let clasificacion = '';
+      if (imc < 18.5) clasificacion = 'Bajo peso';
+      else if (imc < 24.9) clasificacion = 'Peso normal';
+      else if (imc < 29.9) clasificacion = 'Sobrepeso';
+      else clasificacion = 'Obesidad';
+
+      document.getElementById('formIMC').style.display = 'none';
+      document.getElementById('resultadoIMC').classList.add('active');
+      document.getElementById('valorIMC').textContent = imc.toFixed(1);
+      document.getElementById('clasificacionIMC').textContent = clasificacion;
+    }
+
+    function reiniciarIMC() {
+      document.getElementById('formIMC').reset();
+      document.getElementById('formIMC').style.display = 'flex';
+      document.getElementById('resultadoIMC').classList.remove('active');
+    }
+
+    // FUNCIONES CALCULADORA DE AGUA
+    function abrirModalAgua() {
+      document.getElementById('modalAgua').classList.add('active');
+    }
+
+    function cerrarModalAgua() {
+      document.getElementById('modalAgua').classList.remove('active');
+      reiniciarAgua();
+    }
+
+    function calcularAgua() {
+      const peso = parseFloat(document.getElementById('pesoAgua').value);
+      const edad = parseInt(document.getElementById('edadAgua').value);
+
+      if (!peso || !edad) {
+        alert("Por favor ingresa todos los datos");
+        return;
+      }
+
+      // Fórmula simple: adultos necesitan ~35 ml por kg de peso
+      // Ajuste según edad: niños y ancianos necesitan menos
+      let litros = peso * 0.035; // litros por kg
+
+      if (edad < 14) litros *= 0.8;      // niños
+      else if (edad > 65) litros *= 0.9; // ancianos
+
+      litros = litros.toFixed(2);
+
+      document.getElementById('formAgua').style.display = 'none';
+      document.getElementById('valorAgua').textContent = litros + " litros";
+      document.getElementById('resultadoAgua').classList.add('active');
+    }
+
+    function reiniciarAgua() {
+      document.getElementById('formAgua').reset();
+      document.getElementById('formAgua').style.display = 'flex';
+      document.getElementById('resultadoAgua').classList.remove('active');
+    }
+
+    // FUNCIONES CALCULADORA DE MACRONUTRIENTES
+    function abrirModalMacronutrientes() {
+      document.getElementById('modalMacronutrientes').classList.add('active');
+    }
+
+    function cerrarModalMacronutrientes() {
+      document.getElementById('modalMacronutrientes').classList.remove('active');
+      reiniciarMacronutrientes();
+    }
+
+    function calcularMacronutrientes() {
+      const edad = parseInt(document.getElementById('edad').value);
+      const altura = parseFloat(document.getElementById('altura').value);
+      const peso = parseFloat(document.getElementById('peso').value);
+      const actividad = document.getElementById('actividad').value;
+      const meta = document.getElementById('meta').value;
+
+      // Detectar género
+      const genero = document.querySelector('input[name="genero"]:checked');
+      if (!genero) {
+        alert('Por favor selecciona tu género');
+        return;
+      }
+
+      if (!edad || !altura || !peso || !actividad || !meta) {
+        alert('Por favor completa todos los campos');
+        return;
+      }
+
+      let bmr = 0;
+
+      // Fórmulas Harris-Benedict revisadas
+      if (genero.value === "masculino") {
+        bmr = 88.362 + (13.397 * peso) + (4.799 * altura) - (5.677 * edad);
+      } else {
+        bmr = 447.593 + (9.247 * peso) + (3.098 * altura) - (4.330 * edad);
+      }
+
+      // Factor de actividad
+      let factorActividad = 1.2;
+      if (actividad === 'ligero') factorActividad = 1.375;
+      if (actividad === 'moderado') factorActividad = 1.55;
+      if (actividad === 'intenso') factorActividad = 1.725;
+
+      // Calorías totales
+      let calorias = bmr * factorActividad;
+
+      // Ajuste según meta
+      if (meta === 'bajar') calorias -= 400;
+      if (meta === 'subir') calorias += 400;
+
+      // Mostrar resultado
+      document.getElementById('formMacronutrientes').style.display = 'none';
+      document.getElementById('resultadoMacronutrientes').classList.add('active');
+      document.getElementById('valorKcal').textContent = `${Math.round(calorias)} kcal`;
+    }
+
+    function reiniciarMacronutrientes() {
+      document.getElementById('formMacronutrientes').reset();
+      document.getElementById('formMacronutrientes').style.display = 'flex';
+      document.getElementById('resultadoMacronutrientes').classList.remove('active');
+    }
+
+    // Inicializar al cargar
+    loadUserData();
+  </script>
+  
+</body>
+</html>

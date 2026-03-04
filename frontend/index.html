@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitAiid - Transforma Tu Cuerpo</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --red: #ff0000;
+      --red-mid: #cc0000;
+      --red-dim: rgba(255, 0, 0, 0.15);
+      --orange: #ff7f00;
+      --black: #000000;
+      --dark: #0a0a0a;
+      --dark-card: #0d0d0d;
+      --text: #f0f0f0;
+      --text-muted: #888;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #000000;
+      color: #f0f0f0;
+      overflow-x: hidden;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #0a0a0a;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, var(--red) 0%, var(--orange) 100%);
+      border-radius: 5px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #ff3333 0%, #ff9933 100%);
+    }
+    
+    /* Navbar Glassmorphism */
+    .navbar-glass {
+      background: rgba(11, 13, 23, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 0, 0, 0.15);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Nav Link Effects */
+    .nav-link {
+      position: relative;
+      transition: all 0.3s ease;
+      padding-bottom: 4px;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--red) 0%, var(--orange) 100%);
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+    
+    /* Button Glow Effect */
+    .btn-glow {
+      box-shadow: 0 4px 20px rgba(255, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-glow:hover {
+      box-shadow: 0 8px 30px rgba(255, 0, 0, 0.6);
+      transform: translateY(-2px);
+    }
+    
+    /* Gradient Text */
+    .gradient-text {
+      background: linear-gradient(135deg, #fff 0%, #ddd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .gradient-text-red {
+      background: linear-gradient(135deg, var(--red) 0%, var(--orange) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Hero Section */
+    .hero-gradient {
+      background: radial-gradient(ellipse 70% 60% at 85% 50%, rgba(255, 42, 42, 0.2) 0%, transparent 70%);
+    }
+    
+    .grid-overlay {
+      background-image: linear-gradient(rgba(255, 0, 0, 0.03) 1px, transparent 1px), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      opacity: 0.4;
+    }
+    
+    /* Float Animation */
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+    
+    .float-animation {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    /* Card Hover Effects */
+    .card-hover {
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(255, 0, 0, 0.3);
+    }
+    
+    /* Mobile Menu Animation */
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .mobile-menu-active {
+      animation: slideDown 0.3s ease;
+    }
+  </style>
+</head>
+
+<body class="bg-black text-white">
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       NAVBAR
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <header class="navbar-glass fixed top-0 left-0 w-full z-50 px-6 sm:px-10 lg:px-16 py-4">
+    <div class="flex justify-between items-center max-w-7xl mx-auto">
+      
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <img src="img/logo.png" alt="FitAiid Logo" class="w-11 h-11 object-contain">
+        <div>
+          <h1 class="text-2xl font-black tracking-wider">
+            <span class="text-white">Fit</span><span class="text-red-600">Aiid</span>
+          </h1>
+          <p class="text-[10px] text-gray-400 -mt-1 tracking-widest uppercase">Transforma Tu Cuerpo</p>
+        </div>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav id="desktop-nav" class="hidden md:flex gap-8 text-sm lg:text-base font-semibold">
+        <a href="#inicio" class="nav-link text-white">Inicio</a>
+        <a href="#servicios" class="nav-link text-gray-300 hover:text-white">Servicios</a>
+        <a href="pages/register.html" class="nav-link text-gray-300 hover:text-white">Coach Virtual</a>
+        <a href="#herramientas" class="nav-link text-gray-300 hover:text-white">Herramientas</a>
+        <a href="#sobre-nosotros" class="nav-link text-gray-300 hover:text-white">Nosotros</a>
+      </nav>
+
+      <!-- Desktop Buttons -->
+      <div id="desktop-buttons" class="hidden md:flex gap-3">
+        <a href="pages/login.html" class="border-2 border-red-600 text-red-500 px-5 py-2 rounded-full font-semibold 
+          hover:bg-red-600 hover:text-white transition duration-300">
+          Iniciar Sesión
+        </a>
+        <a href="pages/register.html" class="bg-gradient-to-r from-red-600 to-orange-500 px-5 py-2 rounded-full font-semibold
+          text-white btn-glow">
+          Registrarse
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button id="menu-btn" class="text-3xl md:hidden text-red-500 focus:outline-none transition-transform duration-300">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div id="menu" class="hidden fixed top-[70px] left-0 w-full h-[calc(100vh-70px)] bg-black/96 
+    flex-col items-center justify-center gap-8 py-6 text-xl font-bold md:hidden z-40 backdrop-blur-2xl">
+    <a href="#inicio" class="mobile-link text-white hover:text-red-500 transition">Inicio</a>
+    <a href="#servicios" class="mobile-link text-white hover:text-red-500 transition">Servicios</a>
+    <a href="pages/register.html" class="mobile-link text-white hover:text-red-500 transition">Coach Virtual</a>
+    <a href="#herramientas" class="mobile-link text-white hover:text-red-500 transition">Herramientas</a>
+    <a href="#sobre-nosotros" class="mobile-link text-white hover:text-red-500 transition">Nosotros</a>
+    
+    <div class="flex flex-col gap-4 mt-4 w-full px-10">
+      <a href="pages/login.html" class="mobile-link border-2 border-red-600 text-red-500 px-6 py-3 rounded-full 
+        text-center hover:bg-red-600 hover:text-white transition font-semibold">
+        Iniciar Sesión
+      </a>
+      <a href="pages/register.html" class="mobile-link bg-gradient-to-r from-red-600 to-orange-500 px-6 py-3 
+        rounded-full text-center text-white font-semibold btn-glow">
+        Registrarse
+      </a>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       HERO SECTION
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <section id="inicio" class="relative min-h-screen flex items-center justify-center px-6 sm:px-10 lg:px-20 pt-32 pb-24 overflow-hidden">
+    
+    <!-- Background Effects -->
+    <div class="absolute inset-0 hero-gradient"></div>
+    <div class="absolute inset-0 grid-overlay"></div>
+    
+    <!-- Ambient Lights -->
+    <div class="absolute bottom-[20%] left-[10%] w-40 h-40 rounded-full bg-orange-500/20 blur-3xl"></div>
+    <div class="absolute bottom-[8%] right-[20%] w-24 h-24 rounded-full bg-red-500/20 blur-3xl"></div>
+    
+    <!-- Content -->
+    <div class="relative z-10 max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+      
+      <!-- Text Content -->
+      <div class="text-center lg:text-left space-y-8">
+        <div class="inline-flex items-center gap-2 bg-red-600/10 border border-red-600/30 rounded-full px-4 py-2 backdrop-blur-sm">
+          <i class="fas fa-bolt text-red-500 text-sm"></i>
+          <span class="text-red-500 text-xs font-bold tracking-widest uppercase">Tu Plataforma Fitness</span>
+        </div>
+        
+        <h1 class="font-black leading-tight">
+          <span class="block text-4xl sm:text-5xl lg:text-6xl xl:text-7xl gradient-text">Alcanza Tus</span>
+          <span class="block text-4xl sm:text-5xl lg:text-6xl xl:text-7xl gradient-text-red mt-2">
+            OBJETIVOS FITNESS
+          </span>
+          <span class="block text-3xl sm:text-4xl lg:text-5xl xl:text-6xl gradient-text mt-2">Con FitAiid</span>
+        </h1>
+
+        <p class="text-gray-400 text-base sm:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0">
+          Únete a la comunidad FitAiid y transforma tu camino hacia el fitness. Nuestros programas personalizados están
+          diseñados para ayudarte a alcanzar tus metas y superar tus expectativas.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+          <a href="pages/register.html" class="bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold 
+            px-8 py-4 rounded-full btn-glow w-full sm:w-auto text-center transition-all">
+            Empieza Tu Rutina
+          </a>
+          <a href="#servicios" class="border-2 border-orange-500 text-orange-400 font-bold px-8 py-4 rounded-full 
+            hover:bg-orange-500 hover:text-white transition-all w-full sm:w-auto text-center">
+            Explorar Servicios
+          </a>
+        </div>
+      </div>
+
+      <!-- Image Content -->
+      <div class="relative">
+        <img src="./img/SIN FONDO.png" alt="Atleta" 
+          class="w-full max-w-2xl mx-auto float-animation relative z-10" />            
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       STATS SECTION
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <section class="border-t border-white/10 py-20 px-6 sm:px-10 lg:px-20 bg-gradient-to-b from-black to-neutral-950">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 text-center">
+      
+      <div class="space-y-3 group">
+        <h3 class="text-6xl font-black gradient-text-red group-hover:scale-110 transition-transform">96%</h3>
+        <p class="font-bold text-xl text-white">Satisfacción Del Cliente</p>
+        <p class="text-gray-500 text-sm leading-relaxed">A nuestros miembros les encantan sus resultados y experiencia</p>
+      </div>
+
+      <div class="space-y-3 group">
+        <h3 class="text-3xl font-black text-orange-400 group-hover:scale-105 transition-transform">Confía En Nuestra Experiencia</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Historial comprobado de transformación física</p>
+      </div>
+
+      <div class="space-y-3 group">
+        <h3 class="text-6xl font-black gradient-text-red group-hover:scale-110 transition-transform">+200</h3>
+        <p class="font-bold text-xl text-white">Miembros Activos</p>
+        <p class="text-gray-500 text-sm leading-relaxed">Únete a nuestra comunidad próspera de fitness</p>
+      </div>
+
+      <div class="space-y-3 group">
+        <h3 class="text-6xl font-black text-orange-400 group-hover:scale-110 transition-transform">24/7</h3>
+        <p class="font-bold text-xl text-white">Soporte Disponible</p>
+        <p class="text-gray-500 text-sm leading-relaxed">Asistencia siempre que la necesites</p>
+      </div>
+    </div>
+  </section>
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       BENEFICIOS SECTION
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <section id="beneficios" class="relative py-24 overflow-hidden bg-gradient-to-b from-neutral-950 to-black">
+    
+    <!-- Decorative Gradients -->
+    <div class="absolute top-0 left-0 w-96 h-96 bg-red-600/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl"></div>
+    
+    <div class="container mx-auto px-6 md:px-12 lg:px-20 relative z-10">
+      
+      <!-- Header -->
+      <div class="text-center mb-16">
+        <span class="inline-block text-red-600 text-xs font-black tracking-[0.3em] uppercase mb-4">
+          ¿Por qué elegirnos?
+        </span>
+        <h2 class="text-5xl md:text-6xl lg:text-7xl font-black gradient-text mb-4">
+          BENEFICIOS
+        </h2>
+        <div class="w-24 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto rounded-full"></div>
+      </div>
+
+      <!-- Benefits Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+
+        <!-- Benefit 1: IA Personalizada -->
+        <div class="group relative benefit-card">
+          <div class="absolute inset-0 bg-gradient-to-br from-red-600/20 to-transparent rounded-3xl blur-xl 
+            opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+          <div class="relative bg-gradient-to-b from-neutral-900 to-neutral-950 border border-white/10 rounded-3xl 
+            p-8 h-full transition-all duration-500 group-hover:border-red-600/30 group-hover:translate-y-[-8px] 
+            group-hover:shadow-[0_20px_60px_-15px_rgba(255,42,42,0.3)]">
+            
+            <!-- Icon -->
+            <div class="w-16 h-16 mb-6 relative">
+              <div class="absolute inset-0 bg-gradient-to-br from-red-600 to-orange-600 rounded-2xl opacity-20 
+                group-hover:opacity-40 transition-opacity duration-500"></div>
+              <div class="relative w-full h-full flex items-center justify-center">
+                <i class="fas fa-brain text-3xl text-red-600 group-hover:scale-110 transition-transform duration-300"></i>
+              </div>
+            </div>
+            
+            <!-- Content -->
+            <h3 class="text-xl font-bold text-white mb-3 tracking-wide">IA PERSONALIZADA</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">
+              Planes adaptados a tu cuerpo, objetivos y estilo de vida mediante inteligencia artificial avanzada.
+            </p>
+          </div>
+        </div>
+
+        <!-- Benefit 2: Seguimiento -->
+        <div class="group relative benefit-card">
+          <div class="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-transparent rounded-3xl blur-xl 
+            opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+          <div class="relative bg-gradient-to-b from-neutral-900 to-neutral-950 border border-white/10 rounded-3xl 
+            p-8 h-full transition-all duration-500 group-hover:border-orange-500/30 group-hover:translate-y-[-8px] 
+            group-hover:shadow-[0_20px_60px_-15px_rgba(255,120,0,0.3)]">
+            
+            <!-- Icon -->
+            <div class="w-16 h-16 mb-6 relative">
+              <div class="absolute inset-0 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl opacity-20 
+                group-hover:opacity-40 transition-opacity duration-500"></div>
+              <div class="relative w-full h-full flex items-center justify-center">
+                <i class="fas fa-chart-line text-3xl text-orange-500 group-hover:scale-110 transition-transform duration-300"></i>
+              </div>
+            </div>
+            
+            <!-- Content -->
+            <h3 class="text-xl font-bold text-white mb-3 tracking-wide">SEGUIMIENTO</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">
+              Monitorea tu progreso en tiempo real con métricas detalladas y visualizaciones claras.
+            </p>
+          </div>
+        </div>
+
+        <!-- Benefit 3: Recetas Fáciles -->
+        <div class="group relative benefit-card">
+          <div class="absolute inset-0 bg-gradient-to-br from-red-600/20 to-transparent rounded-3xl blur-xl 
+            opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+          <div class="relative bg-gradient-to-b from-neutral-900 to-neutral-950 border border-white/10 rounded-3xl 
+            p-8 h-full transition-all duration-500 group-hover:border-red-600/30 group-hover:translate-y-[-8px] 
+            group-hover:shadow-[0_20px_60px_-15px_rgba(255,42,42,0.3)]">
+            
+            <!-- Icon -->
+            <div class="w-16 h-16 mb-6 relative">
+              <div class="absolute inset-0 bg-gradient-to-br from-red-600 to-orange-600 rounded-2xl opacity-20 
+                group-hover:opacity-40 transition-opacity duration-500"></div>
+              <div class="relative w-full h-full flex items-center justify-center">
+                <i class="fas fa-utensils text-3xl text-red-600 group-hover:scale-110 transition-transform duration-300"></i>
+              </div>
+            </div>
+            
+            <!-- Content -->
+            <h3 class="text-xl font-bold text-white mb-3 tracking-wide">RECETAS FÁCILES</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">
+              Comidas deliciosas y sencillas de preparar, perfectas para mantener tu dieta sin complicaciones.
+            </p>
+          </div>
+        </div>
+
+        <!-- Benefit 4: Soporte 24/7 -->
+        <div class="group relative benefit-card">
+          <div class="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-transparent rounded-3xl blur-xl 
+            opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+          <div class="relative bg-gradient-to-b from-neutral-900 to-neutral-950 border border-white/10 rounded-3xl 
+            p-8 h-full transition-all duration-500 group-hover:border-orange-500/30 group-hover:translate-y-[-8px] 
+            group-hover:shadow-[0_20px_60px_-15px_rgba(255,120,0,0.3)]">
+            
+            <!-- Icon -->
+            <div class="w-16 h-16 mb-6 relative">
+              <div class="absolute inset-0 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl opacity-20 
+                group-hover:opacity-40 transition-opacity duration-500"></div>
+              <div class="relative w-full h-full flex items-center justify-center">
+                <i class="fas fa-headset text-3xl text-orange-500 group-hover:scale-110 transition-transform duration-300"></i>
+              </div>
+            </div>
+            
+            <!-- Content -->
+            <h3 class="text-xl font-bold text-white mb-3 tracking-wide">SOPORTE 24/7</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">
+              Coach virtual siempre disponible para resolver tus dudas y mantenerte motivado.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="text-center mt-16">
+        <a href="pages/register.html" class="inline-flex items-center gap-3 bg-gradient-to-r from-red-600 to-orange-500 
+          text-white font-bold px-10 py-4 rounded-full text-lg btn-glow group">
+          <span>Únete Ahora</span>
+          <i class="fas fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Decorative Dots -->
+    <div class="absolute top-20 left-10 w-2 h-2 bg-red-600 rounded-full animate-pulse opacity-60"></div>
+    <div class="absolute top-40 right-20 w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse opacity-40"></div>
+    <div class="absolute bottom-32 left-1/4 w-1 h-1 bg-red-600 rounded-full animate-pulse opacity-50"></div>
+    <div class="absolute bottom-20 right-1/3 w-2 h-2 bg-orange-400 rounded-full animate-pulse opacity-30"></div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       SERVICIOS SECTION
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <section id="servicios" class="py-24 bg-black text-white">
+    <div class="container mx-auto px-6 md:px-12 lg:px-20 text-center">
+
+      <!-- Title -->
+      <h2 class="text-4xl md:text-5xl font-black mb-4">
+        Nuestros <span class="gradient-text-red">Servicios</span>
+      </h2>
+      <p class="max-w-2xl mx-auto text-gray-400 mb-16 text-lg leading-relaxed">
+        Accede fácilmente a todos nuestros servicios. Échales un vistazo y elige el que mejor se adapte a ti.
+      </p>
+
+      <!-- Services Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+        <!-- Service 1: Gimnasio -->
+        <div class="service-card relative w-full h-80 rounded-2xl overflow-hidden shadow-2xl group cursor-pointer card-hover">
+          <img src="./img/servicios/entrenamiento de gimnasio.png" alt="Entrenamiento de gimnasio"
+            class="absolute inset-0 w-full h-full object-cover transition-all duration-500 
+            group-hover:brightness-50 group-hover:scale-110">
+
+          <!-- Default Text -->
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 
+            transition-all duration-500 group-hover:opacity-0 group-hover:translate-y-4">
+            <h3 class="text-white text-xl font-black tracking-wide leading-tight">
+              ENTRENAMIENTO<br>DE GIMNASIO
+            </h3>
+          </div>
+
+          <!-- Hover Text -->
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center 
+            bg-gradient-to-t from-black/95 via-black/70 to-transparent 
+            opacity-0 group-hover:opacity-100 translate-y-10 group-hover:translate-y-0 
+            transition-all duration-500 px-6">
+            <h3 class="text-white text-2xl font-black mb-3 leading-tight">
+              ENTRENAMIENTO EN EL GIMNASIO
+            </h3>
+            <p class="text-gray-200 text-base leading-relaxed">
+              Lleva tu rendimiento al siguiente nivel con máquinas y rutinas personalizadas que potencian tu fuerza y técnica.
+            </p>
+          </div>
+        </div>
+
+        <!-- Service 2: Rutinas -->
+        <div class="service-card relative w-full h-80 rounded-2xl overflow-hidden shadow-2xl group cursor-pointer card-hover">
+          <img src="./img/servicios/rutina personalizada.png" alt="Rutinas personalizadas"
+            class="absolute inset-0 w-full h-full object-cover transition-all duration-500 
+            group-hover:brightness-50 group-hover:scale-110">
+
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 
+            transition-all duration-500 group-hover:opacity-0 group-hover:translate-y-4">
+            <h3 class="text-white text-xl font-black tracking-wide leading-tight">
+              RUTINAS<br>PERSONALIZADAS
+            </h3>
+          </div>
+
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center 
+            bg-gradient-to-t from-black/95 via-black/70 to-transparent 
+            opacity-0 group-hover:opacity-100 translate-y-10 group-hover:translate-y-0 
+            transition-all duration-500 px-6">
+            <h3 class="text-white text-2xl font-black mb-3 leading-tight">
+              RUTINAS PERSONALIZADAS
+            </h3>
+            <p class="text-gray-200 text-base leading-relaxed">
+              Diseñadas a tu medida: objetivos, nivel y estilo de vida. Progreso constante con el acompañamiento adecuado.
+            </p>
+          </div>
+        </div>
+
+        <!-- Service 3: Casa -->
+        <div class="service-card relative w-full h-80 rounded-2xl overflow-hidden shadow-2xl group cursor-pointer card-hover">
+          <img src="./img/servicios/entrenamiento en casa (7).png" alt="Entrenamiento en casa"
+            class="absolute inset-0 w-full h-full object-cover transition-all duration-500 
+            group-hover:brightness-50 group-hover:scale-110">
+
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 
+            transition-all duration-500 group-hover:opacity-0 group-hover:translate-y-4">
+            <h3 class="text-white text-xl font-black tracking-wide leading-tight">
+              ENTRENAMIENTO<br>EN CASA
+            </h3>
+          </div>
+
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center 
+            bg-gradient-to-t from-black/95 via-black/70 to-transparent 
+            opacity-0 group-hover:opacity-100 translate-y-10 group-hover:translate-y-0 
+            transition-all duration-500 px-6">
+            <h3 class="text-white text-2xl font-black mb-3 leading-tight">
+              ENTRENAMIENTO EN CASA
+            </h3>
+            <p class="text-gray-200 text-base leading-relaxed">
+              Mantente activo desde casa con rutinas adaptadas a tu espacio y disponibilidad. Sin excusas, solo resultados.
+            </p>
+          </div>
+        </div>
+
+        <!-- Service 4: Nutrición -->
+        <div class="service-card relative w-full h-80 rounded-2xl overflow-hidden shadow-2xl group cursor-pointer card-hover">
+          <img src="./img/servicios/plan nutricional.png" alt="Plan nutricional"
+            class="absolute inset-0 w-full h-full object-cover transition-all duration-500 
+            group-hover:brightness-50 group-hover:scale-110">
+
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 
+            transition-all duration-500 group-hover:opacity-0 group-hover:translate-y-4">
+            <h3 class="text-white text-xl font-black tracking-wide leading-tight">
+              PLAN NUTRICIONAL
+            </h3>
+          </div>
+
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center 
+            bg-gradient-to-t from-black/95 via-black/70 to-transparent 
+            opacity-0 group-hover:opacity-100 translate-y-10 group-hover:translate-y-0 
+            transition-all duration-500 px-6">
+            <h3 class="text-white text-2xl font-black mb-3 leading-tight">
+              PLAN NUTRICIONAL PERSONALIZADO
+            </h3>
+            <p class="text-gray-200 text-base leading-relaxed">
+              Mejora tu salud y rendimiento con un plan alimenticio adaptado a ti. Logra tus metas con equilibrio y constancia.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       HERRAMIENTAS FITNESS SECTION
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <section id="herramientas" class="py-24 bg-gradient-to-b from-black to-neutral-950 text-white">
+    <div class="container mx-auto px-6 md:px-12 lg:px-20 text-center">
+
+      <!-- Title -->
+      <h2 class="text-4xl md:text-5xl font-black mb-4">
+        Nuestras <span class="gradient-text-red">Herramientas Fitness</span>
+      </h2>
+      <p class="max-w-2xl mx-auto text-gray-400 mb-16 text-lg leading-relaxed">
+        Accede a herramientas diseñadas para ayudarte a alcanzar tus objetivos de la manera más efectiva.
+      </p>
+
+      <!-- Tools Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+
+        <!-- Tool 1: Macronutrientes -->
+        <div onclick="abrirModal('modalMacronutrientes')" class="tool-card relative w-full max-w-xs mx-auto h-72 
+          rounded-2xl overflow-hidden shadow-2xl cursor-pointer transform transition-all duration-300 hover:scale-105">
+          
+          <div class="absolute inset-0 bg-gradient-to-b from-red-700/40 via-black/70 to-black opacity-90"></div>
+          
+          <img src="./img/calculadoras/macronutrientes.png" alt="Calculadora de macronutrientes"
+            class="relative z-10 mx-auto mt-10 w-32 h-32 object-contain" />
+          
+          <div class="relative z-10 text-center mt-8 px-4">
+            <h3 class="text-white font-black text-lg tracking-wide leading-tight">
+              CALCULADORA<br>DE MACRONUTRIENTES
+            </h3>
+          </div>
+          
+          <div class="absolute inset-0 bg-gradient-to-t from-red-700/40 via-transparent to-transparent 
+            opacity-0 hover:opacity-80 transition-all duration-500 rounded-2xl"></div>
+        </div>
+
+        <!-- Tool 2: IMC -->
+        <div onclick="abrirModalIMC()" class="tool-card relative w-full max-w-xs mx-auto h-72 rounded-2xl 
+          overflow-hidden shadow-2xl cursor-pointer transform transition-all duration-300 hover:scale-105"
+          style="background: linear-gradient(135deg, rgba(255, 127, 0, 0.6) 0%, rgba(255, 69, 0, 0.8) 100%); 
+          border-color: rgba(255, 127, 0, 0.4);">
+          
+          <div class="absolute inset-0 bg-gradient-to-b from-orange-700/40 via-black/70 to-black opacity-90"></div>
+          
+          <img src="./img/calculadoras/imc.png" alt="Calculadora IMC"
+            class="relative z-10 mx-auto mt-10 w-32 h-32 object-contain" />
+          
+          <div class="relative z-10 text-center mt-8 px-4">
+            <h3 class="text-white font-black text-lg tracking-wide leading-tight">
+              CALCULADORA DE<br>ÍNDICE DE MASA CORPORAL
+            </h3>
+          </div>
+          
+          <div class="absolute inset-0 bg-gradient-to-t from-orange-700/40 via-transparent to-transparent 
+            opacity-0 hover:opacity-80 transition-all duration-500 rounded-2xl"></div>
+        </div>
+
+        <!-- Tool 3: Agua -->
+        <div onclick="abrirModalAgua()" class="tool-card relative w-full max-w-xs mx-auto h-72 rounded-2xl 
+          overflow-hidden shadow-2xl cursor-pointer transform transition-all duration-300 hover:scale-105"
+          style="background: linear-gradient(135deg, rgba(0, 191, 255, 0.6) 0%, rgba(0, 107, 255, 0.8) 100%); 
+          border-color: rgba(0, 191, 255, 0.4);">
+          
+          <div class="absolute inset-0 bg-gradient-to-b from-blue-700/40 via-black/70 to-black opacity-90"></div>
+          
+          <img src="./img/calculadoras/consumo_agua.png" alt="Calculadora de agua"
+            class="relative z-10 mx-auto mt-10 w-32 h-32 object-contain" />
+          
+          <div class="relative z-10 text-center mt-8 px-4">
+            <h3 class="text-white font-black text-lg tracking-wide leading-tight">
+              CALCULADORA DE<br>CONSUMO DE AGUA
+            </h3>
+          </div>
+          
+          <div class="absolute inset-0 bg-gradient-to-t from-blue-700/40 via-transparent to-transparent 
+            opacity-0 hover:opacity-80 transition-all duration-500 rounded-2xl"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MODALES DE HERRAMIENTAS (Mantener los modales existentes del HTML original) -->
+  <!-- Modal Macronutrientes -->
+  <div id="modalMacronutrientes" class="fixed inset-0 bg-black/80 flex items-center justify-center hidden z-50 px-4 backdrop-blur-sm">
+    <div class="bg-neutral-900 w-full max-w-md max-h-[90vh] overflow-y-auto p-8 rounded-2xl shadow-2xl relative 
+      border-2 border-red-600 text-white">
+      <button onclick="cerrarModal('modalMacronutrientes')"
+        class="absolute top-3 right-4 text-red-500 text-2xl font-bold hover:text-red-400 transition">&times;</button>
+      <h2 class="text-center text-2xl font-black text-red-500 mb-6 uppercase">
+        CALCULADORA DE<br>MACRONUTRIENTES
+      </h2>
+      <!-- Mantener formulario original -->
+      <form id="formMacronutrientes" class="space-y-5">
+        <div>
+          <label class="block text-red-500 mb-2 font-bold uppercase text-sm">Edad</label>
+          <input type="number" id="edad" min="14" max="90" oninput="limitarDigitos(this, 2)"
+            class="w-20 h-10 bg-transparent border-2 border-red-500 rounded-lg px-3 text-white 
+            focus:outline-none focus:border-red-400" />
+        </div>
+        <div class="w-full flex justify-center">
+          <div class="w-80 flex flex-col items-center">
+            <label class="text-red-500 mb-3 font-bold uppercase text-sm">Género</label>
+            <div class="flex gap-10">
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input type="radio" name="genero" value="masculino" 
+                  class="w-5 h-5 border-2 border-red-500 rounded-full appearance-none checked:bg-red-500" />
+                <span>Masculino</span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input type="radio" name="genero" value="femenino" 
+                  class="w-5 h-5 border-2 border-red-500 rounded-full appearance-none checked:bg-red-500" />
+                <span>Femenino</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="block text-red-500 mb-2 font-bold uppercase text-sm">Altura (cm)</label>
+          <input type="number" id="altura" min="120" max="210" oninput="limitarDigitos(this, 3)"
+            class="w-full h-11 bg-transparent border-2 border-red-500 rounded-lg px-3 text-white 
+            focus:outline-none focus:border-red-400" placeholder="Ingresa tu altura" />
+        </div>
+        <div>
+          <label class="block text-red-500 mb-2 font-bold uppercase text-sm">Peso (kg)</label>
+          <input type="number" id="peso" min="30" max="200" oninput="limitarDigitos(this, 3)"
+            class="w-full h-11 bg-transparent border-2 border-red-500 rounded-lg px-3 text-white 
+            focus:outline-none focus:border-red-400" placeholder="Ingresa tu peso" />
+        </div>
+        <div>
+          <label class="block text-red-500 mb-2 font-bold uppercase text-sm">Actividad</label>
+          <select id="actividad" class="w-full h-11 bg-neutral-900 border-2 border-red-500 rounded-lg px-3 text-white 
+            focus:outline-none focus:border-red-400">
+            <option value="">Selecciona tu nivel</option>
+            <option value="sedentario">Sedentario</option>
+            <option value="ligero">Ligero</option>
+            <option value="moderado">Moderado</option>
+            <option value="intenso">Intenso</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-red-500 mb-2 font-bold uppercase text-sm">Tu meta</label>
+          <select id="meta" class="w-full h-11 bg-neutral-900 border-2 border-red-500 rounded-lg px-3 text-white 
+            focus:outline-none focus:border-red-400">
+            <option value="">Selecciona tu meta</option>
+            <option value="bajar">Bajar peso</option>
+            <option value="mantener">Mantener peso</option>
+            <option value="subir">Subir masa</option>
+          </select>
+        </div>
+        <button type="button" onclick="calcularMacronutrientes()" 
+          class="w-full h-11 rounded-lg font-black text-white text-lg bg-gradient-to-r from-red-600 to-red-700 
+          hover:from-red-700 hover:to-red-800 transition-all">
+          CALCULAR
+        </button>
+      </form>
+      <div id="resultadoMacronutrientes" class="hidden mt-8 text-center">
+        <h3 class="text-xl text-red-500 mb-3">Tu requerimiento diario estimado es de:</h3>
+        <p id="valorKcal" class="text-4xl text-red-600 font-black"></p>
+        <button onclick="reiniciarFormulario()"
+          class="mt-6 py-2 px-6 rounded-lg bg-gradient-to-r from-red-600 to-red-700 text-white font-bold 
+          hover:from-red-700 hover:to-red-800 transition-all">
+          Volver
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal IMC (Mantener estructura original con estilos mejorados) -->
+  <div id="modalIMC" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 px-4 backdrop-blur-sm">
+    <div class="bg-neutral-900 w-full max-w-md max-h-[90vh] overflow-y-auto p-8 rounded-2xl shadow-2xl relative 
+      border-2 border-orange-500 text-white">
+      <button onclick="cerrarModalIMC()"
+        class="absolute top-3 right-4 text-orange-500 text-2xl font-bold hover:text-orange-400">&times;</button>
+      <h2 class="text-2xl font-black text-orange-500 mb-4 uppercase">Calculadora de IMC</h2>
+      <form id="formIMC" class="space-y-5">
+        <div>
+          <label class="block text-orange-500 mb-2 font-bold uppercase text-sm">Peso (kg)</label>
+          <input type="number" id="pesoIMC" min="40" max="300" oninput="limitarDigitos(this, 3)"
+            class="w-full h-11 bg-transparent border-2 border-orange-500 rounded-lg px-3 text-white 
+            focus:outline-none focus:border-orange-400" placeholder="Ej: 70" />
+        </div>
+        <div>
+          <label class="block text-orange-500 mb-2 font-bold uppercase text-sm">Altura (cm)</label>
+          <input type="number" id="alturaIMC" min="120" max="210" oninput="limitarDigitos(this, 3)"
+            class="w-full h-11 bg-transparent border-2 border-orange-500 rounded-lg px-3 text-white 
+            focus:outline-none focus:border-orange-400" placeholder="Ej: 170" />
+        </div>
+        <button type="button" onclick="calcularIMC()"
+          class="bg-orange-500 text-white w-full py-2 rounded-lg font-bold hover:bg-orange-600 transition">
+          Calcular
+        </button>
+      </form>
+      <div id="resultadoIMC" class="hidden mt-6 text-white">
+        <p class="text-lg">Tu IMC es:</p>
+        <p id="valorIMC" class="text-4xl font-black text-orange-500 my-2"></p>
+        <p id="clasificacionIMC" class="text-base font-medium text-gray-300"></p>
+        <button onclick="reiniciarIMC()"
+          class="mt-4 bg-orange-500 text-white px-6 py-2 rounded-lg font-bold hover:bg-orange-600 transition">
+          Calcular nuevamente
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Agua (Mantener estructura original con estilos mejorados) -->
+  <div id="modalAgua" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 px-4 backdrop-blur-sm">
+    <div class="bg-neutral-900 w-full max-w-md max-h-[90vh] overflow-y-auto p-8 rounded-2xl shadow-2xl relative 
+      border-2 border-blue-500 text-white">
+      <button onclick="cerrarModalAgua()"
+        class="absolute top-3 right-4 text-blue-500 text-2xl font-bold hover:text-blue-400">&times;</button>
+      <h2 class="text-2xl font-black text-blue-500 mb-4 uppercase">Calculadora de Agua</h2>
+      <form id="formAgua" class="space-y-5">
+        <div>
+          <label class="block text-blue-500 mb-2 font-bold uppercase text-sm">Peso (kg)</label>
+          <input type="number" id="pesoAgua" min="30" max="300" oninput="limitarDigitos(this, 3)"
+            class="w-full h-11 bg-transparent border-2 border-blue-500 rounded-lg px-3 text-white 
+            focus:outline-none focus:border-blue-400" placeholder="Ej: 70" />
+        </div>
+        <div>
+          <label class="block text-blue-500 mb-2 font-bold uppercase text-sm">Edad (años)</label>
+          <input type="number" id="edadAgua" min="1" max="120" oninput="limitarDigitos(this, 2)"
+            class="w-full h-11 bg-transparent border-2 border-blue-500 rounded-lg px-3 text-white 
+            focus:outline-none focus:border-blue-400" placeholder="Ej: 25" />
+        </div>
+        <button type="button" onclick="calcularAgua()"
+          class="bg-blue-500 text-white w-full py-2 rounded-lg font-bold hover:bg-blue-600 transition">
+          Calcular
+        </button>
+      </form>
+      <div id="resultadoAgua" class="hidden mt-6 text-white">
+        <p class="text-lg">Debes tomar aproximadamente:</p>
+        <p id="valorAgua" class="text-4xl font-black text-blue-500 my-2"></p>
+        <p id="clasificacionAgua" class="text-base font-medium text-gray-300"></p>
+        <button onclick="reiniciarAgua()"
+          class="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-600 transition">
+          Calcular nuevamente
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       NOTICIAS SECTION
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <section id="noticias" class="w-full py-24 text-white bg-black">
+    <div class="max-w-7xl mx-auto px-6 text-center mb-12">
+      <h2 class="text-4xl md:text-5xl font-black mb-4">
+        Últimas Noticias <span class="gradient-text-red">Deportivas</span>
+      </h2>
+      <p class="text-gray-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+        Mantente al día con las noticias más recientes del mundo del deporte.
+      </p>
+    </div>
+
+    <div id="contenedor-noticias" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto px-6">
+      <!-- Noticias se cargarán aquí dinámicamente -->
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       COMUNIDAD SECTION
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <section class="py-24 bg-gradient-to-b from-black to-neutral-950">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 px-6">
+
+      <!-- Left Content -->
+      <div class="space-y-6">
+        <h1 class="text-4xl md:text-5xl font-black leading-tight">
+          Únete A Nuestra <span class="gradient-text-red">Comunidad Fitness</span>
+        </h1>
+        <p class="text-gray-400 text-base md:text-lg leading-relaxed">
+          Regístrate ahora para desbloquear acceso exclusivo a planes de entrenamiento personalizados, entrenamiento
+          experto y una comunidad de apoyo que te ayudará a alcanzar tus objetivos de fitness.
+        </p>
+        
+        <div class="grid sm:grid-cols-2 gap-4 pt-4">
+          <div class="bg-neutral-900 rounded-xl p-5 border border-neutral-800 hover:border-red-500 
+            transition-all duration-300 card-hover">
+            <h3 class="text-red-500 font-bold mb-2">Planes de Entrenamiento <span class="text-white">Personalizado</span></h3>
+            <p class="text-sm text-gray-400">Rutinas personalizadas que se adaptan a tu nivel de fitness y objetivos.</p>
+          </div>
+          
+          <div class="bg-neutral-900 rounded-xl p-5 border border-neutral-800 hover:border-red-500 
+            transition-all duration-300 card-hover">
+            <h3 class="text-white font-bold mb-2">Entrenamiento <span class="text-red-500">Experto</span></h3>
+            <p class="text-sm text-gray-400">Guía virtual en cada paso del camino para garantizar que estés en el camino correcto.</p>
+          </div>
+          
+          <div class="bg-neutral-900 rounded-xl p-5 border border-neutral-800 hover:border-red-500 
+            transition-all duration-300 card-hover">
+            <h3 class="text-white font-bold mb-2">Apoyo <span class="text-red-500">Comunitario</span></h3>
+            <p class="text-sm text-gray-400">Conecta con otros miembros para compartir experiencias y mantenerte inspirado.</p>
+          </div>
+          
+          <div class="bg-neutral-900 rounded-xl p-5 border border-neutral-800 hover:border-red-500 
+            transition-all duration-300 card-hover">
+            <h3 class="text-white font-bold mb-2">Recursos <span class="text-red-500">Exclusivos</span></h3>
+            <p class="text-sm text-gray-400">Acceso a contenido premium, guías, tutoriales y descuentos en equipos.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Form -->
+      <div class="flex items-center justify-center">
+        <div class="bg-gradient-to-b from-red-900/40 to-red-950/60 backdrop-blur-md p-8 rounded-2xl w-full 
+          max-w-md border border-red-600/30">
+          <div class="flex items-center justify-center mb-6 space-x-6">
+            <button class="text-red-500 font-bold text-lg border-b-2 border-red-500 pb-1">Registrarse</button>
+            <a href="pages/login.html" class="text-gray-400 hover:text-white text-lg pb-1 font-semibold transition">
+              Iniciar sesión
+            </a>
+          </div>
+          
+          <form class="space-y-4">
+            <div>
+              <label class="block text-sm mb-2 text-gray-300 font-semibold">Nombre</label>
+              <input type="text" placeholder="Ingresa tu nombre"
+                class="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 text-white 
+                focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition">
+            </div>
+            <div>
+              <label class="block text-sm mb-2 text-gray-300 font-semibold">E-Mail</label>
+              <input type="email" placeholder="Ingresa tu email"
+                class="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 text-white 
+                focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition">
+            </div>
+            <button type="submit" formaction="pages/register.html"
+              class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 
+              transition font-bold py-3 rounded-lg btn-glow">
+              Registrarse
+            </button>
+            <div class="text-center text-gray-300 text-sm my-2 font-bold">o</div>
+            <a href="pages/register.html">
+              <button type="button"
+                class="w-full flex items-center justify-center border border-white/20 hover:border-red-500 
+                py-3 rounded-lg transition font-semibold hover:bg-red-500/10">
+                <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" class="w-5 h-5 mr-2">
+                Regístrate con Google
+              </button>
+            </a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       FAQ SECTION
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <section id="FAQS" class="py-24 bg-black">
+    <div class="max-w-4xl mx-auto px-6">
+      <h2 class="text-4xl md:text-5xl font-black mb-12 text-center gradient-text">
+        Preguntas Frecuentes
+      </h2>
+      
+      <div class="space-y-4">
+        <!-- FAQ 1 -->
+        <div class="faq-item rounded-xl overflow-hidden bg-neutral-950">
+          <button class="w-full flex justify-between items-center px-6 py-5 text-left font-bold text-white 
+            hover:text-red-500 transition-colors" onclick="toggleFAQ(1)">
+            ¿Qué Es FitAiid Y Cómo Puede Ayudarme A Alcanzar Mis Objetivos De Fitness?
+            <i id="icon-1" class="fas fa-chevron-up text-red-500 transition-transform duration-300"></i>
+          </button>
+          <div id="answer-1" class="px-6 pb-5 text-gray-400 text-sm leading-relaxed hidden">
+            FitAiid es una plataforma de fitness online que ofrece planes de entrenamiento personalizados, 
+            coach virtual impulsado por IA y asesoramiento nutricional integral. Si buscas perder peso, ganar 
+            músculo o simplemente mantenerte en forma, nuestros programas personalizados y el apoyo de nuestra 
+            comunidad te ayudarán a alcanzar tus objetivos de fitness.
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item rounded-xl overflow-hidden bg-neutral-950">
+          <button class="w-full flex justify-between items-center px-6 py-5 text-left font-bold text-white 
+            hover:text-red-500 transition-colors" onclick="toggleFAQ(2)">
+            ¿Cómo Empiezo Con El Plan De Entrenamiento En FitAiid?
+            <i id="icon-2" class="fas fa-chevron-down text-red-500 transition-transform duration-300"></i>
+          </button>
+          <div id="answer-2" class="px-6 pb-5 text-gray-400 text-sm leading-relaxed hidden">
+            Solo necesitas registrarte, completar tu perfil y establecer tus objetivos. FitAiid generará un plan 
+            de entrenamiento y nutrición personalizado para ti de forma automática.
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item rounded-xl overflow-hidden bg-neutral-950">
+          <button class="w-full flex justify-between items-center px-6 py-5 text-left font-bold text-white 
+            hover:text-red-500 transition-colors" onclick="toggleFAQ(3)">
+            ¿La app ajusta mis recomendaciones si cambio mi objetivo?
+            <i id="icon-3" class="fas fa-chevron-down text-red-500 transition-transform duration-300"></i>
+          </button>
+          <div id="answer-3" class="px-6 pb-5 text-gray-400 text-sm leading-relaxed hidden">
+            Sí. Cada vez que cambias tu objetivo, FitAiid recalcula tus necesidades calóricas y la distribución 
+            de macronutrientes según tus datos actuales (peso, altura, edad y nivel de actividad).
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-item rounded-xl overflow-hidden bg-neutral-950">
+          <button class="w-full flex justify-between items-center px-6 py-5 text-left font-bold text-white 
+            hover:text-red-500 transition-colors" onclick="toggleFAQ(4)">
+            ¿Por qué el chatbot solo responde temas de fitness?
+            <i id="icon-4" class="fas fa-chevron-down text-red-500 transition-transform duration-300"></i>
+          </button>
+          <div id="answer-4" class="px-6 pb-5 text-gray-400 text-sm leading-relaxed hidden">
+            El chatbot de FitAiid está diseñado específicamente para brindarte apoyo en temas relacionados con 
+            fitness, nutrición y tus objetivos personales de salud. Su función es ayudarte a resolver dudas sobre 
+            entrenamiento, alimentación, calorías, macronutrientes y progreso físico.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       SOBRE NOSOTROS SECTION
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <section id="sobre-nosotros" class="relative py-28 bg-gradient-to-b from-black to-neutral-950 text-white overflow-hidden">
+
+    <!-- Ambient Light -->
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] 
+        bg-[radial-gradient(ellipse_at_center,rgba(255,42,42,0.05)_0%,transparent_65%)]"></div>
+    </div>
+
+    <div class="relative z-10 mx-auto px-6 md:px-12 lg:px-20 max-w-6xl text-center">
+
+      <!-- Label -->
+      <span class="inline-block text-red-600 text-xs font-black tracking-[0.4em] uppercase mb-5">
+        Conócenos
+      </span>
+
+      <!-- Title -->
+      <h2 class="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-5">
+        SOBRE <span class="gradient-text-red">FITAIID</span>
+      </h2>
+
+      <!-- Divider -->
+      <div class="w-16 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto rounded-full mb-12"></div>
+
+      <!-- Description -->
+      <p class="text-gray-300 text-lg sm:text-xl leading-relaxed max-w-3xl mx-auto mb-5">
+        En <strong class="text-white">FitAiid</strong> creemos que cada persona merece acceso a una guía fitness
+        inteligente, personalizada y accesible. Somos un equipo apasionado por la tecnología, el deporte y el
+        bienestar humano.
+      </p>
+      <p class="text-gray-500 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-20">
+        Combinamos <span class="text-orange-400 font-semibold">inteligencia artificial</span>, ciencia del ejercicio
+        y nutrición para ofrecerte una experiencia única que se adapta a tu cuerpo, tus tiempos y tus metas.
+      </p>
+
+      <!-- Decorative Divider -->
+      <div class="flex items-center justify-center gap-4 mb-20">
+        <div class="flex-1 h-px bg-gradient-to-r from-transparent to-white/10 max-w-xs"></div>
+        <div class="w-1.5 h-1.5 rounded-full bg-red-600"></div>
+        <div class="w-1 h-1 rounded-full bg-orange-500/60"></div>
+        <div class="w-1.5 h-1.5 rounded-full bg-red-600"></div>
+        <div class="flex-1 h-px bg-gradient-to-l from-transparent to-white/10 max-w-xs"></div>
+      </div>
+
+      <!-- Mission & Vision Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-16 text-left">
+
+        <!-- Mission -->
+        <div class="space-y-4 group">
+          <span class="text-red-600 text-[11px] font-black tracking-[0.4em] uppercase">— Misión</span>
+          <h3 class="text-2xl sm:text-3xl font-black text-white leading-snug group-hover:text-red-500 transition-colors">
+            Transformar vidas a través del fitness inteligente
+          </h3>
+          <div class="w-8 h-[2px] bg-red-600 rounded-full"></div>
+          <p class="text-gray-400 text-base leading-relaxed">
+            Promover el bienestar integral de las personas mediante herramientas tecnológicas que faciliten hábitos
+            saludables, sostenibles y adaptados a cada individuo. Queremos que alcanzar tus metas sea accesible para
+            todos.
+          </p>
+        </div>
+
+        <!-- Vision -->
+        <div class="space-y-4 group">
+          <span class="text-orange-400 text-[11px] font-black tracking-[0.4em] uppercase">— Visión</span>
+          <h3 class="text-2xl sm:text-3xl font-black text-white leading-snug group-hover:text-orange-400 transition-colors">
+            Liderar la salud digital en Latinoamérica
+          </h3>
+          <div class="w-8 h-[2px] bg-orange-400 rounded-full"></div>
+          <p class="text-gray-400 text-base leading-relaxed">
+            Convertirnos en la plataforma referente de innovación y salud digital en Latinoamérica, impulsando el
+            desarrollo humano y deportivo con tecnología de vanguardia. El aliado número uno para transformar tu
+            vida.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <footer class="bg-gradient-to-b from-neutral-950 to-black text-gray-300 py-16 px-10 md:px-24 border-t border-white/5">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-14">
+
+      <!-- Logo + Description -->
+      <div>
+        <div class="flex items-center space-x-3 mb-3">
+          <img src="img/logo.png" alt="FitAiid Logo" class="w-14 h-14 object-contain">
+          <h2 class="text-3xl font-black tracking-wide">
+            <span class="text-white">Fit</span><span class="text-red-600">Aiid</span>
+          </h2>
+        </div>
+        <p class="text-sm font-bold text-red-600 uppercase tracking-wider mb-4">
+          Transforma tu cuerpo
+        </p>
+        <p class="text-sm leading-relaxed text-gray-400 mb-6">
+          Tu aliado inteligente en fitness. Planes personalizados, asesoramiento nutricional con IA
+          y acompañamiento virtual para alcanzar tu mejor versión.
+        </p>
+        
+        <!-- Social Icons -->
+        <div class="flex space-x-4">
+          <a href="#" class="w-10 h-10 bg-neutral-900 rounded-full flex items-center justify-center 
+            hover:bg-red-600 transition-all duration-300 group">
+            <i class="fab fa-facebook-f text-gray-400 group-hover:text-white transition"></i>
+          </a>
+          <a href="#" class="w-10 h-10 bg-neutral-900 rounded-full flex items-center justify-center 
+            hover:bg-red-600 transition-all duration-300 group">
+            <i class="fab fa-instagram text-gray-400 group-hover:text-white transition"></i>
+          </a>
+          <a href="#" class="w-10 h-10 bg-neutral-900 rounded-full flex items-center justify-center 
+            hover:bg-red-600 transition-all duration-300 group">
+            <i class="fab fa-x-twitter text-gray-400 group-hover:text-white transition"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Nosotros -->
+      <div>
+        <h3 class="text-red-600 font-bold text-xl mb-5 uppercase tracking-wide">Nosotros</h3>
+        <ul class="space-y-3 text-sm">
+          <li><a href="#sobre-nosotros" class="hover:text-white transition-colors hover:translate-x-1 
+            inline-block transform duration-200">Sobre Nosotros</a></li>
+          <li><a href="#servicios" class="hover:text-white transition-colors hover:translate-x-1 
+            inline-block transform duration-200">Nuestros Servicios</a></li>
+          <li><a href="#" class="hover:text-white transition-colors hover:translate-x-1 
+            inline-block transform duration-200">Blog</a></li>
+          <li><a href="#" class="hover:text-white transition-colors hover:translate-x-1 
+            inline-block transform duration-200">Contáctanos</a></li>
+        </ul>
+      </div>
+
+      <!-- Recursos -->
+      <div>
+        <h3 class="text-red-600 font-bold text-xl mb-5 uppercase tracking-wide">Recursos</h3>
+        <ul class="space-y-3 text-sm">
+          <li><a href="#herramientas" class="hover:text-white transition-colors hover:translate-x-1 
+            inline-block transform duration-200">Herramientas Fitness</a></li>
+          <li><a href="#" class="hover:text-white transition-colors hover:translate-x-1 
+            inline-block transform duration-200">Guías de Nutrición</a></li>
+          <li><a href="#FAQS" class="hover:text-white transition-colors hover:translate-x-1 
+            inline-block transform duration-200">Preguntas Frecuentes</a></li>
+          <li><a href="#" class="hover:text-white transition-colors hover:translate-x-1 
+            inline-block transform duration-200">Membresías</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h3 class="text-red-600 font-bold text-xl mb-5 uppercase tracking-wide">Contáctanos</h3>
+        <ul class="space-y-4 text-sm">
+          <li class="flex items-center space-x-3">
+            <i class="fas fa-location-dot text-red-600 text-lg"></i>
+            <span>Colombia</span>
+          </li>
+          <li class="flex items-center space-x-3">
+            <i class="fas fa-phone text-red-600 text-lg"></i>
+            <span>+57 320 263 6622</span>
+          </li>
+          <li class="flex items-center space-x-3">
+            <i class="fas fa-envelope text-red-600 text-lg"></i>
+            <span>contacto@fitaiid.com</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="border-t border-white/5 mt-14 pt-6 text-center text-sm text-gray-500">
+      © 2025 <span class="text-red-600 font-semibold">FitAiid</span> — Todos los derechos reservados.
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       SCRIPTS
+  ══════════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Mobile Menu Toggle -->
+  <script>
+    const menuBtn = document.getElementById("menu-btn");
+    const menu = document.getElementById("menu");
+    const mobileLinks = document.querySelectorAll(".mobile-link");
+
+    function toggleMenu() {
+      menu.classList.toggle("hidden");
+      menu.classList.toggle("flex");
+      menu.classList.toggle("mobile-menu-active");
+      
+      const icon = menuBtn.querySelector("i");
+      if (menu.classList.contains("hidden")) {
+        icon.className = "fas fa-bars";
+      } else {
+        icon.className = "fas fa-times";
+      }
+    }
+
+    menuBtn.addEventListener("click", toggleMenu);
+
+    mobileLinks.forEach(link => {
+      link.addEventListener("click", () => {
+        if (!menu.classList.contains("hidden")) {
+          toggleMenu();
+        }
+      });
+    });
+  </script>
+
+  <!-- Active Navigation Link -->
+  <script>
+    const sections = document.querySelectorAll("section[id]");
+    const navLinks = document.querySelectorAll(".nav-link");
+
+    window.addEventListener("scroll", () => {
+      let current = "";
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 150;
+        const sectionHeight = section.clientHeight;
+        if (pageYOffset >= sectionTop && pageYOffset < sectionTop + sectionHeight) {
+          current = section.getAttribute("id");
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove("active");
+        if (link.getAttribute("href") === `#${current}`) {
+          link.classList.add("active");
+        }
+      });
+    });
+  </script>
+
+  <!-- Calculadora de Macronutrientes -->
+  <script>
+    function abrirModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function cerrarModal(id) {
+      document.getElementById(id).classList.add('hidden');
+      reiniciarFormulario();
+    }
+
+    function calcularMacronutrientes() {
+      const edad = parseInt(document.getElementById('edad').value);
+      const altura = parseFloat(document.getElementById('altura').value);
+      const peso = parseFloat(document.getElementById('peso').value);
+      const actividad = document.getElementById('actividad').value;
+      const meta = document.getElementById('meta').value;
+
+      const genero = document.querySelector('input[name="genero"]:checked');
+      if (!genero) {
+        alert('Por favor selecciona tu género');
+        return;
+      }
+
+      if (!edad || !altura || !peso || !actividad || !meta) {
+        alert('Por favor completa todos los campos');
+        return;
+      }
+
+      let bmr = 0;
+      if (genero.value === "masculino") {
+        bmr = 88.362 + (13.397 * peso) + (4.799 * altura) - (5.677 * edad);
+      } else {
+        bmr = 447.593 + (9.247 * peso) + (3.098 * altura) - (4.330 * edad);
+      }
+
+      let factorActividad = 1.2;
+      if (actividad === 'ligero') factorActividad = 1.375;
+      if (actividad === 'moderado') factorActividad = 1.55;
+      if (actividad === 'intenso') factorActividad = 1.725;
+
+      let calorias = bmr * factorActividad;
+
+      if (meta === 'bajar') calorias -= 400;
+      if (meta === 'subir') calorias += 400;
+
+      document.getElementById('formMacronutrientes').classList.add('hidden');
+      document.getElementById('resultadoMacronutrientes').classList.remove('hidden');
+      document.getElementById('valorKcal').textContent = `${Math.round(calorias)} kcal`;
+    }
+
+    function reiniciarFormulario() {
+      document.getElementById('formMacronutrientes').reset();
+      document.getElementById('formMacronutrientes').classList.remove('hidden');
+      document.getElementById('resultadoMacronutrientes').classList.add('hidden');
+    }
+  </script>
+
+  <!-- Calculadora IMC -->
+  <script>
+    function abrirModalIMC() {
+      document.getElementById('modalIMC').classList.remove('hidden');
+    }
+
+    function cerrarModalIMC() {
+      document.getElementById('modalIMC').classList.add('hidden');
+      reiniciarIMC();
+    }
+
+    function calcularIMC() {
+      const peso = parseFloat(document.getElementById("pesoIMC").value);
+      const alturaCm = parseFloat(document.getElementById("alturaIMC").value);
+
+      if (!peso || !alturaCm) {
+        alert("Por favor completa todos los campos.");
+        return;
+      }
+
+      const alturaM = alturaCm / 100;
+      const imc = peso / (alturaM * alturaM);
+      const imcRedondeado = imc.toFixed(2);
+
+      let clasificacion = "";
+      let mensajeExtra = "";
+
+      if (imc < 18.5) {
+        clasificacion = "Bajo peso";
+      } else if (imc >= 18.5 && imc < 24.9) {
+        clasificacion = "Peso normal";
+      } else if (imc >= 25 && imc < 29.9) {
+        clasificacion = "Sobrepeso";
+      } else {
+        clasificacion = "Obesidad";
+      }
+
+      const pesoIdeal = 22 * (alturaM * alturaM);
+      const pesoIdealRedondeado = pesoIdeal.toFixed(1);
+
+      if (clasificacion === "Bajo peso") {
+        mensajeExtra = `Deberías aumentar aproximadamente hasta ${pesoIdealRedondeado} kg para estar en un rango saludable.`;
+      } else if (clasificacion === "Sobrepeso" || clasificacion === "Obesidad") {
+        mensajeExtra = `Tu peso saludable aproximado sería alrededor de ${pesoIdealRedondeado} kg.`;
+      } else {
+        mensajeExtra = "¡Estás en un rango saludable! Sigue manteniendo buenos hábitos 💪";
+      }
+
+      document.getElementById("valorIMC").textContent = imcRedondeado;
+      document.getElementById("clasificacionIMC").textContent = `Clasificación: ${clasificacion}. ${mensajeExtra}`;
+      document.getElementById("resultadoIMC").classList.remove("hidden");
+      document.getElementById("formIMC").classList.add("hidden");
+    }
+
+    function reiniciarIMC() {
+      document.getElementById("formIMC").reset();
+      document.getElementById("resultadoIMC").classList.add("hidden");
+      document.getElementById("formIMC").classList.remove("hidden");
+    }
+  </script>
+
+  <!-- Calculadora Agua -->
+  <script>
+    function abrirModalAgua() {
+      document.getElementById('modalAgua').classList.remove('hidden');
+    }
+
+    function cerrarModalAgua() {
+      document.getElementById('modalAgua').classList.add('hidden');
+      reiniciarAgua();
+    }
+
+    function calcularAgua() {
+      const peso = parseFloat(document.getElementById('pesoAgua').value);
+      const edad = parseInt(document.getElementById('edadAgua').value);
+
+      if (!peso || !edad) {
+        alert("Por favor ingresa todos los datos");
+        return;
+      }
+
+      let litros = peso * 0.035;
+      if (edad < 14) litros *= 0.8;
+      else if (edad > 65) litros *= 0.9;
+
+      litros = litros.toFixed(2);
+
+      document.getElementById('valorAgua').textContent = litros + " litros al día";
+      document.getElementById('resultadoAgua').classList.remove('hidden');
+      document.getElementById('formAgua').classList.add('hidden');
+    }
+
+    function reiniciarAgua() {
+      document.getElementById('formAgua').reset();
+      document.getElementById('resultadoAgua').classList.add('hidden');
+      document.getElementById('formAgua').classList.remove('hidden');
+    }
+  </script>
+
+  <!-- FAQ Toggle -->
+  <script>
+    function toggleFAQ(id) {
+      const answer = document.getElementById(`answer-${id}`);
+      const icon = document.getElementById(`icon-${id}`);
+
+      // Cerrar todos los demás
+      document.querySelectorAll('[id^="answer-"]').forEach((el, index) => {
+        if (index + 1 !== id) el.classList.add('hidden');
+      });
+      document.querySelectorAll('[id^="icon-"]').forEach((el, index) => {
+        if (index + 1 !== id) {
+          el.className = 'fas fa-chevron-down text-red-500 transition-transform duration-300';
+        }
+      });
+
+      // Toggle actual
+      if (answer.classList.contains('hidden')) {
+        answer.classList.remove('hidden');
+        icon.className = 'fas fa-chevron-up text-red-500 transition-transform duration-300';
+      } else {
+        answer.classList.add('hidden');
+        icon.className = 'fas fa-chevron-down text-red-500 transition-transform duration-300';
+      }
+    }
+  </script>
+
+  <!-- Limitar Dígitos -->
+  <script>
+    function limitarDigitos(input, max) {
+      if (input.value.length > max) {
+        input.value = input.value.slice(0, max);
+      }
+    }
+  </script>
+
+  <!-- Noticias API -->
+  <script>
+    const API_KEY = "69ab3fff67ec43cd93c26393df9abf96";
+    const API_URL = `https://newsapi.org/v2/everything?q=fitness OR deporte OR nutrición OR alimentación OR yoga OR hidratación OR bienestar&language=es&sortBy=publishedAt&pageSize=6&apiKey=${API_KEY}`;
+
+    async function cargarNoticias() {
+      try {
+        const respuesta = await fetch(API_URL);
+        const data = await respuesta.json();
+        const contenedor = document.getElementById("contenedor-noticias");
+        contenedor.innerHTML = "";
+
+        if (!data.articles || data.articles.length === 0) {
+          contenedor.innerHTML = `<p class="text-gray-400 text-center col-span-3">No se encontraron noticias en este momento.</p>`;
+          return;
+        }
+
+        data.articles.forEach(noticia => {
+          const titulo = noticia.title || "Noticia sin título";
+          const fuente = noticia.source?.name || "Fuente desconocida";
+          const fecha = new Date(noticia.publishedAt).toLocaleDateString("es-ES", {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+          });
+          const link = noticia.url;
+          const imagen = noticia.urlToImage || "https://via.placeholder.com/400x250?text=Noticia+Fitness";
+
+          const card = `
+            <div class="bg-neutral-900 rounded-2xl overflow-hidden shadow-2xl card-hover border border-neutral-800 
+              hover:border-red-600/30 transition-all duration-300">
+              <a href="${link}" target="_blank">
+                <img src="${imagen}" alt="${titulo}" class="w-full h-56 object-cover">
+                <div class="p-6 text-left">
+                  <h3 class="text-lg font-bold mb-2 line-clamp-2 hover:text-red-500 transition">${titulo}</h3>
+                  <p class="text-gray-400 text-sm mb-4">${fuente} | ${fecha}</p>
+                  <span class="inline-flex items-center gap-2 text-red-500 font-semibold hover:gap-3 transition-all">
+                    Leer más <i class="fas fa-arrow-right text-sm"></i>
+                  </span>
+                </div>
+              </a>
+            </div>
+          `;
+          contenedor.innerHTML += card;
+        });
+      } catch (error) {
+        console.error("Error al cargar las noticias:", error);
+        document.getElementById("contenedor-noticias").innerHTML =
+          `<p class="text-gray-400 text-center col-span-3">Error al conectar con el servicio de noticias.</p>`;
+      }
+    }
+
+    cargarNoticias();
+  </script>
+
+</body>
+</html>

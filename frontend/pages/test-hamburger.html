@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Hamburger Menu</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+    }
+
+    .navbar-header {
+      width: 100%;
+      padding: 20px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(12, 12, 12, 0.95);
+      backdrop-filter: blur(10px);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9999;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      gap: 20px;
+      flex-wrap: nowrap;
+    }
+
+    .navbar-header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      min-width: 0;
+      color: white;
+      font-weight: bold;
+    }
+
+    .navbar-header .menu {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .navbar-header .menu a {
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      text-decoration: none;
+      padding-bottom: 5px;
+      transition: all 0.3s ease;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+    }
+
+    .navbar-header .menu a:hover {
+      color: #ff2e00;
+    }
+
+    .navbar-header .menu a.active {
+      color: #ff2e00;
+      border-bottom: 3px solid #ff2e00;
+    }
+
+    .navbar-header .icons {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-shrink: 0;
+    }
+
+    .navbar-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: #ff3d00;
+      font-size: 24px;
+      cursor: pointer;
+      flex-shrink: 0;
+      padding: 5px 10px;
+      z-index: 2000;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .navbar-toggle:hover {
+      color: #ff6e40;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .navbar-header {
+        padding: 12px 15px;
+        flex-wrap: nowrap;
+      }
+
+      .navbar-toggle {
+        display: block;
+      }
+
+      .navbar-header .menu {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: rgba(12, 12, 12, 0.95);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+        padding: 15px 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        justify-content: flex-start;
+        border-bottom: 1px solid rgba(255, 61, 0, 0.2);
+        flex: none;
+        z-index: 1000;
+      }
+
+      .navbar-header .menu.active {
+        max-height: 300px;
+      }
+
+      .navbar-header .menu a {
+        font-size: 14px;
+        padding: 12px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+
+    main {
+      margin-top: 100px;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar-header">
+    <div class="logo">Logo</div>
+
+    <button class="navbar-toggle" id="navbar-toggle">☰</button>
+
+    <nav class="menu" id="navbar-menu">
+      <a href="#" class="active">Inicio</a>
+      <a href="#">Entrenamiento</a>
+      <a href="#">Coach Virtual</a>
+      <a href="#">Nutrición</a>
+      <a href="#">Estadísticas</a>
+    </nav>
+
+    <div class="icons">
+      <button style="background: #ff3d00; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Cerrar</button>
+    </div>
+  </header>
+
+  <main>
+    <h1>Test Hamburger Menu</h1>
+    <p>Redimensiona la ventana a menos de 768px para ver el menú hamburguesa.</p>
+    <p>El botón ☰ debe aparecer y al hacerle click el menú debe expandirse.</p>
+  </main>
+
+  <script>
+    function setupHamburgerMenu() {
+      try {
+        const hamburger = document.querySelector('.navbar-toggle');
+        const navMenu = document.querySelector('.navbar-header .menu');
+        const menuItems = document.querySelectorAll('.navbar-header .menu a');
+        
+        if (!hamburger) {
+          console.warn('⚠️ Hamburger button not found');
+          return;
+        }
+        
+        if (!navMenu) {
+          console.warn('⚠️ Navigation menu not found');
+          return;
+        }
+
+        console.log('✅ Hamburger menu elements found');
+
+        // Click en el hamburger
+        hamburger.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('🔄 Hamburger clicked');
+          console.log('Menu classList before:', navMenu.className);
+          navMenu.classList.toggle('active');
+          console.log('Menu classList after:', navMenu.className);
+        });
+
+        // Click en items del menú
+        menuItems.forEach(function(item) {
+          item.addEventListener('click', function(e) {
+            console.log('🔗 Menu item clicked:', this.textContent);
+            navMenu.classList.remove('active');
+          });
+        });
+
+        // Click fuera del navbar para cerrar
+        document.addEventListener('click', function(e) {
+          const navbar = document.querySelector('.navbar-header');
+          if (navbar && !navbar.contains(e.target)) {
+            navMenu.classList.remove('active');
+          }
+        });
+
+        console.log('✅ Hamburger menu initialized successfully');
+      } catch (error) {
+        console.error('❌ Error initializing hamburger menu:', error);
+      }
+    }
+
+    // Ejecutar el setup cuando el DOM esté listo
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupHamburgerMenu);
+    } else {
+      setupHamburgerMenu();
+    }
+  </script>
+</body>
+</html>

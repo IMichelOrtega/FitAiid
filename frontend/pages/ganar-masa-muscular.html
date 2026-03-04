@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plan Mensual - Ganar Masa Muscular | FitAiid</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #111111;
+      --bg-card: #161616;
+      --bg-card-hover: #1c1c1c;
+      --accent: #ff0400;
+      --accent-light: #ee4d3e;
+      --accent-dark: #ab000d;
+      --accent-glow: rgba(229, 57, 53, 0.3);
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0b0;
+      --text-muted: #707070;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --gradient-accent: linear-gradient(135deg, var(--accent), var(--accent-light));
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ============================================
+       TOP BAR
+       ============================================ */
+    .topbar {
+      background: var(--bg-secondary);
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .topbar img {
+      width: 45px;
+      height: 45px;
+      filter: drop-shadow(0 0 10px var(--accent-glow));
+    }
+
+    .topbar-title {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar-title h2 {
+      margin: 0;
+      color: var(--accent);
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .topbar-title span {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      transform: translateX(-3px);
+    }
+
+    /* ============================================
+       MAIN CONTAINER
+       ============================================ */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* ============================================
+       HERO SECTION
+       ============================================ */
+    .hero {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      background: var(--bg-card);
+      padding: 40px;
+      border-radius: 24px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-image {
+      width: 280px;
+      height: 180px;
+      border-radius: 16px;
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .hero-image:hover img {
+      transform: scale(1.05);
+    }
+
+    .hero-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid rgba(229, 57, 53, 0.3);
+      border-radius: 16px;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(229, 57, 53, 0.15);
+      border: 1px solid rgba(229, 57, 53, 0.3);
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .hero-content h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .hero-content h1 span {
+      color: var(--accent);
+    }
+
+    .hero-content p {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 24px;
+      max-width: 500px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--gradient-accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px var(--accent-glow);
+    }
+
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ============================================
+       STATS BAR
+       ============================================ */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-5px);
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(229, 57, 53, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .stat-value {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+
+    /* ============================================
+       WEEKS SECTION
+       ============================================ */
+    .section-header {
+      margin-bottom: 24px;
+    }
+
+    .section-header h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-header h2 i {
+      color: var(--accent);
+    }
+
+    .weeks {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .week {
+      background: var(--bg-card);
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .week:hover {
+      border-color: rgba(229, 57, 53, 0.3);
+    }
+
+    .week.active {
+      border-color: var(--accent);
+      box-shadow: 0 10px 40px rgba(229, 57, 53, 0.1);
+    }
+
+    .week-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 28px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .week-header:hover {
+      background: var(--bg-card-hover);
+    }
+
+    .week-header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .week-number {
+      width: 50px;
+      height: 50px;
+      background: var(--gradient-accent);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .week-info h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .week-info p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .week-toggle {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+    }
+
+    .week.active .week-toggle {
+      background: var(--accent);
+      color: white;
+      transform: rotate(180deg);
+    }
+
+    .week-content {
+      display: none;
+      padding: 0 28px 28px;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .week.active .week-content {
+      display: block;
+    }
+
+    .week-objective {
+      background: rgba(229, 57, 53, 0.08);
+      border-left: 3px solid var(--accent);
+      padding: 16px 20px;
+      border-radius: 0 12px 12px 0;
+      margin-bottom: 24px;
+    }
+
+    .week-objective p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .week-objective strong {
+      color: var(--accent);
+    }
+
+    .meals-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .meal-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .meal-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+
+    .meal-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .meal-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(229, 57, 53, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .meal-card h4 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .meal-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ============================================
+       SHOPPING LIST
+       ============================================ */
+    .shopping-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 40px;
+    }
+
+    .shopping-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .shopping-header i {
+      font-size: 24px;
+      color: var(--accent);
+    }
+
+    .shopping-header h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .shopping-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+    }
+
+    .shopping-category h4 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .shopping-category ul {
+      list-style: none;
+    }
+
+    .shopping-category li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .shopping-category li::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ============================================
+       TIPS SECTION
+       ============================================ */
+    .tips-section {
+      background: linear-gradient(135deg, rgba(229, 57, 53, 0.1), rgba(229, 57, 53, 0.05));
+      border: 1px solid rgba(229, 57, 53, 0.2);
+      border-radius: 20px;
+      padding: 32px;
+    }
+
+    .tips-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .tips-header i {
+      font-size: 24px;
+      color: var(--accent);
+    }
+
+    .tips-header h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .tips-section p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .tips-section strong {
+      color: var(--text-primary);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 900px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px;
+      }
+
+      .hero-content p {
+        max-width: 100%;
+      }
+
+      .hero-actions {
+        justify-content: center;
+      }
+
+      .hero-image {
+        width: 100%;
+        max-width: 350px;
+        height: 200px;
+      }
+
+      .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .meals-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .topbar {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .container {
+        padding: 20px 15px 60px;
+      }
+
+      .hero {
+        padding: 24px;
+      }
+
+      .hero-content h1 {
+        font-size: 28px;
+      }
+
+      .stats-bar {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .stat-card {
+        padding: 16px;
+      }
+
+      .stat-value {
+        font-size: 24px;
+      }
+
+      .week-header {
+        padding: 18px 20px;
+      }
+
+      .week-content {
+        padding: 0 20px 20px;
+      }
+
+      .shopping-section {
+        padding: 24px;
+      }
+
+      .shopping-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+
+      .topbar,
+      .btn-back,
+      .hero-actions {
+        display: none !important;
+      }
+
+      .week-content {
+        display: block !important;
+      }
+
+      body {
+        background: white;
+        color: black;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <img src="../img/logo.png" alt="FitAiid">
+      <div class="topbar-title">
+        <h2>Plan Ganar Masa Muscular</h2>
+        <span>Programa mensual de hipertrofia</span>
+      </div>
+    </div>
+    <a href="nutricion.html" class="btn-back">
+      <i class="fas fa-arrow-left"></i> Volver
+    </a>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-image">
+        <img src="../img/nutricion/nutrición (1).jpg" alt="Ganar Masa Muscular">
+      </div>
+      <div class="hero-content">
+        <div class="hero-badge">
+          <i class="fas fa-dumbbell"></i>
+          Hipertrofia Muscular
+        </div>
+        <h1>Plan Mensual <span>Ganar Masa</span></h1>
+        <p>Un plan disenado para construir masa muscular con una alimentacion rica en proteinas, carbohidratos
+          estrategicos y habitos saludables sostenibles.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="printBtn">
+            <i class="fas fa-print"></i> Imprimir Plan
+          </button>
+          <button class="btn btn-secondary" id="downloadShop">
+            <i class="fas fa-download"></i> Descargar Lista
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS BAR -->
+    <section class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-calendar-week"></i>
+        </div>
+        <div class="stat-value">4</div>
+        <div class="stat-label">Semanas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-utensils"></i>
+        </div>
+        <div class="stat-value">6</div>
+        <div class="stat-label">Comidas/Día</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-drumstick-bite"></i>
+        </div>
+        <div class="stat-value">2g/kg</div>
+        <div class="stat-label">Proteina</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-bed"></i>
+        </div>
+        <div class="stat-value">7-9h</div>
+        <div class="stat-label">Descanso</div>
+      </div>
+    </section>
+
+    <!-- WEEKS -->
+    <div class="section-header">
+      <h2><i class="fas fa-list-check"></i> Plan Semanal</h2>
+    </div>
+
+    <section class="weeks" id="weeks">
+
+      <!-- SEMANA 1 -->
+      <div class="week">
+        <div class="week-header" data-toggle>
+          <div class="week-header-left">
+            <div class="week-number">1</div>
+            <div class="week-info">
+              <h3>Activacion Muscular</h3>
+              <p>Aumentar proteina y regular horarios</p>
+            </div>
+          </div>
+          <div class="week-toggle">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+        <div class="week-content">
+          <div class="week-objective">
+            <p><strong>Objetivo:</strong> Aumentar proteina diaria y regular horarios de comidas para maximizar la
+              sintesis muscular.</p>
+          </div>
+          <div class="meals-grid">
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🌅</div>
+                <h4>Desayuno</h4>
+              </div>
+              <p>Avena (60 g) + leche (200 ml) + proteina + fresas.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🍎</div>
+                <h4>Media Manana</h4>
+              </div>
+              <p>Yogur griego + almendras (15 g).</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🍽️</div>
+                <h4>Almuerzo</h4>
+              </div>
+              <p>Pollo (180 g) + arroz (120 g) + ensalada.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">💪</div>
+                <h4>Merienda</h4>
+              </div>
+              <p>Batido de proteina + fruta.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🌙</div>
+                <h4>Cena</h4>
+              </div>
+              <p>Carne magra (180 g) + batata (150 g).</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🧀</div>
+                <h4>Snack Nocturno</h4>
+              </div>
+              <p>Queso cottage (100 g).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEMANA 2 -->
+      <div class="week">
+        <div class="week-header" data-toggle>
+          <div class="week-header-left">
+            <div class="week-number">2</div>
+            <div class="week-info">
+              <h3>Mas Energia</h3>
+              <p>Subir carbohidratos complejos</p>
+            </div>
+          </div>
+          <div class="week-toggle">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+        <div class="week-content">
+          <div class="week-objective">
+            <p><strong>Objetivo:</strong> Subir carbohidratos complejos para mejorar rendimiento en entrenamientos
+              intensos.</p>
+          </div>
+          <div class="meals-grid">
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🌅</div>
+                <h4>Desayuno</h4>
+              </div>
+              <p>Huevos (3) + pan integral (2) + fruta.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🍎</div>
+                <h4>Media Manana</h4>
+              </div>
+              <p>Proteina + avena (40 g).</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🍽️</div>
+                <h4>Almuerzo</h4>
+              </div>
+              <p>Pasta integral (180 g) + pollo (150 g).</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🥑</div>
+                <h4>Merienda</h4>
+              </div>
+              <p>Sandwich integral con aguacate.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🌙</div>
+                <h4>Cena</h4>
+              </div>
+              <p>Salmon (180 g) + quinoa (120 g).</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🍯</div>
+                <h4>Snack</h4>
+              </div>
+              <p>Yogur + miel.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEMANA 3 -->
+      <div class="week">
+        <div class="week-header" data-toggle>
+          <div class="week-header-left">
+            <div class="week-number">3</div>
+            <div class="week-info">
+              <h3>Prioridad Proteina</h3>
+              <p>Reforzar construccion muscular</p>
+            </div>
+          </div>
+          <div class="week-toggle">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+        <div class="week-content">
+          <div class="week-objective">
+            <p><strong>Objetivo:</strong> Reforzar construccion muscular con mayor ingesta proteica y nutrientes
+              esenciales.</p>
+          </div>
+          <div class="meals-grid">
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🌅</div>
+                <h4>Desayuno</h4>
+              </div>
+              <p>Smoothie: proteina + avena + frutos rojos.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🥚</div>
+                <h4>Media Manana</h4>
+              </div>
+              <p>Huevo + frutos secos.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🍽️</div>
+                <h4>Almuerzo</h4>
+              </div>
+              <p>Carne magra (200 g) + arroz (150 g).</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🧀</div>
+                <h4>Merienda</h4>
+              </div>
+              <p>Queso cottage + fruta.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🌙</div>
+                <h4>Cena</h4>
+              </div>
+              <p>Pollo (180 g) + pasta integral.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🥛</div>
+                <h4>Snack</h4>
+              </div>
+              <p>Caseina nocturna.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEMANA 4 -->
+      <div class="week">
+        <div class="week-header" data-toggle>
+          <div class="week-header-left">
+            <div class="week-number">4</div>
+            <div class="week-info">
+              <h3>Optimizacion Final</h3>
+              <p>Aumentar calorias limpias</p>
+            </div>
+          </div>
+          <div class="week-toggle">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+        <div class="week-content">
+          <div class="week-objective">
+            <p><strong>Objetivo:</strong> Aumentar calorias limpias y estabilizar progreso para maximas ganancias
+              musculares.</p>
+          </div>
+          <div class="meals-grid">
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🌅</div>
+                <h4>Desayuno</h4>
+              </div>
+              <p>Pancakes de avena + proteina + miel.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🥑</div>
+                <h4>Media Manana</h4>
+              </div>
+              <p>Aguacate + pan integral.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🍽️</div>
+                <h4>Almuerzo</h4>
+              </div>
+              <p>Pavo (200 g) + pure de batata.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🍌</div>
+                <h4>Merienda</h4>
+              </div>
+              <p>Batido + banana.</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🌙</div>
+                <h4>Cena</h4>
+              </div>
+              <p>Salmon (200 g) + pasta (150 g).</p>
+            </div>
+            <div class="meal-card">
+              <div class="meal-header">
+                <div class="meal-icon">🥣</div>
+                <h4>Snack</h4>
+              </div>
+              <p>Yogur griego + granola.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- SHOPPING LIST -->
+    <section class="shopping-section" id="shopList">
+      <div class="shopping-header">
+        <i class="fas fa-cart-shopping"></i>
+        <h3>Lista de Compras</h3>
+      </div>
+      <div class="shopping-grid">
+        <div class="shopping-category">
+          <h4>Proteinas</h4>
+          <ul>
+            <li>Pollo</li>
+            <li>Carne magra</li>
+            <li>Pavo</li>
+            <li>Salmon</li>
+            <li>Huevos</li>
+            <li>Proteina en polvo</li>
+            <li>Queso cottage</li>
+          </ul>
+        </div>
+        <div class="shopping-category">
+          <h4>Carbohidratos</h4>
+          <ul>
+            <li>Avena</li>
+            <li>Pan integral</li>
+            <li>Arroz</li>
+            <li>Quinoa</li>
+            <li>Batata</li>
+            <li>Pasta integral</li>
+          </ul>
+        </div>
+        <div class="shopping-category">
+          <h4>Frutas y Verduras</h4>
+          <ul>
+            <li>Bananas, fresas, manzana</li>
+            <li>Frutos rojos</li>
+            <li>Brocoli, espinaca</li>
+            <li>Zanahoria</li>
+          </ul>
+        </div>
+        <div class="shopping-category">
+          <h4>Grasas Saludables</h4>
+          <ul>
+            <li>Aguacate</li>
+            <li>Almendras y nueces</li>
+            <li>Aceite de oliva</li>
+          </ul>
+        </div>
+        <div class="shopping-category">
+          <h4>Otros</h4>
+          <ul>
+            <li>Miel</li>
+            <li>Especias</li>
+            <li>Yogur griego</li>
+            <li>Granola</li>
+            <li>Caseina</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIPS -->
+    <section class="tips-section">
+      <div class="tips-header">
+        <i class="fas fa-lightbulb"></i>
+        <h3>Consejos para Ganar Musculo</h3>
+      </div>
+      <p><strong>Consume 2 g de proteina por kg</strong> de peso corporal, <strong>descansa 7–9 horas</strong> cada
+        noche, <strong>entrena fuerza 3–5 veces por semana</strong> y aumenta calorias progresivamente. La consistencia
+        y el descanso son clave para el crecimiento muscular.</p>
+    </section>
+
+  </main>
+
+  <!-- SCRIPTS -->
+  <script src="../scripts/auth-guard.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    // Acordeón para las semanas
+    document.querySelectorAll('.week-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const week = header.parentElement;
+        const wasActive = week.classList.contains('active');
+
+        // Cerrar todos
+        document.querySelectorAll('.week').forEach(w => w.classList.remove('active'));
+
+        // Abrir el clickeado si no estaba activo
+        if (!wasActive) {
+          week.classList.add('active');
+          week.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    });
+
+    // Imprimir
+    document.getElementById('printBtn').addEventListener('click', () => {
+      window.print();
+    });
+
+
+    // Descargar PDF
+    document.getElementById('downloadShop').addEventListener('click', function () {
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: "mm", format: "a4" });
+
+        // ── Función para normalizar caracteres especiales del español ──────────
+        // jsPDF con fuentes base no renderiza tildes/ñ correctamente; esta función
+        // los reemplaza por sus equivalentes ASCII seguros para el PDF.
+        function fix(str) {
+          let s = (str || "")
+            .replace(/á/g, "a").replace(/Á/g, "A")
+            .replace(/é/g, "e").replace(/É/g, "E")
+            .replace(/í/g, "i").replace(/Í/g, "I")
+            .replace(/ó/g, "o").replace(/Ó/g, "O")
+            .replace(/ú/g, "u").replace(/Ú/g, "U")
+            .replace(/ü/g, "u").replace(/Ü/g, "U")
+            .replace(/ñ/g, "n").replace(/Ñ/g, "N")
+            .replace(/¿/g, "").replace(/¡/g, "")
+            .replace(/•/g, "-");
+
+          return s.replace(/[^\x20-\x7E]/g, "").trim();
+        }
+
+        const colorT = [50, 50, 50];
+        const colorS = [80, 80, 80];
+        const pageH = doc.internal.pageSize.getHeight();
+        const maxY = pageH - 15;
+        let y = 15;
+
+        function checkPage(needed) {
+          if (y + needed > maxY) { doc.addPage(); y = 15; }
+        }
+
+        // ── CABECERA ──────────────────────────────────────────
+        doc.setFillColor(255, 61, 0);
+        doc.rect(0, 0, 210, 38, "F");
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(22);
+        doc.setTextColor(255, 255, 255);
+        doc.text("FITAIID", 15, 18);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text("Plan Nutricional - Ganar Masa Muscular", 15, 28);
+        y = 50;
+
+        // ── INFO DEL PLAN ─────────────────────────────────────
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.setTextColor(255, 61, 0);
+        doc.text("INFORMACION DEL PLAN", 15, y);
+        y += 3;
+        doc.setDrawColor(255, 61, 0);
+        doc.setLineWidth(0.4);
+        doc.line(15, y, 195, y);
+        y += 5;
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(colorT[0], colorT[1], colorT[2]);
+        ["Duracion: 4 Semanas", "Objetivo: Aumento de masa muscular", "Metodo: Superavit calorico con alta proteina"].forEach(t => {
+          doc.text("- " + t, 18, y); y += 5;
+        });
+        y += 4;
+
+        // ── SEMANAS ───────────────────────────────────────────
+        document.querySelectorAll(".week").forEach((week, wi) => {
+          const titulo = fix(week.querySelector("h3")?.textContent || "Semana " + (wi + 1));
+          const objetivo = fix(week.querySelector(".week-objective p")?.textContent || "");
+
+          checkPage(20);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(12);
+          doc.setTextColor(255, 61, 0);
+          doc.text(titulo, 15, y);
+          y += 3;
+          doc.setDrawColor(255, 61, 0);
+          doc.setLineWidth(0.3);
+          doc.line(15, y, 195, y);
+          y += 5;
+
+          if (objetivo) {
+            doc.setFont("helvetica", "italic");
+            doc.setFontSize(9);
+            doc.setTextColor(colorS[0], colorS[1], colorS[2]);
+            doc.splitTextToSize(objetivo, 172).forEach(l => {
+              checkPage(5); doc.text(l, 18, y); y += 4.5;
+            });
+            y += 2;
+          }
+
+          week.querySelectorAll(".meal-card").forEach(b => {
+            const comida = fix(b.querySelector("h4")?.textContent || "");
+            const detalle = fix(b.querySelector("p")?.textContent || "");
+            checkPage(12);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(10);
+            doc.setTextColor(255, 61, 0);
+            doc.text("- " + comida, 20, y);
+            y += 4;
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(9);
+            doc.setTextColor(colorT[0], colorT[1], colorT[2]);
+            doc.splitTextToSize(detalle, 165).forEach(l => {
+              checkPage(5); doc.text(l, 25, y); y += 4;
+            });
+            y += 1;
+          });
+          y += 5;
+        });
+
+        // ── PIE ───────────────────────────────────────────────
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text("Generado por FitAiid - Consulta con un nutricionista para personalizar tu plan", 105, pageH - 8, { align: "center" });
+
+        doc.save("plan_ganar_masa_muscular_fitaiid.pdf");
+      } catch (err) {
+        console.error("Error PDF:", err);
+        alert("Error al generar PDF: " + err.message);
+      }
+    });
+
+  </script>
+
+</body>
+
+</html>

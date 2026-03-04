@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitAiid - Estadísticas y Progreso</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <link rel="stylesheet" href="../styles/estadisticas.css" />
+  <script src="../scripts/config.js"></script>
+</head>
+
+<body>
+  <!-- NAVBAR MEJORADO -->
+  <header class="navbar-header">
+    <div class="logo">
+      <img src="../img/logo.png" alt="FitAiid Logo" />
+      <div class="brand-text">
+        <h2>FitAiid</h2>
+        <p>Transforma Tu Cuerpo</p>
+      </div>
+    </div>
+
+    <nav class="menu" id="navbar-menu">
+      <a href="home.html">Inicio</a>
+      <a href="entrenador.html">Entrenamiento</a>
+      <a href="chatbot.html">Coach Virtual</a>
+      <a href="nutricion.html">Nutrición</a>
+      <a href="estadisticas.html" class="active">Estadísticas</a>
+      <a href="perfil.html" class="profile-link">Mi Perfil</a>
+      <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+    </nav>
+
+    <div class="navbar-actions">
+      <button id="notificationBell" class="bell" style="display: none;"></button>
+      <button class="navbar-toggle" id="navbar-toggle">☰</button>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <i class="fas fa-chart-line"></i>
+          <span>Tu Progreso Fitness</span>
+        </div>
+        <h1>TUS <span class="accent">ESTADÍSTICAS</span></h1>
+        <p class="hero-subtitle">
+          Seguimiento completo de tu progreso, logros desbloqueados y evolución fitness.
+          ¡Cada día es un paso más hacia tu mejor versión! 💪
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS CARDS -->
+  <section class="stats-section">
+    <div class="stats-container">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-dumbbell"></i>
+          </div>
+          <div class="stat-info">
+            <h3>Rutinas Completadas</h3>
+            <div class="stat-value" id="totalWorkouts">0</div>
+            <div class="stat-label" id="weeklyProgress">Esta semana: 0</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-fire"></i>
+          </div>
+          <div class="stat-info">
+            <h3>Racha Actual</h3>
+            <div class="stat-value" id="currentStreak">0</div>
+            <div class="stat-label">días consecutivos 🔥</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-info">
+            <h3>Tiempo Total</h3>
+            <div class="stat-value" id="totalTime">0</div>
+            <div class="stat-label">horas de entrenamiento</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="stat-info">
+            <h3>Ejercicios Completados</h3>
+            <div class="stat-value" id="totalExercises">0</div>
+            <div class="stat-label">ejercicios realizados</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- RESUMEN MENSUAL -->
+  <section class="resumen-mensual-section">
+    <div class="resumen-container">
+      <div id="resumenMensual">
+        <!-- Se genera dinámicamente -->
+      </div>
+    </div>
+  </section>
+  <!-- ACHIEVEMENTS -->
+  <section class="achievements-section">
+    <div class="achievements-container">
+      <div class="section-header">
+        <h2><i class="fas fa-trophy"></i> Logros Desbloqueados</h2>
+        <p>Desbloquea logros completando tus entrenamientos</p>
+      </div>
+
+      <div class="achievements-grid" id="achievementsGrid">
+        <!-- Se genera dinámicamente -->
+      </div>
+    </div>
+  </section>
+
+  <!-- CHARTS -->
+  <section class="charts-section">
+    <div class="charts-container">
+      <div class="chart-card">
+        <h3><i class="fas fa-calendar-week"></i> Actividad Semanal</h3>
+        <canvas id="weeklyChart"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3><i class="fas fa-chart-bar"></i> Progreso Mensual</h3>
+        <canvas id="monthlyChart"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3><i class="fas fa-bullseye"></i> Distribución de Entrenamientos</h3>
+        <canvas id="focusChart"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3><i class="fas fa-clock"></i> Horarios de Entrenamiento</h3>
+        <canvas id="timeChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRESS BARS -->
+  <section class="progress-section">
+    <div class="progress-container">
+      <div class="section-header">
+        <h2><i class="fas fa-target"></i> Objetivos del Mes</h2>
+        <p>Mantén tu consistencia y alcanza tus metas</p>
+      </div>
+
+      <div class="progress-bars-grid">
+        <div class="progress-item">
+          <div class="progress-header">
+            <div class="progress-title">
+              <i class="fas fa-calendar-check"></i>
+              <span>Rutinas Mensuales</span>
+            </div>
+            <span class="progress-value" id="monthlyGoalProgress">0/12</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="monthlyGoalBar" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div class="progress-item">
+          <div class="progress-header">
+            <div class="progress-title">
+              <i class="fas fa-clock"></i>
+              <span>Horas de Entrenamiento</span>
+            </div>
+            <span class="progress-value" id="hoursGoalProgress">0/10</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="hoursGoalBar" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div class="progress-item">
+          <div class="progress-header">
+            <div class="progress-title">
+              <i class="fas fa-fire"></i>
+              <span>Racha Máxima</span>
+            </div>
+            <span class="progress-value" id="streakGoalProgress">0/7</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="streakGoalBar" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECENT ACTIVITY -->
+  <section class="activity-section">
+    <div class="activity-container">
+      <div class="section-header">
+        <h2><i class="fas fa-history"></i> Actividad Reciente</h2>
+        <p>Tus últimos entrenamientos</p>
+      </div>
+
+      <div class="activity-list" id="activityList">
+        <div class="empty-state">
+          <i class="fas fa-clipboard-list"></i>
+          <p>No hay actividad reciente. ¡Comienza tu primera rutina!</p>
+          <a href="entrenador.html" class="btn-start">Generar Rutina</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- COLUMNA 1 — LOGO + DESCRIPCIÓN -->
+      <div class="footer-col">
+        <div class="footer-logo">
+          <img src="../img/logo.png" alt="logo">
+          <span>FitAiid</span>
+        </div>
+        <p class="footer-desc">
+          Transforma tu cuerpo con FitAiid, tu aliado de confianza en fitness.
+          Ofrecemos coach virtual, planes de entrenamiento a medida y asesoramiento
+          nutricional integral basado en IA.
+        </p>
+        <div class="footer-social">
+          <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><i
+              class="fab fa-facebook-f"></i></a>
+          <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i
+              class="fab fa-instagram"></i></a>
+          <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="Twitter"><i
+              class="fab fa-twitter"></i></a>
+          <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i
+              class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <!-- COLUMNA 2 — NOSOTROS -->
+      <div class="footer-col">
+        <h3>Nosotros</h3>
+        <a href="home.html">Inicio</a>
+        <a href="entrenador.html">Entrenamiento</a>
+        <a href="chatbot.html">Coach Virtual</a>
+        <a href="nutricion.html">Nutrición</a>
+      </div>
+
+      <!-- COLUMNA 3 — RECURSOS -->
+      <div class="footer-col">
+        <h3>Recursos</h3>
+        <a href="herramientas.html">Herramientas Fitness</a>
+        <a href="nutricion.html">Guías de Nutrición</a>
+        <a href="perfil.html">Mi Perfil</a>
+      </div>
+
+      <!-- COLUMNA 4 — PROGRAMAS -->
+      <div class="footer-col">
+        <h3>Programas</h3>
+        <a href="bajar-de-peso.html">Pérdida De Peso</a>
+        <a href="ganar-masa-muscular.html">Ganar Músculo</a>
+        <a href="plan-vida-saludable.html">Vida Saludable</a>
+      </div>
+
+      <!-- COLUMNA 5 — CONTACTO -->
+      <div class="footer-col1">
+        <h3>Contacto</h3>
+        <p><i class="fas fa-location-dot"></i> Colombia</p>
+        <p><i class="fas fa-phone"></i> 3202363622</p>
+        <p><i class="fas fa-envelope"></i> soporte@fitaiid.com</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2025 <span>FitAiid</span> — Todos los derechos reservados.
+    </div>
+  </footer>
+
+
+  <script>
+    // ============================================
+    // 📱 HAMBURGER MENU (MOBILE) - RESPONSIVE FIX
+    // ============================================
+    (function () {
+      console.log('🔧 Initializing hamburger menu...');
+
+      const hamburger = document.querySelector('.navbar-toggle');
+      const navMenu = document.querySelector('.navbar-header .menu');
+      const menuItems = document.querySelectorAll('.navbar-header .menu a, .navbar-header .menu button');
+      const navbar = document.querySelector('.navbar-header');
+
+      if (!hamburger) {
+        console.warn('⚠️ Hamburger button not found');
+        return;
+      }
+
+      if (!navMenu) {
+        console.warn('⚠️ Navigation menu not found');
+        return;
+      }
+
+      console.log('✅ Hamburger menu elements found');
+
+      // Función para cerrar el menú
+      function closeMenu() {
+        navMenu.classList.remove('active');
+        console.log('Menu closed');
+      }
+
+      // Función para resetear estado en cambios de viewport
+      function handleViewportChange() {
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        console.log('📐 Viewport changed - Mobile:', isMobile);
+
+        if (!isMobile) {
+          // Si estamos en desktop, cierra el menú
+          closeMenu();
+          console.log('🖥️ Desktop view - Menu closed');
+        }
+      }
+
+      // Click en el hamburger
+      hamburger.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('🔄 Hamburger clicked - Toggling menu');
+        navMenu.classList.toggle('active');
+        console.log('Menu active:', navMenu.classList.contains('active'));
+      });
+
+      // Click en items del menú
+      menuItems.forEach(function (item) {
+        item.addEventListener('click', function (e) {
+          console.log('🔗 Menu item clicked:', this.textContent);
+          closeMenu();
+        });
+      });
+
+      // Click fuera del navbar para cerrar
+      document.addEventListener('click', function (e) {
+        if (navbar && !navbar.contains(e.target)) {
+          console.log('👆 Click outside navbar - closing menu');
+          closeMenu();
+        }
+      });
+
+      // NUEVO: Detectar cambios de tamaño de ventana
+      window.addEventListener('resize', function () {
+        handleViewportChange();
+      });
+
+      // NUEVO: Detectar cambios en media queries
+      const mediaQuery = window.matchMedia('(max-width: 768px)');
+      mediaQuery.addListener(function (e) {
+        console.log('📱 Media query changed:', e.matches ? 'Mobile' : 'Desktop');
+        if (!e.matches) {
+          // Cambió a desktop, cierra el menú
+          closeMenu();
+        }
+      });
+
+      console.log('✅ Hamburger menu setup complete!');
+    })();
+  </script>
+
+  <script src="../scripts/estadisticas.js"></script>
+</body>
+
+</html>

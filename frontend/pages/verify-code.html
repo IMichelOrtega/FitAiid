@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar Código - FitAiid</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+    <script src="../scripts/config.js"></script>
+    <style>
+        /* ======== ESTILO GENERAL ======== */
+        body {
+            margin: 0;
+            font-family: "Oswald", sans-serif;
+            font-weight: 400;
+            background: #000;
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* ======== FONDO CON ONDAS ROJAS ======== */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background:
+                linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                url("https://img.freepik.com/fotos-premium/gimnasio-luces-rojas-luz-roja-techo_1177960-12802.jpg");
+            background-size: cover;
+            background-position: center center;
+            background-blend-mode: darken;
+            animation: moveWaves 8s infinite alternate ease-in-out;
+            z-index: 0;
+            filter: blur(50px);
+        }
+
+        @keyframes moveWaves {
+            0% {
+                transform: translate(-20px, -20px) scale(1);
+            }
+
+            100% {
+                transform: translate(20px, 20px) scale(1.1);
+            }
+        }
+
+        /* ======== CONTENEDOR ======== */
+        .verify-container {
+            position: relative;
+            z-index: 1;
+            padding: 2.5rem;
+            border-radius: 0px;
+            width: 360px;
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.4);
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+            border: 2px solid #ff0000;
+        }
+
+        .verify-container:hover {
+            box-shadow: 0 0 60px rgba(255, 0, 0, 0.6);
+        }
+
+        /* ======== TÍTULO ======== */
+        .verify-container h2 {
+            margin-bottom: 1rem;
+            color: white;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .email-display {
+            background: transparent;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 1.2rem;
+            color: #e50914;
+            font-weight: bold;
+        }
+
+        /* ======== CAMPOS ======== */
+        .verify-container input {
+            width: 93%;
+            margin-bottom: 0.9rem;
+            padding: 0.75rem;
+            border: 1px solid #000000;
+            border-radius: 6px;
+            background: #353333;
+            color: #ddd;
+            outline: none;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            text-align: center;
+            letter-spacing: 5px;
+        }
+
+        .verify-container input::placeholder {
+            letter-spacing: normal;
+        }
+
+        .verify-container input:focus {
+            border-color: #e50914;
+            box-shadow: 0 0 8px #e50914;
+        }
+
+        /* ======== BOTÓN ======== */
+        .verify-container button {
+            width: 100%;
+            padding: 0.85rem;
+            border: none;
+            border-radius: 6px;
+            background: #e50914;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .verify-container button:hover {
+            background: #ff2626;
+            box-shadow: 0 0 12px #ff2626;
+        }
+
+        .verify-container button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* ======== ENLACE REENVIAR ======== */
+        .resend-link {
+            margin-top: 1.2rem;
+            color: #ccc;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .resend-link:hover {
+            text-decoration: underline;
+            color: white;
+        }
+
+        /* ======== BOTÓN CERRAR ======== */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 28px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            transition: color 0.3s, transform 0.2s;
+            text-decoration: none;
+        }
+
+        .close-btn:hover {
+            color: red;
+            transform: scale(1.1);
+        }
+
+        /* ======== MENSAJES ======== */
+        .msg-box {
+            display: none;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-align: center;
+            transition: opacity 0.4s ease;
+        }
+
+        .msg-box.success {
+            display: block;
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+
+        .msg-box.error {
+            display: block;
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #dc2626;
+        }
+
+        .back-link {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .back-link a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .back-link a:hover {
+            color: #e50914;
+        }
+
+        /* ======== LOGO STYLES ======== */
+        .verify-logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .verify-logo img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .verify-logo span {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        @media (max-width: 480px) {
+            .verify-logo {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Logo -->
+    <div class="verify-logo">
+        <img src="../img/logo.png" alt="FitAiid Logo">
+        <span>FitAiid</span>
+    </div>
+    
+    <div class="verify-container">
+        <a href="login.html" class="close-btn">✕</a>
+
+        <h2 id="pageTitle">VERIFICAR CÓDIGO</h2>
+        <p class="subtitle" id="pageSubtitle">Ingresa el código de 6 dígitos que enviamos a:</p>
+        <div class="email-display" id="emailDisplay"></div>
+
+        <div id="msgBox" class="msg-box"></div>
+
+        <form id="verifyForm">
+            <input type="text" id="code" placeholder="000000" maxlength="6" pattern="[0-9]{6}" required
+                autocomplete="off">
+            <button type="submit" id="submitBtn">Verificar Código</button>
+        </form>
+
+        <p class="resend-link" id="resendLink">¿No recibiste el código? Reenviar</p>
+
+        <div class="back-link">
+            <a href="forgot-password.html" id="backLink">← Volver a solicitar código</a>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = `${CONFIG.API_URL}/api/auth`;
+
+        const registrationEmail = localStorage.getItem('pendingVerificationEmail');
+        const resetEmail = localStorage.getItem('resetEmail');
+
+        let userEmail = null;
+        let verificationType = null;
+
+        if (resetEmail) {
+            userEmail = resetEmail;
+            verificationType = 'reset';
+            document.getElementById('pageTitle').textContent = 'CÓDIGO DE RECUPERACIÓN';
+            document.getElementById('backLink').href = 'forgot-password.html';
+        } else if (registrationEmail) {
+            userEmail = registrationEmail;
+            verificationType = 'registration';
+            document.getElementById('pageTitle').textContent = 'VERIFICAR REGISTRO';
+            document.getElementById('backLink').href = 'register.html';
+        } else {
+            alert('Sesión expirada. Por favor inicia el proceso nuevamente.');
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('emailDisplay').textContent = userEmail;
+
+        function showMessage(message, type) {
+            const msgBox = document.getElementById('msgBox');
+            msgBox.className = `msg-box ${type}`;
+            msgBox.textContent = message;
+        }
+
+        document.getElementById('verifyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const code = document.getElementById('code').value.trim();
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (code.length !== 6) {
+                showMessage('El código debe tener 6 dígitos', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Verificando...';
+
+            try {
+                let endpoint = verificationType === 'reset'
+                    ? `${API_URL}/verify-code`
+                    : `${API_URL}/verify-registration`;
+
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: userEmail, code })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    if (verificationType === 'reset') {
+                        localStorage.setItem('verificationCode', code);
+                        showMessage('✅ Código verificado', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'reset-password.html';
+                        }, 1000);
+                    } else {
+                        // ⭐ REGISTRO - GUARDAR PRIMERO, REDIRIGIR DESPUÉS
+                        const userId = data.user._id || data.user.id;
+
+                        // GUARDAR TODO SINCRONICAMENTE
+                        localStorage.setItem('authToken', data.token);
+                        localStorage.setItem('userId', userId);
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        localStorage.removeItem('pendingVerificationEmail');
+
+                        showMessage('✅ Registro completado', 'success');
+
+                        // ESPERAR Y REDIRIGIR
+                        setTimeout(() => {
+                            window.location.href = 'preguntas.html';
+                        }, 2000);
+                    }
+                } else {
+                    showMessage(data.message || 'Código inválido', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Verificar Código';
+                }
+            } catch (error) {
+                showMessage('Error de conexión', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Verificar Código';
+            }
+        });
+
+        document.getElementById('resendLink').addEventListener('click', async () => {
+            const resendLink = document.getElementById('resendLink');
+            const originalText = resendLink.textContent;
+            resendLink.textContent = 'Enviando...';
+            resendLink.style.pointerEvents = 'none';
+
+            try {
+                let endpoint = verificationType === 'reset'
+                    ? `${API_URL}/forgot-password`
+                    : `${API_URL}/resend-verification`;
+
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: userEmail })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage('✅ Nuevo código enviado', 'success');
+
+                    let countdown = 60;
+                    const interval = setInterval(() => {
+                        resendLink.textContent = `Reenviar (${countdown}s)`;
+                        countdown--;
+
+                        if (countdown < 0) {
+                            clearInterval(interval);
+                            resendLink.textContent = originalText;
+                            resendLink.style.pointerEvents = 'auto';
+                        }
+                    }, 1000);
+                } else {
+                    showMessage('Error al reenviar', 'error');
+                    resendLink.textContent = originalText;
+                    resendLink.style.pointerEvents = 'auto';
+                }
+            } catch (error) {
+                showMessage('Error de conexión', 'error');
+                resendLink.textContent = originalText;
+                resendLink.style.pointerEvents = 'auto';
+            }
+        });
+
+        document.getElementById('code').focus();
+
+        document.querySelector('.close-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm('¿Seguro que deseas cancelar?')) {
+                localStorage.removeItem('resetEmail');
+                localStorage.removeItem('pendingVerificationEmail');
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+
+</html>

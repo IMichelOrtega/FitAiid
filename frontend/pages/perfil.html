@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Perfil - FitAiid</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../styles/perfil.css" />
+  <script src="../scripts/config.js"></script>
+</head>
+
+<body>
+  <!-- NAVBAR ESTÁNDAR -->
+  <header class="navbar-header">
+    <div class="logo">
+      <img src="../img/logo.png" alt="FitAiid Logo" />
+      <div class="brand-text">
+        <h2>FitAiid</h2>
+        <p>Transforma Tu Cuerpo</p>
+      </div>
+    </div>
+
+    <nav class="menu" id="navbar-menu">
+      <a href="home.html">Inicio</a>
+      <a href="entrenador.html">Entrenamiento</a>
+      <a href="chatbot.html">Coach Virtual</a>
+      <a href="nutricion.html">Nutrición</a>
+      <a href="estadisticas.html">Estadísticas</a>
+      <a href="perfil.html" class="active profile-link">Mi Perfil</a>
+      <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+    </nav>
+
+    <div class="navbar-actions">
+      <button id="notificationBell" class="bell" style="display: none;"></button>
+      <button class="navbar-toggle" id="navbar-toggle">☰</button>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <section class="profile-hero">
+      <div class="profile-hero-content">
+        <div class="avatar-container">
+          <div class="avatar" onclick="openAvatarModal()"><img id="userAvatar"
+              src="https://api.dicebear.com/7.x/avataaars/svg?seed=default" alt="Avatar"></div>
+          <div class="avatar-edit" onclick="openAvatarModal()"><i class="fas fa-camera"></i></div>
+        </div>
+        <div class="profile-info">
+          <h1 class="profile-name">HOLA, <span id="userName">USUARIO</span></h1>
+          <p class="profile-email" id="userEmail">usuario@email.com</p>
+          <div class="profile-badges">
+            <span class="badge badge-level"><i class="fas fa-star"></i> <span id="userLevel">Principiante</span></span>
+            <span class="badge badge-goal"><i class="fas fa-bullseye"></i> <span id="userGoal">Perder Peso</span></span>
+            <span class="badge badge-streak"><i class="fas fa-fire"></i> <span id="streakBadge">7 días</span></span>
+          </div>
+          <div class="profile-stats">
+            <div class="profile-stat">
+              <div class="profile-stat-value" id="totalWorkouts">24</div>
+              <div class="profile-stat-label">Entrenamientos</div>
+            </div>
+            <div class="profile-stat">
+              <div class="profile-stat-value" id="totalCalories">8,420</div>
+              <div class="profile-stat-label">Calorías Quemadas</div>
+            </div>
+            <div class="profile-stat">
+              <div class="profile-stat-value" id="totalHours">18h</div>
+              <div class="profile-stat-label">Tiempo Activo</div>
+            </div>
+          </div>
+        </div>
+        <div class="profile-actions">
+          <button class="btn btn-primary" onclick="window.location.href='preguntas.html'"><i class="fas fa-edit"></i>
+            Editar Perfil</button>
+          <button class="btn btn-outline" onclick="window.location.href='chatbot.html'"><i class="fas fa-dumbbell"></i>
+            Entrenar</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="content-grid">
+      <div class="left-column">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-user"></i>
+              <h3>Datos Personales</h3>
+            </div><a class="card-action" onclick="window.location.href='preguntas.html'">Editar</a>
+          </div>
+          <div class="data-grid">
+            <div class="data-item">
+              <div class="data-item-label">Edad</div>
+              <div class="data-item-value" id="userAge">25 años</div>
+            </div>
+            <div class="data-item">
+              <div class="data-item-label">Altura</div>
+              <div class="data-item-value" id="userHeight">170 cm</div>
+            </div>
+            <div class="data-item">
+              <div class="data-item-label">Peso Actual</div>
+              <div class="data-item-value accent" id="userWeight">70 kg</div>
+            </div>
+            <div class="data-item">
+              <div class="data-item-label">Objetivo</div>
+              <div class="data-item-value" id="userObjective">Perder Peso</div>
+            </div>
+            <div class="data-item">
+              <div class="data-item-label">Nivel</div>
+              <div class="data-item-value" id="userFitnessLevel">Principiante</div>
+            </div>
+            <div class="data-item">
+              <div class="data-item-label">Disponibilidad</div>
+              <div class="data-item-value" id="userAvailability">3-4 días</div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:20px;">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-clock-rotate-left"></i>
+              <h3>Actividad Reciente</h3>
+            </div><a class="card-action"></a>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-icon">🏋️</div>
+              <div class="activity-info">
+                <div class="activity-title">Circuito Funcional</div>
+                <div class="activity-date">Hoy, 10:30 AM</div>
+              </div><span class="activity-badge">Completado</span>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">🥗</div>
+              <div class="activity-info">
+                <div class="activity-title">Plan Nutricional Revisado</div>
+                <div class="activity-date">Ayer, 8:00 PM</div>
+              </div><span class="activity-badge">Completado</span>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">💬</div>
+              <div class="activity-info">
+                <div class="activity-title">Consulta con Fitty</div>
+                <div class="activity-date">Hace 2 días</div>
+              </div><span class="activity-badge">Completado</span>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:20px;">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-trophy"></i>
+              <h3>Logros</h3>
+            </div><a class="card-action">Ver Todos</a>
+          </div>
+          <div class="achievements-grid">
+            <div class="achievement">
+              <div class="achievement-icon">🔥</div>
+              <div class="achievement-name">7 Días Racha</div>
+            </div>
+            <div class="achievement">
+              <div class="achievement-icon">💪</div>
+              <div class="achievement-name">Primer Entreno</div>
+            </div>
+            <div class="achievement">
+              <div class="achievement-icon">🎯</div>
+              <div class="achievement-name">Meta Cumplida</div>
+            </div>
+            <div class="achievement locked">
+              <div class="achievement-icon">🏆</div>
+              <div class="achievement-name">30 Días</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-cards">
+        <div class="card streak-card">
+          <div class="streak-icon">🔥</div>
+          <div class="streak-value" id="streakCount">7</div>
+          <div class="streak-label">Días consecutivos</div>
+          <div class="streak-days">
+            <div class="streak-day completed">L</div>
+            <div class="streak-day completed">M</div>
+            <div class="streak-day completed">X</div>
+            <div class="streak-day completed">J</div>
+            <div class="streak-day completed">V</div>
+            <div class="streak-day completed">S</div>
+            <div class="streak-day today">D</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-chart-simple"></i>
+              <h3>Resumen</h3>
+            </div>
+          </div>
+          <div class="quick-stat"><span class="quick-stat-label">Rutinas hoy</span><span class="quick-stat-value"
+              style="color:var(--accent);">2</span></div>
+          <div class="quick-stat"><span class="quick-stat-label">Kcal quemadas</span><span class="quick-stat-value"
+              style="color:var(--success);">420</span></div>
+          <div class="quick-stat"><span class="quick-stat-label">Última sesión</span><span
+              class="quick-stat-value">Hoy</span></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-toolbox"></i>
+              <h3>Calculadoras</h3>
+            </div>
+          </div>
+          <div class="tools-grid">
+            <div class="tool-item" onclick="abrirModalIMC()">
+              <div class="tool-left">
+                <div class="tool-icon"><i class="fas fa-calculator"></i></div>
+                <span class="tool-name">Calcular IMC</span>
+              </div>
+              <i class="fas fa-chevron-right" style="color:var(--text-muted);"></i>
+            </div>
+            <div class="tool-item" onclick="abrirModalAgua()">
+              <div class="tool-left">
+                <div class="tool-icon"><i class="fas fa-droplet"></i></div>
+                <span class="tool-name">Consumo de Agua</span>
+              </div>
+              <i class="fas fa-chevron-right" style="color:var(--text-muted);"></i>
+            </div>
+            <div class="tool-item" onclick="abrirModalMacronutrientes()">
+              <div class="tool-left">
+                <div class="tool-icon"><i class="fas fa-utensils"></i></div>
+                <span class="tool-name">Macronutrientes</span>
+              </div>
+              <i class="fas fa-chevron-right" style="color:var(--text-muted);"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card motivation-card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-heart"></i>
+              <h3>Motivación</h3>
+            </div>
+          </div>
+          <p class="motivation-text">"Cada dia es una <strong id="streakMotivation">oportunidad</strong> para ser mas
+            fuerte que ayer"</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL DE AVATAR -->
+  <div class="modal-overlay" id="avatarModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Elige tu Avatar</h3>
+        <div class="modal-close" onclick="closeAvatarModal()"><i class="fas fa-times"></i></div>
+      </div>
+
+      <!-- Sección para subir imagen -->
+      <div class="upload-section">
+        <label for="imageUpload" class="upload-btn">
+          <i class="fas fa-camera"></i> <span>Subir Mi Foto</span>
+        </label>
+        <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+        <p class="upload-hint">JPG, PNG o GIF</p>
+      </div>
+
+      <!-- Preview de imagen subida -->
+      <div id="uploadPreview" class="upload-preview">
+        <div class="preview-container">
+          <img id="previewImg" src="" class="preview-img">
+          <div onclick="removeUploadedImage()" class="preview-remove">✕</div>
+        </div>
+        <p class="preview-text"><i class="fas fa-check"></i> Foto lista</p>
+      </div>
+
+      <div class="divider-text">— o elige un avatar —</div>
+
+      <div class="avatar-grid" id="avatarGrid"></div>
+      <button class="btn btn-primary save-btn" onclick="saveAvatar()">Guardar</button>
+    </div>
+  </div>
+
+  <!-- MODAL CALCULADORA IMC -->
+  <div id="modalIMC" class="calc-modal">
+    <div class="calc-modal-content">
+      <button onclick="cerrarModalIMC()" class="calc-modal-close">&times;</button>
+      <h2 class="calc-modal-title">Calculadora de IMC</h2>
+
+      <form id="formIMC" class="calc-form">
+        <div class="calc-form-group">
+          <label class="calc-form-label">Peso (kg)</label>
+          <input type="number" id="pesoIMC" class="calc-form-input" min="40" max="300" step="0.1" placeholder="Ej: 70">
+        </div>
+        <div class="calc-form-group">
+          <label class="calc-form-label">Altura (cm)</label>
+          <input type="number" id="alturaIMC" class="calc-form-input" min="120" max="210" placeholder="Ej: 170">
+        </div>
+        <button type="button" onclick="calcularIMC()" class="calc-submit-btn">Calcular</button>
+      </form>
+
+      <div id="resultadoIMC" class="calc-result">
+        <p class="calc-result-title">Tu IMC es:</p>
+        <p id="valorIMC" class="calc-result-value"></p>
+        <p id="clasificacionIMC" class="calc-result-label"></p>
+        <button onclick="reiniciarIMC()" class="calc-reset-btn">Calcular nuevamente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CALCULADORA DE AGUA -->
+  <div id="modalAgua" class="calc-modal">
+    <div class="calc-modal-content">
+      <button onclick="cerrarModalAgua()" class="calc-modal-close">&times;</button>
+      <h2 class="calc-modal-title">Calculadora de Consumo de Agua</h2>
+
+      <form id="formAgua" class="calc-form">
+        <div class="calc-form-group">
+          <label class="calc-form-label">Peso (kg)</label>
+          <input type="number" id="pesoAgua" class="calc-form-input" min="30" max="300" step="0.1" placeholder="Ej: 70">
+        </div>
+        <div class="calc-form-group">
+          <label class="calc-form-label">Edad (años)</label>
+          <input type="number" id="edadAgua" class="calc-form-input" min="1" max="120" placeholder="Ej: 25">
+        </div>
+        <button type="button" onclick="calcularAgua()" class="calc-submit-btn">Calcular</button>
+      </form>
+
+      <div id="resultadoAgua" class="calc-result">
+        <p class="calc-result-title">Debes tomar aproximadamente:</p>
+        <p id="valorAgua" class="calc-result-value"></p>
+        <p class="calc-result-label">de agua al día</p>
+        <button onclick="reiniciarAgua()" class="calc-reset-btn">Calcular nuevamente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CALCULADORA DE MACRONUTRIENTES -->
+  <div id="modalMacronutrientes" class="calc-modal">
+    <div class="calc-modal-content">
+      <button onclick="cerrarModalMacronutrientes()" class="calc-modal-close">&times;</button>
+      <h2 class="calc-modal-title">Calculadora de Macronutrientes</h2>
+
+      <form id="formMacronutrientes" class="calc-form">
+        <div class="calc-form-group">
+          <label class="calc-form-label">Edad</label>
+          <input type="number" id="edad" class="calc-form-input" min="14" max="90" placeholder="Ej: 25">
+        </div>
+
+        <div class="calc-form-group">
+          <label class="calc-form-label">Género</label>
+          <div class="calc-radio-group">
+            <label class="calc-radio-label">
+              <input type="radio" name="genero" value="masculino">
+              <span>Masculino</span>
+            </label>
+            <label class="calc-radio-label">
+              <input type="radio" name="genero" value="femenino">
+              <span>Femenino</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="calc-form-group">
+          <label class="calc-form-label">Altura (cm)</label>
+          <input type="number" id="altura" class="calc-form-input" min="120" max="210" placeholder="Ej: 170">
+        </div>
+
+        <div class="calc-form-group">
+          <label class="calc-form-label">Peso (kg)</label>
+          <input type="number" id="peso" class="calc-form-input" min="30" max="200" placeholder="Ej: 70">
+        </div>
+
+        <div class="calc-form-group">
+          <label class="calc-form-label">Nivel de Actividad</label>
+          <select id="actividad" class="calc-form-select">
+            <option value="">Selecciona tu nivel</option>
+            <option value="sedentario">Sedentario</option>
+            <option value="ligero">Ligero</option>
+            <option value="moderado">Moderado</option>
+            <option value="intenso">Intenso</option>
+          </select>
+        </div>
+
+        <div class="calc-form-group">
+          <label class="calc-form-label">Tu Meta</label>
+          <select id="meta" class="calc-form-select">
+            <option value="">Selecciona tu meta</option>
+            <option value="bajar">Bajar peso</option>
+            <option value="mantener">Mantener peso</option>
+            <option value="subir">Subir masa</option>
+          </select>
+        </div>
+
+        <button type="button" onclick="calcularMacronutrientes()" class="calc-submit-btn">Calcular</button>
+      </form>
+
+      <div id="resultadoMacronutrientes" class="calc-result">
+        <p class="calc-result-title">Tu requerimiento diario estimado es:</p>
+        <p id="valorKcal" class="calc-result-value"></p>
+        <p class="calc-result-label">calorías al día</p>
+        <button onclick="reiniciarMacronutrientes()" class="calc-reset-btn">Volver</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- COLUMNA 1 — LOGO + DESCRIPCIÓN -->
+      <div class="footer-col">
+        <div class="footer-logo">
+          <img src="../img/logo.png" alt="logo">
+          <span>FitAiid</span>
+        </div>
+        <p class="footer-desc">
+          Transforma tu cuerpo con FitAiid, tu aliado de confianza en fitness.
+          Ofrecemos coach virtual, planes de entrenamiento a medida y asesoramiento
+          nutricional integral basado en IA.
+        </p>
+        <div class="footer-social">
+          <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><i
+              class="fab fa-facebook-f"></i></a>
+          <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i
+              class="fab fa-instagram"></i></a>
+          <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="Twitter"><i
+              class="fab fa-twitter"></i></a>
+          <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i
+              class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <!-- COLUMNA 2 — NOSOTROS -->
+      <div class="footer-col">
+        <h3>Nosotros</h3>
+        <a href="sobre-nosotros.html">Sobre Nosotros</a>
+        <a href="servicios.html">Nuestros Servicios</a>
+        <a href="blog.html">Blog</a>
+        <a href="contacto.html">Contacto</a>
+      </div>
+
+      <!-- COLUMNA 3 — RECURSOS -->
+      <div class="footer-col">
+        <h3>Recursos</h3>
+        <a href="herramientas.html">Herramientas Fitness</a>
+        <a href="videos.html">Videos</a>
+        <a href="nutricion.html">Guías de Nutrición</a>
+        <a href="faq.html">FAQ</a>
+      </div>
+
+      <!-- COLUMNA 4 — PROGRAMAS -->
+      <div class="footer-col">
+        <h3>Programas</h3>
+        <a href="bajar-de-peso.html">Pérdida De Peso</a>
+        <a href="ganar-masa-muscular.html">Ganar Músculo</a>
+        <a href="entrena.html">Entreno En Casa</a>
+        <a href="entrena.html">Plan Gimnasio</a>
+      </div>
+
+      <!-- COLUMNA 5 — CONTACTO -->
+      <div class="footer-col">
+        <h3>Contacto</h3>
+        <p><i class="fas fa-location-dot"></i> Colombia</p>
+        <p><i class="fas fa-phone"></i> 3202363622</p>
+        <p><i class="fas fa-envelope"></i> info@fitaiid.com</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 <span>FitAiid</span>. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+  <script src="../scripts/perfil.js"></script>
+  <script src="../scripts/perfil-stats-addon.js"></script>
+  <script src="../scripts/perfil-datos.js"></script>
+  <script>
+    const token = localStorage.getItem("token") || localStorage.getItem("authToken");
+    const userId = localStorage.getItem("userId");
+    if (!token || !userId) { window.location.replace("login.html"); }
+
+    let selectedAvatar = null;
+    let uploadedImageData = null;
+
+    function loadUserData() {
+      const userString = localStorage.getItem('user');
+      const fitnessProfile = localStorage.getItem('fitnessProfile');
+
+      console.log('🔍 Buscando datos del usuario...');
+      console.log('📦 fitnessProfile en localStorage:', fitnessProfile);
+
+      // Cargar nombre y email del usuario
+      if (userString) {
+        try {
+          const user = JSON.parse(userString);
+          document.getElementById('userName').textContent = (user.firstName || 'USUARIO').toUpperCase();
+          document.getElementById('userEmail').textContent = user.email || localStorage.getItem('userEmail') || 'usuario@email.com';
+        } catch (e) { console.error('Error cargando usuario:', e); }
+      }
+
+      // Cargar perfil fitness del cuestionario
+      if (fitnessProfile) {
+        try {
+          const p = JSON.parse(fitnessProfile);
+          console.log('📋 Perfil fitness cargado:', p);
+
+          // Edad
+          if (p.age) {
+            document.getElementById('userAge').textContent = p.age + ' años';
+            console.log('✅ Edad cargada:', p.age);
+          }
+
+          // Altura
+          if (p.height) {
+            document.getElementById('userHeight').textContent = p.height + ' cm';
+            console.log('✅ Altura cargada:', p.height);
+          }
+
+          // Peso e IMC
+          if (p.weight) {
+            document.getElementById('userWeight').textContent = p.weight + ' kg';
+            console.log('✅ Peso cargado:', p.weight);
+          }
+
+          // Objetivo principal
+          if (p.mainGoal) {
+            const goalText = p.mainGoal.charAt(0).toUpperCase() + p.mainGoal.slice(1);
+            document.getElementById('userGoal').textContent = goalText;
+            document.getElementById('userObjective').textContent = goalText;
+            console.log('✅ Objetivo cargado:', goalText);
+          }
+
+          // Nivel de experiencia
+          if (p.fitnessLevel) {
+            const levelText = p.fitnessLevel.charAt(0).toUpperCase() + p.fitnessLevel.slice(1);
+            document.getElementById('userLevel').textContent = levelText;
+            document.getElementById('userFitnessLevel').textContent = levelText;
+            console.log('✅ Nivel cargado:', levelText);
+          }
+
+          // Disponibilidad
+          if (p.availability) {
+            document.getElementById('userAvailability').textContent = p.availability;
+            console.log('✅ Disponibilidad cargada:', p.availability);
+          }
+
+        } catch (e) { console.error('❌ Error cargando perfil fitness:', e); }
+      } else {
+        console.log('⚠️ No hay fitnessProfile en localStorage');
+      }
+    }
+
+    function handleImageUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        uploadedImageData = ev.target.result;
+        document.getElementById('previewImg').src = uploadedImageData;
+        document.getElementById('uploadPreview').style.display = 'block';
+
+        // Deseleccionar avatares
+        document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected'));
+        selectedAvatar = null;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeUploadedImage() {
+      uploadedImageData = null;
+      document.getElementById('uploadPreview').style.display = 'none';
+      document.getElementById('imageUpload').value = '';
+    }
+
+    function openAvatarModal() {
+      const avatars = [
+        '😎', '🤩', '😁', '🥳', '🤓', '😇', '🥰', '😊',
+        'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
+        'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka',
+        'https://api.dicebear.com/7.x/avataaars/svg?seed=Coco',
+        'https://api.dicebear.com/7.x/avataaars/svg?seed=Milo'
+      ];
+
+      const grid = document.getElementById('avatarGrid');
+      grid.innerHTML = '';
+      avatars.forEach(av => {
+        const d = document.createElement('div');
+        d.className = 'avatar-option';
+        d.onclick = () => selectAvatar(d, av);
+        if (av.startsWith('http')) {
+          const img = document.createElement('img');
+          img.src = av;
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.borderRadius = '50%';
+          d.appendChild(img);
+        } else {
+          d.textContent = av;
+        }
+        grid.appendChild(d);
+      });
+
+      document.getElementById('avatarModal').classList.add('active');
+    }
+
+    function closeAvatarModal() {
+      document.getElementById('avatarModal').classList.remove('active');
+    }
+
+    function selectAvatar(el, av) {
+      document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedAvatar = av;
+
+      // Quitar imagen subida si selecciona avatar
+      uploadedImageData = null;
+      document.getElementById('uploadPreview').style.display = 'none';
+      document.getElementById('imageUpload').value = '';
+    }
+
+    function saveAvatar() {
+      let avatarToSave = null;
+
+      // Prioridad: imagen subida > avatar seleccionado
+      if (uploadedImageData) {
+        avatarToSave = uploadedImageData;
+      } else if (selectedAvatar) {
+        if (selectedAvatar.startsWith('http')) {
+          avatarToSave = selectedAvatar;
+        } else {
+          // Es emoji, convertir a imagen
+          const c = document.createElement('canvas');
+          c.width = 100;
+          c.height = 100;
+          const ctx = c.getContext('2d');
+          ctx.fillStyle = '#1a1a1a';
+          ctx.fillRect(0, 0, 100, 100);
+          ctx.font = '60px Arial';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(selectedAvatar, 50, 55);
+          avatarToSave = c.toDataURL();
+        }
+      }
+
+      if (avatarToSave) {
+        document.getElementById('userAvatar').src = avatarToSave;
+        closeAvatarModal();
+      } else {
+        alert('Selecciona un avatar o sube una foto.');
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userId');
+      window.location.href = 'login.html';
+    }
+
+    // FUNCIONES CALCULADORA IMC
+    function abrirModalIMC() {
+      document.getElementById('modalIMC').classList.add('active');
+    }
+
+    function cerrarModalIMC() {
+      document.getElementById('modalIMC').classList.remove('active');
+      reiniciarIMC();
+    }
+
+    function calcularIMC() {
+      const peso = parseFloat(document.getElementById('pesoIMC').value);
+      const altura = parseFloat(document.getElementById('alturaIMC').value);
+
+      if (!peso || !altura || peso <= 0 || altura <= 0) {
+        alert('Por favor ingresa peso y altura válidos.');
+        return;
+      }
+
+      const alturaM = altura / 100;
+      const imc = peso / (alturaM * alturaM);
+
+      let clasificacion = '';
+      if (imc < 18.5) clasificacion = 'Bajo peso';
+      else if (imc < 24.9) clasificacion = 'Peso normal';
+      else if (imc < 29.9) clasificacion = 'Sobrepeso';
+      else clasificacion = 'Obesidad';
+
+      document.getElementById('formIMC').style.display = 'none';
+      document.getElementById('resultadoIMC').classList.add('active');
+      document.getElementById('valorIMC').textContent = imc.toFixed(1);
+      document.getElementById('clasificacionIMC').textContent = clasificacion;
+    }
+
+    function reiniciarIMC() {
+      document.getElementById('formIMC').reset();
+      document.getElementById('formIMC').style.display = 'flex';
+      document.getElementById('resultadoIMC').classList.remove('active');
+    }
+
+    // FUNCIONES CALCULADORA DE AGUA
+    function abrirModalAgua() {
+      document.getElementById('modalAgua').classList.add('active');
+    }
+
+    function cerrarModalAgua() {
+      document.getElementById('modalAgua').classList.remove('active');
+      reiniciarAgua();
+    }
+
+    function calcularAgua() {
+      const peso = parseFloat(document.getElementById('pesoAgua').value);
+      const edad = parseInt(document.getElementById('edadAgua').value);
+
+      if (!peso || !edad) {
+        alert("Por favor ingresa todos los datos");
+        return;
+      }
+
+      // Fórmula simple: adultos necesitan ~35 ml por kg de peso
+      // Ajuste según edad: niños y ancianos necesitan menos
+      let litros = peso * 0.035; // litros por kg
+
+      if (edad < 14) litros *= 0.8;      // niños
+      else if (edad > 65) litros *= 0.9; // ancianos
+
+      litros = litros.toFixed(2);
+
+      document.getElementById('formAgua').style.display = 'none';
+      document.getElementById('valorAgua').textContent = litros + " litros";
+      document.getElementById('resultadoAgua').classList.add('active');
+    }
+
+    function reiniciarAgua() {
+      document.getElementById('formAgua').reset();
+      document.getElementById('formAgua').style.display = 'flex';
+      document.getElementById('resultadoAgua').classList.remove('active');
+    }
+
+    // FUNCIONES CALCULADORA DE MACRONUTRIENTES
+    function abrirModalMacronutrientes() {
+      document.getElementById('modalMacronutrientes').classList.add('active');
+    }
+
+    function cerrarModalMacronutrientes() {
+      document.getElementById('modalMacronutrientes').classList.remove('active');
+      reiniciarMacronutrientes();
+    }
+
+    function calcularMacronutrientes() {
+      const edad = parseInt(document.getElementById('edad').value);
+      const altura = parseFloat(document.getElementById('altura').value);
+      const peso = parseFloat(document.getElementById('peso').value);
+      const actividad = document.getElementById('actividad').value;
+      const meta = document.getElementById('meta').value;
+
+      // Detectar género
+      const genero = document.querySelector('input[name="genero"]:checked');
+      if (!genero) {
+        alert('Por favor selecciona tu género');
+        return;
+      }
+
+      if (!edad || !altura || !peso || !actividad || !meta) {
+        alert('Por favor completa todos los campos');
+        return;
+      }
+
+      let bmr = 0;
+
+      // Fórmulas Harris-Benedict revisadas
+      if (genero.value === "masculino") {
+        bmr = 88.362 + (13.397 * peso) + (4.799 * altura) - (5.677 * edad);
+      } else {
+        bmr = 447.593 + (9.247 * peso) + (3.098 * altura) - (4.330 * edad);
+      }
+
+      // Factor de actividad
+      let factorActividad = 1.2;
+      if (actividad === 'ligero') factorActividad = 1.375;
+      if (actividad === 'moderado') factorActividad = 1.55;
+      if (actividad === 'intenso') factorActividad = 1.725;
+
+      // Calorías totales
+      let calorias = bmr * factorActividad;
+
+      // Ajuste según meta
+      if (meta === 'bajar') calorias -= 400;
+      if (meta === 'subir') calorias += 400;
+
+      // Mostrar resultado
+      document.getElementById('formMacronutrientes').style.display = 'none';
+      document.getElementById('resultadoMacronutrientes').classList.add('active');
+      document.getElementById('valorKcal').textContent = `${Math.round(calorias)} kcal`;
+    }
+
+    function reiniciarMacronutrientes() {
+      document.getElementById('formMacronutrientes').reset();
+      document.getElementById('formMacronutrientes').style.display = 'flex';
+      document.getElementById('resultadoMacronutrientes').classList.remove('active');
+    }
+
+    // Inicializar al cargar
+    loadUserData();
+  </script>
+
+  <script>
+    // ============================================
+    // 📱 HAMBURGER MENU (MOBILE) - RESPONSIVE FIX
+    // ============================================
+    (function () {
+      console.log('🔧 Initializing hamburger menu...');
+
+      const hamburger = document.querySelector('.navbar-toggle');
+      const navMenu = document.querySelector('.navbar-header .menu');
+      const menuItems = document.querySelectorAll('.navbar-header .menu a, .navbar-header .menu button');
+      const navbar = document.querySelector('.navbar-header');
+
+      if (!hamburger) {
+        console.warn('⚠️ Hamburger button not found');
+        return;
+      }
+
+      if (!navMenu) {
+        console.warn('⚠️ Navigation menu not found');
+        return;
+      }
+
+      console.log('✅ Hamburger menu elements found');
+
+      // Función para cerrar el menú
+      function closeMenu() {
+        navMenu.classList.remove('active');
+        console.log('Menu closed');
+      }
+
+      // Función para resetear estado en cambios de viewport
+      function handleViewportChange() {
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        console.log('📐 Viewport changed - Mobile:', isMobile);
+
+        if (!isMobile) {
+          // Si estamos en desktop, cierra el menú
+          closeMenu();
+          console.log('🖥️ Desktop view - Menu closed');
+        }
+      }
+
+      // Click en el hamburger
+      hamburger.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('🔄 Hamburger clicked - Toggling menu');
+        navMenu.classList.toggle('active');
+        console.log('Menu active:', navMenu.classList.contains('active'));
+      });
+
+      // Click en items del menú
+      menuItems.forEach(function (item) {
+        item.addEventListener('click', function (e) {
+          console.log('🔗 Menu item clicked:', this.textContent);
+          closeMenu();
+        });
+      });
+
+      // Click fuera del navbar para cerrar
+      document.addEventListener('click', function (e) {
+        if (navbar && !navbar.contains(e.target)) {
+          console.log('👆 Click outside navbar - closing menu');
+          closeMenu();
+        }
+      });
+
+      // NUEVO: Detectar cambios de tamaño de ventana
+      window.addEventListener('resize', function () {
+        handleViewportChange();
+      });
+
+      // NUEVO: Detectar cambios en media queries
+      const mediaQuery = window.matchMedia('(max-width: 768px)');
+      mediaQuery.addListener(function (e) {
+        console.log('📱 Media query changed:', e.matches ? 'Mobile' : 'Desktop');
+        if (!e.matches) {
+          // Cambió a desktop, cierra el menú
+          closeMenu();
+        }
+      });
+
+      console.log('✅ Hamburger menu setup complete!');
+    })();
+  </script>
+
+</body>
+
+</html>

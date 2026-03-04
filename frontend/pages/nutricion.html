@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nutrición - FitAiid</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #0a0a0a;
+      --bg-card: #111111;
+      --bg-card-hover: #1a1a1a;
+      --accent: #ff3d00;
+      --accent-light: #ff6b3d;
+      --accent-dark: #cc3100;
+      --accent-glow: rgba(255, 61, 0, 0.3);
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0b0;
+      --text-muted: #707070;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --gradient-accent: linear-gradient(135deg, var(--accent), var(--accent-light));
+      --gradient-dark: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%);
+      --green: #22c55e;
+      --blue: #3b82f6;
+      --purple: #a855f7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Oswald', 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      margin: 0;
+      padding-top: 80px;
+    }
+
+    /* ============================================
+       NAVBAR — estructura y CSS idénticos a home.html
+       ============================================ */
+    .navbar-header {
+      width: 100%;
+      padding: 15px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(12, 12, 12, 0.95);
+      backdrop-filter: blur(10px);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9999;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      border-bottom: 1px solid rgba(255, 61, 0, 0.1);
+    }
+
+    .navbar-header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      z-index: 10001;
+    }
+
+    .navbar-header .logo img {
+      width: 55px;
+      height: 55px;
+      object-fit: contain;
+    }
+
+    .navbar-header .brand-text h2 {
+      color: #ff2e00;
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    .navbar-header .brand-text p {
+      font-size: 12px;
+      color: #ccc;
+      font-weight: 400;
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    /* Desktop Menu */
+    .navbar-header .menu {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .navbar-header .menu a {
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      text-decoration: none;
+      padding-bottom: 5px;
+      transition: all 0.3s ease;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+    }
+
+    .navbar-header .menu a:hover {
+      color: #ff2e00;
+      border-bottom-color: #ff2e00;
+    }
+
+    .navbar-header .menu a.active {
+      color: #ff2e00;
+      border-bottom: 3px solid #ff2e00;
+    }
+
+    .navbar-header .menu .profile-link {
+      color: #ff2e00;
+      font-weight: 600;
+    }
+
+    .navbar-header .menu .logout-btn {
+      background: linear-gradient(135deg, #ff4444, #cc0000);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s;
+      font-family: "Oswald", sans-serif;
+      white-space: nowrap;
+    }
+
+    .navbar-header .menu .logout-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);
+    }
+
+    /* Navbar Actions */
+    .navbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      z-index: 10001;
+    }
+
+    .navbar-header .bell {
+      font-size: 22px;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.2s;
+      background: transparent;
+      border: none;
+      color: white;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .navbar-header .bell:hover {
+      transform: scale(1.1);
+    }
+
+    .navbar-header .bell::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 8px;
+      height: 8px;
+      background: #ff2e00;
+      border-radius: 50%;
+    }
+
+    /* Hamburger Button */
+    .navbar-toggle {
+      display: none;
+      background: none;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      font-size: 24px;
+      cursor: pointer;
+      flex-shrink: 0;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      width: 44px;
+      height: 44px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .navbar-toggle:hover {
+      background: rgba(255, 61, 0, 0.1);
+      border-color: var(--accent-light);
+      color: var(--accent-light);
+    }
+
+    .navbar-toggle:active {
+      transform: scale(0.95);
+    }
+
+    /* ──────── RESPONSIVE NAVBAR ──────── */
+    @media (max-width: 1024px) {
+      .navbar-header {
+        padding: 15px 40px;
+      }
+
+      .navbar-header .menu {
+        gap: 25px;
+      }
+
+      .navbar-header .menu a {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-top: 70px;
+      }
+
+      .navbar-header {
+        padding: 12px 15px;
+      }
+
+      .navbar-header .logo img {
+        width: 45px;
+        height: 45px;
+      }
+
+      .navbar-header .brand-text h2 {
+        font-size: 18px;
+      }
+
+      .navbar-header .brand-text p {
+        font-size: 10px;
+      }
+
+      .navbar-toggle {
+        display: flex;
+      }
+
+      /* Menú móvil desplegable — igual que home.html */
+      .navbar-header .menu {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: rgba(12, 12, 12, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        justify-content: flex-start;
+        border-bottom: 2px solid transparent;
+        flex: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .navbar-header .menu.active {
+        max-height: 450px;
+        border-bottom-color: rgba(255, 61, 0, 0.3);
+      }
+
+      .navbar-header .menu a,
+      .navbar-header .menu .logout-btn {
+        font-size: 15px;
+        padding: 16px 25px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        border-left: 3px solid transparent;
+        border-top: none;
+        border-right: none;
+        width: 100%;
+        text-align: left;
+        transition: all 0.3s ease;
+        border-radius: 0;
+      }
+
+      .navbar-header .menu a:hover,
+      .navbar-header .menu .logout-btn:hover {
+        background: rgba(255, 61, 0, 0.05);
+        border-left-color: var(--accent);
+        padding-left: 30px;
+        border-bottom-color: rgba(255, 255, 255, 0.05);
+      }
+
+      .navbar-header .menu a.active {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        border-left: 3px solid #ff2e00;
+        background: rgba(255, 61, 0, 0.08);
+      }
+
+      .navbar-header .menu .profile-link {
+        display: block;
+        width: 100%;
+      }
+
+      .navbar-header .menu .logout-btn {
+        background: rgba(255, 68, 68, 0.1);
+        color: #ff9999;
+        font-size: 15px;
+        border-left: 3px solid transparent;
+      }
+
+      .navbar-header .menu .logout-btn:hover {
+        background: rgba(255, 68, 68, 0.2);
+        border-left-color: #ff4444;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .navbar-header .bell {
+        font-size: 20px;
+        padding: 6px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar-header {
+        padding: 10px 12px;
+      }
+
+      .navbar-header .logo img {
+        width: 40px;
+        height: 40px;
+      }
+
+      .navbar-header .brand-text h2 {
+        font-size: 16px;
+      }
+
+      .navbar-header .brand-text p {
+        font-size: 9px;
+      }
+
+      .navbar-toggle {
+        font-size: 20px;
+        width: 40px;
+        height: 40px;
+        padding: 6px 10px;
+      }
+
+      .navbar-header .bell {
+        font-size: 18px;
+      }
+
+      .navbar-actions {
+        gap: 10px;
+      }
+    }
+
+    /* ============================================
+       HERO SECTION
+       ============================================ */
+    .hero-section {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 60px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, var(--accent-glow) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(255, 107, 61, 0.1) 0%, transparent 40%);
+      pointer-events: none;
+    }
+
+    .hero-container {
+      max-width: 1200px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-content {
+      flex: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 61, 0, 0.1);
+      border: 1px solid rgba(255, 61, 0, 0.3);
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .hero-badge i {
+      font-size: 14px;
+    }
+
+    .hero-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .hero-title span {
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-description {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 500px;
+      margin-bottom: 40px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Oswald', sans-serif;
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 8px;
+    }
+
+    .hero-image {
+      flex: 0 0 400px;
+      height: 400px;
+      position: relative;
+    }
+
+    .hero-image-wrapper {
+      width: 100%;
+      height: 100%;
+      border-radius: 30px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 100px var(--accent-glow);
+    }
+
+    .hero-image-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .hero-image-wrapper:hover img {
+      transform: scale(1.05);
+    }
+
+    .floating-icon {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: var(--bg-card);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .floating-icon.icon-1 {
+      top: -20px;
+      right: -20px;
+      animation-delay: 0s;
+    }
+
+    .floating-icon.icon-2 {
+      bottom: 40px;
+      left: -30px;
+      animation-delay: 1s;
+    }
+
+    .floating-icon.icon-3 {
+      bottom: -20px;
+      right: 60px;
+      animation-delay: 2s;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    /* Hero responsive */
+    @media (max-width: 1100px) {
+      .hero-section {
+        padding: 50px 40px 70px;
+      }
+
+      .hero-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 50px;
+      }
+
+      .hero-content {
+        order: 2;
+      }
+
+      .hero-image {
+        order: 1;
+        flex: 0 0 300px;
+        height: 300px;
+      }
+
+      .hero-description {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-stats {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-section {
+        padding: 40px 24px 60px;
+        min-height: auto;
+      }
+
+      .hero-title {
+        font-size: 48px;
+      }
+
+      .hero-description {
+        font-size: 16px;
+      }
+
+      .hero-image {
+        flex: 0 0 260px;
+        height: 260px;
+      }
+
+      .stat-number {
+        font-size: 34px;
+      }
+
+      .floating-icon {
+        width: 46px;
+        height: 46px;
+        font-size: 20px;
+      }
+
+      .floating-icon.icon-1 {
+        top: -12px;
+        right: -12px;
+      }
+
+      .floating-icon.icon-2 {
+        bottom: 20px;
+        left: -16px;
+      }
+
+      .floating-icon.icon-3 {
+        bottom: -12px;
+        right: 40px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-section {
+        padding: 30px 16px 50px;
+      }
+
+      .hero-title {
+        font-size: 38px;
+        letter-spacing: 1px;
+      }
+
+      .hero-description {
+        font-size: 14px;
+      }
+
+      .hero-image {
+        flex: 0 0 220px;
+        height: 220px;
+      }
+
+      .hero-stats {
+        gap: 20px;
+      }
+
+      .stat-number {
+        font-size: 28px;
+      }
+
+      .stat-label {
+        font-size: 10px;
+      }
+    }
+
+    /* ============================================
+       SECTION SHARED
+       ============================================ */
+    .section-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-subtitle {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    @media (max-width: 768px) {
+      .section-title {
+        font-size: 36px;
+      }
+
+      .section-header {
+        margin-bottom: 40px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .section-title {
+        font-size: 28px;
+        letter-spacing: 1px;
+      }
+
+      .section-header {
+        margin-bottom: 28px;
+      }
+    }
+
+    /* ============================================
+       HOW IT WORKS
+       ============================================ */
+    .how-it-works {
+      padding: 80px 60px;
+      background: var(--bg-primary);
+      position: relative;
+    }
+
+    .how-it-works::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+    }
+
+    .steps-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      position: relative;
+    }
+
+    .steps-container::before {
+      content: '';
+      position: absolute;
+      top: 50px;
+      left: 12%;
+      right: 12%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light), var(--green), var(--blue));
+      z-index: 0;
+    }
+
+    .step-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 30px 24px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s ease;
+    }
+
+    .step-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-5px);
+    }
+
+    .step-number {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Oswald', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: white;
+      margin: 0 auto 20px;
+      box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);
+    }
+
+    .step-card:nth-child(2) .step-number {
+      background: var(--gradient-accent);
+      box-shadow: 0 10px 30px var(--accent-glow);
+    }
+
+    .step-card:nth-child(3) .step-number {
+      background: linear-gradient(135deg, var(--green), #4ade80);
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+    }
+
+    .step-card:nth-child(4) .step-number {
+      background: linear-gradient(135deg, var(--blue), #60a5fa);
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+    }
+
+    .step-card h4 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .step-card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      .how-it-works {
+        padding: 60px 40px;
+      }
+
+      .steps-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .steps-container::before {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .how-it-works {
+        padding: 50px 16px;
+      }
+
+      .steps-container {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .step-card {
+        padding: 24px 20px;
+      }
+    }
+
+    /* ============================================
+       QUIZ SECTION
+       ============================================ */
+    .quiz-section {
+      padding: 80px 60px;
+      background: var(--bg-secondary);
+      position: relative;
+    }
+
+    .quiz-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    .quiz-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 50px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quiz-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .quiz-header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .quiz-header i {
+      font-size: 48px;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    .quiz-header h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .quiz-header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .quiz-progress {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 40px;
+      justify-content: center;
+    }
+
+    .progress-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    .progress-dot.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .progress-dot.completed {
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .quiz-question {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .quiz-question.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .question-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .quiz-option {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-color);
+      border-radius: 14px;
+      padding: 20px 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .quiz-option:hover {
+      border-color: var(--accent);
+      background: rgba(255, 61, 0, 0.05);
+    }
+
+    .quiz-option.selected {
+      border-color: var(--accent);
+      background: rgba(255, 61, 0, 0.1);
+    }
+
+    .quiz-option-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 61, 0, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .quiz-option-text {
+      flex: 1;
+    }
+
+    .quiz-option-text h5 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .quiz-option-text p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .quiz-result {
+      display: none;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .quiz-result.active {
+      display: block;
+    }
+
+    .result-icon {
+      width: 100px;
+      height: 100px;
+      background: var(--gradient-accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      margin: 0 auto 24px;
+      box-shadow: 0 20px 50px var(--accent-glow);
+    }
+
+    .result-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .result-description {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 30px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .result-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gradient-accent);
+      color: white;
+      padding: 16px 32px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .result-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px var(--accent-glow);
+    }
+
+    .quiz-restart {
+      display: block;
+      margin: 20px auto 0;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 14px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .quiz-restart:hover {
+      color: var(--accent);
+    }
+
+    @media (max-width: 900px) {
+      .quiz-section {
+        padding: 60px 40px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .quiz-section {
+        padding: 50px 16px;
+      }
+
+      .quiz-container {
+        padding: 32px 20px;
+      }
+
+      .quiz-header i {
+        font-size: 36px;
+      }
+
+      .quiz-header h3 {
+        font-size: 24px;
+      }
+
+      .quiz-header p {
+        font-size: 14px;
+      }
+
+      .question-title {
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+
+      .quiz-option {
+        padding: 14px 16px;
+        gap: 12px;
+      }
+
+      .quiz-option-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 18px;
+      }
+
+      .quiz-option-text h5 {
+        font-size: 14px;
+      }
+
+      .result-icon {
+        width: 80px;
+        height: 80px;
+        font-size: 36px;
+      }
+
+      .result-title {
+        font-size: 22px;
+      }
+
+      .result-btn {
+        padding: 12px 24px;
+        font-size: 14px;
+      }
+    }
+
+    /* ============================================
+       PLANS SECTION
+       ============================================ */
+    .plans-section {
+      padding: 80px 60px 100px;
+      background: var(--bg-primary);
+      position: relative;
+    }
+
+    .plans-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+
+    .plan-card {
+      background: var(--bg-card);
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      transition: all 0.4s ease;
+      border: 1px solid var(--border-color);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .plan-card:hover {
+      transform: translateY(-10px);
+      border-color: var(--accent);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 40px var(--accent-glow);
+    }
+
+    .plan-card-image {
+      height: 220px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .plan-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .plan-card:hover .plan-card-image img {
+      transform: scale(1.1);
+    }
+
+    .plan-card-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gradient-dark);
+    }
+
+    .plan-card-icon {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background: var(--gradient-accent);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: white;
+      z-index: 2;
+      box-shadow: 0 8px 20px var(--accent-glow);
+    }
+
+    .plan-card-badges {
+      position: absolute;
+      bottom: 15px;
+      left: 15px;
+      display: flex;
+      gap: 8px;
+      z-index: 2;
+      flex-wrap: wrap;
+    }
+
+    .plan-badge {
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .plan-badge i {
+      font-size: 10px;
+      color: var(--accent);
+    }
+
+    .plan-card-content {
+      padding: 28px;
+    }
+
+    .plan-card-tag {
+      display: inline-block;
+      background: rgba(255, 61, 0, 0.1);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+
+    .plan-card-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: color 0.3s ease;
+    }
+
+    .plan-card:hover .plan-card-title {
+      color: var(--accent);
+    }
+
+    .plan-card-description {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .plan-card-meta {
+      display: flex;
+      gap: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .meta-item i {
+      color: var(--accent);
+      font-size: 14px;
+    }
+
+    .plan-card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .plan-card-cta i {
+      transition: transform 0.3s ease;
+    }
+
+    .plan-card:hover .plan-card-cta i {
+      transform: translateX(5px);
+    }
+
+    @media (max-width: 1100px) {
+      .plans-section {
+        padding: 60px 40px 80px;
+      }
+
+      .plans-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .plans-section {
+        padding: 50px 16px 60px;
+      }
+
+      .plans-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .plan-card-image {
+        height: 200px;
+      }
+
+      .plan-card-content {
+        padding: 20px;
+      }
+
+      .plan-card-title {
+        font-size: 20px;
+      }
+    }
+
+    /* ============================================
+       BENEFITS SECTION
+       ============================================ */
+    .benefits-section {
+      padding: 100px 60px;
+      background: var(--bg-secondary);
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .benefit-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 32px 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .benefit-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-5px);
+    }
+
+    .benefit-icon {
+      width: 70px;
+      height: 70px;
+      background: rgba(255, 61, 0, 0.1);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 28px;
+      color: var(--accent);
+      transition: all 0.3s ease;
+    }
+
+    .benefit-card:hover .benefit-icon {
+      background: var(--gradient-accent);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .benefit-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .benefit-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 1100px) {
+      .benefits-section {
+        padding: 70px 40px;
+      }
+
+      .benefits-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .benefits-section {
+        padding: 50px 16px;
+      }
+
+      .benefits-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .benefit-card {
+        padding: 24px 20px;
+      }
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .footer {
+      background: var(--bg-primary);
+      padding: 80px 60px 40px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      gap: 50px;
+    }
+
+    .footer-col h3 {
+      font-family: 'Oswald', sans-serif;
+      color: var(--accent);
+      margin-bottom: 20px;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .footer-col a {
+      display: block;
+      color: var(--text-secondary);
+      text-decoration: none;
+      margin-bottom: 12px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .footer-col a:hover {
+      color: var(--accent);
+      padding-left: 5px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .footer-logo img {
+      height: 50px;
+      filter: drop-shadow(0 0 10px var(--accent-glow));
+    }
+
+    .footer-logo span {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .footer-desc {
+      line-height: 1.7;
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+      margin: 0;
+      padding: 0;
+    }
+
+    .footer-social a:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+      padding-left: 0;
+    }
+
+    .footer-col p {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .footer-col p i {
+      color: var(--accent);
+      width: 16px;
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 60px auto 0;
+      padding-top: 30px;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .footer-bottom span {
+      color: var(--accent);
+    }
+
+    @media (max-width: 1100px) {
+      .footer {
+        padding: 60px 40px 30px;
+      }
+
+      .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 36px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .footer {
+        padding: 50px 16px 30px;
+      }
+
+      .footer-container {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .footer-bottom {
+        margin-top: 40px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR — estructura idéntica a home.html -->
+  <header class="navbar-header">
+    <div class="logo">
+      <img src="../img/logo.png" alt="logo">
+      <div class="brand-text">
+        <h2>FitAiid</h2>
+        <p>Tu asistente fitness</p>
+      </div>
+    </div>
+
+    <nav class="menu" id="navbar-menu">
+      <a href="home.html">Inicio</a>
+      <a href="entrenador.html">Entrenamiento</a>
+      <a href="chatbot.html">Coach Virtual</a>
+      <a href="nutricion.html" class="active">Nutrición</a>
+      <a href="estadisticas.html">Estadisticas</a>
+      <a href="perfil.html" class="profile-link">Mi Perfil</a>
+      <button onclick="logout()" class="logout-btn">Cerrar Sesión</button>
+    </nav>
+
+    <div class="navbar-actions">
+      <button class="bell" aria-label="Notificaciones" style="display: none;"></button>
+      <button class="navbar-toggle" id="navbar-toggle" aria-label="Abrir menú">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-badge"><i class="fas fa-leaf"></i> Planes de alimentación</div>
+        <h1 class="hero-title">NUTRICIÓN<br><span>SALUDABLE</span></h1>
+        <p class="hero-description">Una alimentación adecuada es la base de todo progreso. Descubre planes nutricionales
+          adaptados a tus metas, tu estilo de vida y tus gustos personales.</p>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number">3</div>
+            <div class="stat-label">Planes Nutricionales</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">4</div>
+            <div class="stat-label">Semanas por Plan</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Personalizado</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-image">
+        <div class="hero-image-wrapper">
+          <img src="../img/nutricion/dia-mundial-de-la-alimentacion 2.jpg" alt="Nutrición Saludable" />
+        </div>
+        <div class="floating-icon icon-1">🥗</div>
+        <div class="floating-icon icon-2">💪</div>
+        <div class="floating-icon icon-3">🔥</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works">
+    <div class="section-container">
+      <div class="section-header">
+        <p class="section-subtitle">Proceso Simple</p>
+        <h2 class="section-title">¿Cómo Funciona?</h2>
+      </div>
+      <div class="steps-container">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h4>Elige Tu Objetivo</h4>
+          <p>Selecciona si quieres bajar de peso, ganar masa muscular o mantener una vida saludable.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h4>Recibe Tu Plan</h4>
+          <p>Obtén un plan de 4 semanas con comidas detalladas para cada día y lista de compras.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h4>Sigue el Progreso</h4>
+          <p>Cada semana tiene objetivos específicos que te guían hacia mejores hábitos.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <h4>Alcanza Resultados</h4>
+          <p>Consolida hábitos saludables y observa cambios reales en tu cuerpo y energía.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ SECTION -->
+  <section class="quiz-section">
+    <div class="section-container">
+      <div class="section-header">
+        <p class="section-subtitle">Descubre Tu Plan Ideal</p>
+        <h2 class="section-title">Test de Nutrición</h2>
+      </div>
+      <div class="quiz-container">
+        <div class="quiz-header">
+          <i class="fas fa-clipboard-question"></i>
+          <h3>¿Qué Plan es Para Ti?</h3>
+          <p>Responde 3 preguntas rápidas y te recomendaremos el plan perfecto</p>
+        </div>
+        <div class="quiz-progress">
+          <div class="progress-dot active" data-step="1"></div>
+          <div class="progress-dot" data-step="2"></div>
+          <div class="progress-dot" data-step="3"></div>
+        </div>
+        <!-- Pregunta 1 -->
+        <div class="quiz-question active" data-question="1">
+          <h4 class="question-title">¿Cuál es tu objetivo principal?</h4>
+          <div class="quiz-options">
+            <div class="quiz-option" data-value="bajar">
+              <div class="quiz-option-icon">⚖️</div>
+              <div class="quiz-option-text">
+                <h5>Perder peso</h5>
+                <p>Quiero reducir grasa y verme más definido</p>
+              </div>
+            </div>
+            <div class="quiz-option" data-value="ganar">
+              <div class="quiz-option-icon">💪</div>
+              <div class="quiz-option-text">
+                <h5>Ganar músculo</h5>
+                <p>Quiero aumentar masa muscular y fuerza</p>
+              </div>
+            </div>
+            <div class="quiz-option" data-value="saludable">
+              <div class="quiz-option-icon">🌿</div>
+              <div class="quiz-option-text">
+                <h5>Vida saludable</h5>
+                <p>Quiero sentirme mejor y tener más energía</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Pregunta 2 -->
+        <div class="quiz-question" data-question="2">
+          <h4 class="question-title">¿Cómo describirías tu nivel de actividad?</h4>
+          <div class="quiz-options">
+            <div class="quiz-option" data-value="bajo">
+              <div class="quiz-option-icon">🚶</div>
+              <div class="quiz-option-text">
+                <h5>Sedentario</h5>
+                <p>Poco o nada de ejercicio regular</p>
+              </div>
+            </div>
+            <div class="quiz-option" data-value="medio">
+              <div class="quiz-option-icon">🏃</div>
+              <div class="quiz-option-text">
+                <h5>Moderado</h5>
+                <p>Entreno 2-3 veces por semana</p>
+              </div>
+            </div>
+            <div class="quiz-option" data-value="alto">
+              <div class="quiz-option-icon">🏋️</div>
+              <div class="quiz-option-text">
+                <h5>Muy activo</h5>
+                <p>Entreno 4+ veces por semana intensamente</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Pregunta 3 -->
+        <div class="quiz-question" data-question="3">
+          <h4 class="question-title">¿Qué tipo de comidas prefieres?</h4>
+          <div class="quiz-options">
+            <div class="quiz-option" data-value="ligeras">
+              <div class="quiz-option-icon">🥗</div>
+              <div class="quiz-option-text">
+                <h5>Ligeras y frescas</h5>
+                <p>Ensaladas, verduras, comidas bajas en calorías</p>
+              </div>
+            </div>
+            <div class="quiz-option" data-value="proteicas">
+              <div class="quiz-option-icon">🥩</div>
+              <div class="quiz-option-text">
+                <h5>Ricas en proteína</h5>
+                <p>Carnes, huevos, batidos de proteína</p>
+              </div>
+            </div>
+            <div class="quiz-option" data-value="equilibradas">
+              <div class="quiz-option-icon">🍽️</div>
+              <div class="quiz-option-text">
+                <h5>Equilibradas</h5>
+                <p>Un poco de todo, variedad y balance</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Resultado -->
+        <div class="quiz-result" id="quizResult">
+          <div class="result-icon">🎯</div>
+          <h3 class="result-title" id="resultTitle">Plan Recomendado</h3>
+          <p class="result-description" id="resultDescription">Descripción del plan</p>
+          <a href="#" class="result-btn" id="resultBtn"><i class="fas fa-arrow-right"></i> Ver Mi Plan</a>
+          <button class="quiz-restart" onclick="restartQuiz()"><i class="fas fa-redo"></i> Volver a hacer el
+            test</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANES -->
+  <section class="plans-section">
+    <div class="section-container">
+      <div class="section-header">
+        <p class="section-subtitle">Elige Tu Camino</p>
+        <h2 class="section-title">Planes Nutricionales</h2>
+      </div>
+      <div class="plans-grid">
+        <a href="bajar-de-peso.html" class="plan-card">
+          <div class="plan-card-image"><img src="../img/nutricion/SJNEFMOMBVBDDDVOQTULAESDPI.jpg" alt="Bajar de Peso" />
+            <div class="plan-card-icon"><i class="fas fa-weight-scale"></i></div>
+            <div class="plan-card-badges"><span class="plan-badge"><i class="fas fa-calendar"></i> 4 semanas</span><span
+                class="plan-badge"><i class="fas fa-utensils"></i> 6 comidas/día</span></div>
+          </div>
+          <div class="plan-card-content"><span class="plan-card-tag">Pérdida de Grasa</span>
+            <h3 class="plan-card-title">Bajar De Peso</h3>
+            <p class="plan-card-description">Alcanza tus objetivos de manera saludable. Con planes personalizados de
+              nutrición y rutinas adaptadas a tu nivel, podrás perder grasa de forma progresiva.</p>
+            <div class="plan-card-meta">
+              <div class="meta-item"><i class="fas fa-fire"></i><span>Déficit calórico</span></div>
+              <div class="meta-item"><i class="fas fa-leaf"></i><span>Recetas fáciles</span></div>
+            </div><span class="plan-card-cta">Ver Plan <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+        <a href="ganar-masa-muscular.html" class="plan-card">
+          <div class="plan-card-image"><img src="../img/nutricion/nutrición (1).jpg" alt="Ganar Masa Muscular" />
+            <div class="plan-card-icon"><i class="fas fa-dumbbell"></i></div>
+            <div class="plan-card-badges"><span class="plan-badge"><i class="fas fa-calendar"></i> 4 semanas</span><span
+                class="plan-badge"><i class="fas fa-utensils"></i> 6 comidas/día</span></div>
+          </div>
+          <div class="plan-card-content"><span class="plan-card-tag">Hipertrofia</span>
+            <h3 class="plan-card-title">Ganar Masa Muscular</h3>
+            <p class="plan-card-description">Fortalece tu cuerpo y aumenta tu masa muscular con nutrientes esenciales.
+              Diseñados para desarrollar fuerza y mejorar tu rendimiento.</p>
+            <div class="plan-card-meta">
+              <div class="meta-item"><i class="fas fa-drumstick-bite"></i><span>Alto en proteína</span></div>
+              <div class="meta-item"><i class="fas fa-chart-line"></i><span>Superávit calórico</span></div>
+            </div><span class="plan-card-cta">Ver Plan <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+        <a href="plan-vida-saludable.html" class="plan-card">
+          <div class="plan-card-image"><img src="../img/nutricion/sport-city-nutricion-1024x700.jpg"
+              alt="Vida Saludable" />
+            <div class="plan-card-icon"><i class="fas fa-heart-pulse"></i></div>
+            <div class="plan-card-badges"><span class="plan-badge"><i class="fas fa-calendar"></i> 4 semanas</span><span
+                class="plan-badge"><i class="fas fa-utensils"></i> 6 comidas/día</span></div>
+          </div>
+          <div class="plan-card-content"><span class="plan-card-tag">Bienestar</span>
+            <h3 class="plan-card-title">Vida Saludable</h3>
+            <p class="plan-card-description">Aliméntate de manera equilibrada para cuidar tu bienestar general. Mantente
+              activo, previene enfermedades y mejora tu calidad de vida.</p>
+            <div class="plan-card-meta">
+              <div class="meta-item"><i class="fas fa-balance-scale"></i><span>Equilibrado</span></div>
+              <div class="meta-item"><i class="fas fa-seedling"></i><span>Hábitos sostenibles</span></div>
+            </div><span class="plan-card-cta">Ver Plan <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFICIOS -->
+  <section class="benefits-section">
+    <div class="section-container">
+      <div class="section-header">
+        <p class="section-subtitle">Por Qué Elegirnos</p>
+        <h2 class="section-title">Beneficios</h2>
+      </div>
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <div class="benefit-icon"><i class="fas fa-brain"></i></div>
+          <h4 class="benefit-title">IA Personalizada</h4>
+          <p class="benefit-text">Planes adaptados a tu cuerpo y objetivos</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon"><i class="fas fa-chart-line"></i></div>
+          <h4 class="benefit-title">Seguimiento</h4>
+          <p class="benefit-text">Monitorea tu progreso en tiempo real</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon"><i class="fas fa-utensils"></i></div>
+          <h4 class="benefit-title">Recetas Fáciles</h4>
+          <p class="benefit-text">Comidas deliciosas y sencillas de preparar</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon"><i class="fas fa-headset"></i></div>
+          <h4 class="benefit-title">Soporte 24/7</h4>
+          <p class="benefit-text">Coach virtual siempre disponible</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <div class="footer-logo"><img src="../img/logo.png" alt="logo"><span>FitAiid</span></div>
+        <p class="footer-desc">Transforma tu cuerpo con FitAiid, tu aliado de confianza en fitness. Ofrecemos coach
+          virtual, planes de entrenamiento a medida y asesoramiento nutricional integral basado en IA.</p>
+        <div class="footer-social">
+          <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><i
+              class="fab fa-facebook-f"></i></a>
+          <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i
+              class="fab fa-instagram"></i></a>
+          <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="Twitter"><i
+              class="fab fa-twitter"></i></a>
+          <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i
+              class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h3>Nosotros</h3><a href="home.html">Inicio</a><a href="chatbot.html">Coach Virtual</a><a
+          href="nutricion.html">Nutricion</a><a href="estadisticas.html">Estadisticas</a>
+      </div>
+      <div class="footer-col">
+        <h3>Recursos</h3><a href="herramientas.html">Herramientas Fitness</a><a href="nutricion.html">Guías de
+          Nutrición</a><a href="perfil.html">Mi perfil</a>
+      </div>
+      <div class="footer-col">
+        <h3>Programas</h3><a href="bajar-de-peso.html">Pérdida De Peso</a><a href="ganar-masa-muscular.html">Ganar
+          Músculo</a><a href="plan-vida-saludable.html">Vida Saludable</a>
+      </div>
+      <div class="footer-col">
+        <h3>Contacto</h3>
+        <p><i class="fas fa-location-dot"></i> Colombia</p>
+        <p><i class="fas fa-phone"></i> 3202363622</p>
+        <p><i class="fas fa-envelope"></i>fitaiid@gmail.com</p>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 <span>FitAiid</span> — Todos los derechos reservados.</div>
+  </footer>
+
+  <!-- SCRIPTS — FUNCIONALIDADES SIN NINGÚN CAMBIO -->
+  <script>
+    // Logout (sin cambios)
+    function logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("user");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("userAvatar");
+      console.log("🚪 Sesión cerrada");
+      window.location.href = "login.html";
+    }
+
+    // Hamburger menu — mismo patrón e IDs que home.html
+    document.addEventListener('DOMContentLoaded', function () {
+      console.log('🔧 Initializing hamburger menu...');
+
+      const hamburger = document.getElementById('navbar-toggle');
+      const navMenu = document.getElementById('navbar-menu');
+      const menuItems = document.querySelectorAll('.navbar-header .menu a, .navbar-header .menu .logout-btn');
+      const navbar = document.querySelector('.navbar-header');
+
+      if (!hamburger) { console.warn('⚠️ Hamburger button not found'); return; }
+      if (!navMenu) { console.warn('⚠️ Navigation menu not found'); return; }
+
+      console.log('✅ Hamburger menu elements found');
+      console.log('📱 Hamburger:', hamburger);
+      console.log('📋 Menu:', navMenu);
+
+      hamburger.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('🔄 Hamburger clicked - Toggling menu');
+        navMenu.classList.toggle('active');
+        console.log('Menu active:', navMenu.classList.contains('active'));
+      });
+
+      menuItems.forEach(function (item) {
+        item.addEventListener('click', function (e) {
+          console.log('🔗 Menu item clicked:', this.textContent);
+          navMenu.classList.remove('active');
+        });
+      });
+
+      document.addEventListener('click', function (e) {
+        if (navbar && !navbar.contains(e.target)) {
+          console.log('👆 Click outside navbar - closing menu');
+          navMenu.classList.remove('active');
+        }
+      });
+
+      console.log('✅ Hamburger menu setup complete!');
+    });
+
+    // QUIZ FUNCTIONALITY — sin ningún cambio
+    const quizState = {
+      currentQuestion: 1,
+      selectedPlan: null
+    };
+
+    const planInfo = {
+      bajar: {
+        title: "Plan Bajar de Peso",
+        description: "¡Perfecto para ti! Este plan incluye comidas bajas en calorías, altas en nutrientes, con déficit calórico controlado para resultados sostenibles.",
+        link: "bajar-de-peso.html",
+        icon: "⚖️"
+      },
+      ganar: {
+        title: "Plan Ganar Masa Muscular",
+        description: "¡Ideal para tu objetivo! Este plan está diseñado para maximizar el crecimiento muscular con alta proteína y superávit calórico.",
+        link: "ganar-masa-muscular.html",
+        icon: "💪"
+      },
+      saludable: {
+        title: "Plan Vida Saludable",
+        description: "¡Excelente elección! Este plan equilibrado te ayudará a crear hábitos sostenibles y mejorar tu energía y bienestar general.",
+        link: "plan-vida-saludable.html",
+        icon: "🌿"
+      }
+    };
+
+    document.querySelectorAll('.quiz-option').forEach(option => {
+      option.addEventListener('click', function () {
+        this.parentElement.querySelectorAll('.quiz-option').forEach(opt => {
+          opt.classList.remove('selected');
+        });
+        this.classList.add('selected');
+
+        if (quizState.currentQuestion === 1) {
+          quizState.selectedPlan = this.dataset.value;
+        }
+
+        setTimeout(() => {
+          if (quizState.currentQuestion < 3) {
+            nextQuestion();
+          } else {
+            showResult();
+          }
+        }, 400);
+      });
+    });
+
+    function nextQuestion() {
+      document.querySelector(`.quiz-question[data-question="${quizState.currentQuestion}"]`).classList.remove('active');
+      document.querySelector(`.progress-dot[data-step="${quizState.currentQuestion}"]`).classList.remove('active');
+      document.querySelector(`.progress-dot[data-step="${quizState.currentQuestion}"]`).classList.add('completed');
+      quizState.currentQuestion++;
+      document.querySelector(`.quiz-question[data-question="${quizState.currentQuestion}"]`).classList.add('active');
+      document.querySelector(`.progress-dot[data-step="${quizState.currentQuestion}"]`).classList.add('active');
+    }
+
+    function showResult() {
+      document.querySelector(`.quiz-question[data-question="3"]`).classList.remove('active');
+      document.querySelector(`.progress-dot[data-step="3"]`).classList.remove('active');
+      document.querySelector(`.progress-dot[data-step="3"]`).classList.add('completed');
+
+      const result = planInfo[quizState.selectedPlan];
+      document.querySelector('.result-icon').textContent = result.icon;
+      document.getElementById('resultTitle').textContent = result.title;
+      document.getElementById('resultDescription').textContent = result.description;
+      document.getElementById('resultBtn').href = result.link;
+      document.getElementById('quizResult').classList.add('active');
+    }
+
+    function restartQuiz() {
+      quizState.currentQuestion = 1;
+      quizState.selectedPlan = null;
+      document.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+      document.querySelectorAll('.progress-dot').forEach(dot => {
+        dot.classList.remove('active', 'completed');
+      });
+      document.querySelector('.progress-dot[data-step="1"]').classList.add('active');
+      document.getElementById('quizResult').classList.remove('active');
+      document.querySelectorAll('.quiz-question').forEach(q => q.classList.remove('active'));
+      document.querySelector('.quiz-question[data-question="1"]').classList.add('active');
+    }
+  </script>
+
+</body>
+
+</html>

@@ -4,6 +4,7 @@
 const User = require('../models/User');
 const express = require('express');
 const router = express.Router();
+const catchAsync = require('../utils/catchAsync');
 const { authLimiter } = require('../middleware/rateLimiter');
 const authController = require('../controllers/authController');
 const { verificarToken } = require('../middleware/auth');
@@ -37,7 +38,7 @@ router.post('/register',
     authLimiter,
     registerValidation,
     handleValidationErrors,
-    authController.register
+    catchAsync(authController.register)
 );
 
 /**
@@ -49,7 +50,7 @@ router.post('/register-with-code',
     authLimiter,
     registerValidation,
     handleValidationErrors,
-    authController.registerWithCode
+    catchAsync(authController.registerWithCode)
 );
 
 /**
@@ -61,7 +62,7 @@ router.post('/login',
     authLimiter,
     loginValidation,
     handleValidationErrors,
-    authController.login
+    catchAsync(authController.login)
 );
 
 /**
@@ -69,8 +70,8 @@ router.post('/login',
  * @desc    Login o registro con Google
  * @access  Público
  */
-router.post('/google', authController.googleLogin);
-router.post('/google-register', authController.googleRegister);
+router.post('/google', catchAsync(authController.googleLogin));
+router.post('/google-register', catchAsync(authController.googleRegister));
 /**
  * @route   POST /api/auth/verify-registration
  * @desc    Verificar código de registro
@@ -78,7 +79,7 @@ router.post('/google-register', authController.googleRegister);
  */
 router.post('/verify-registration',
     authLimiter,
-    authController.verifyRegistrationCode
+    catchAsync(authController.verifyRegistrationCode)
 );
 
 /**
@@ -88,7 +89,7 @@ router.post('/verify-registration',
  */
 router.post('/resend-verification',
     authLimiter,
-    authController.resendVerificationCode
+    catchAsync(authController.resendVerificationCode)
 );
 
 // =============================================
@@ -102,7 +103,7 @@ router.post('/resend-verification',
  */
 router.post('/forgot-password', 
     authLimiter,
-    authController.forgotPassword
+    catchAsync(authController.forgotPassword)
 );
 
 /**
@@ -112,7 +113,7 @@ router.post('/forgot-password',
  */
 router.post('/verify-code',
     authLimiter,
-    authController.verifyResetCode
+    catchAsync(authController.verifyResetCode)
 );
 
 /**
@@ -122,7 +123,7 @@ router.post('/verify-code',
  */
 router.post('/reset-password',
     authLimiter,
-    authController.resetPassword
+    catchAsync(authController.resetPassword)
 );
 
 // =============================================
@@ -134,7 +135,7 @@ router.post('/reset-password',
  * @desc    Obtener perfil del usuario autenticado
  * @access  Privado
  */
-router.get('/profile', getProfile);
+router.get('/profile', catchAsync(getProfile));
 
 /**
  * @route   PUT /api/auth/profile
@@ -144,7 +145,7 @@ router.get('/profile', getProfile);
 router.put('/profile',
     updateProfileValidation,
     handleValidationErrors,
-    updateProfile
+    catchAsync(updateProfile)
 );
 
 // =============================================

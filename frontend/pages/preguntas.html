@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cuestionario FitAiid</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles/preguntas.css" />
+  <script src="../scripts/config.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="logo-container">
+      <div class="top-line"></div>
+      <img src="../img/logo.png" alt="FitAiid Logo">
+    </div>
+
+    <!-- PREGUNTA 1: GÉNERO -->
+    <div class="question active" id="q1">
+      <h1>ALCANZA TUS METAS FITNESS CON FITAIID</h1>
+      <h3>Elige tu género para iniciar</h3>
+      <div class="option hombre" onclick="selectGender('hombre')"><span>Hombre</span></div>
+      <div class="option mujer" onclick="selectGender('mujer')"><span>Mujer</span></div>
+    </div>
+
+    <!-- PREGUNTA 2: EDAD -->
+    <div class="question" id="q2">
+      <h2>¿Cuál es tu edad?</h2>
+      <input type="number" id="edad" placeholder="Ingresa tu edad (14 - 100)" min="14" max="100" />
+      <p id="errorEdad" class="error-msg"></p>
+      <button onclick="validarEdad()">Siguiente →</button>
+    </div>
+
+    <!-- PREGUNTA 3: ALTURA -->
+    <div class="question" id="q3">
+      <h2>¿Cuál es tu altura (cm)?</h2>
+      <input type="number" placeholder="Ej: 165" id="altura" min="100" max="250" />
+      <p id="errorAltura" class="error-msg"></p>
+      <button onclick="validarAltura()">Siguiente →</button>
+    </div>
+
+    <!-- PREGUNTA 4: PESO -->
+    <div class="question" id="q4">
+      <h2>¿Cuál es tu peso (kg)?</h2>
+      <input type="number" placeholder="Ej: 65" id="peso" min="30" max="300" />
+      <p id="errorPeso" class="error-msg"></p>
+      <button onclick="validarPeso()">Siguiente →</button>
+    </div>
+
+    <!-- PREGUNTA 5: NIVEL -->
+    <div class="question" id="q5">
+      <h2>¿Cuál es tu nivel de experiencia?</h2>
+      <div class="option" onclick="selectLevel('principiante')">Principiante</div>
+      <div class="option" onclick="selectLevel('intermedio')">Intermedio</div>
+      <div class="option" onclick="selectLevel('avanzado')">Avanzado</div>
+    </div>
+
+    <!-- PREGUNTA 6: OBJETIVO -->
+    <div class="question" id="q6">
+      <h2>¿Cuál es tu objetivo principal?</h2>
+      <div class="option" onclick="selectGoal('tonificar')">Tonificar</div>
+      <div class="option" onclick="selectGoal('ganar masa muscular')">Ganar masa muscular</div>
+      <div class="option" onclick="selectGoal('bajar de peso')">Bajar de peso</div>
+    </div>
+
+    <!-- PREGUNTA 7: CONDICIONES -->
+    <div class="question" id="q7">
+      <h2>¿Tienes alguna lesión o condición médica?</h2>
+      <input type="text" id="condicion" placeholder="Ej: Ninguna / Rodilla lesionada" />
+      <p id="errorCondicion" class="error-msg"></p>
+      <button onclick="validarCondicion()">Siguiente →</button>
+    </div>
+
+    <!-- PREGUNTA 8: LUGAR -->
+    <div class="question" id="q8">
+      <h2>¿Dónde prefieres entrenar?</h2>
+      <div class="option" onclick="selectLocation('casa')">Casa</div>
+      <div class="option" onclick="selectLocation('gym')">Gym</div>
+    </div>
+
+    <!-- PREGUNTA 9: DÍAS -->
+    <div class="question" id="q9">
+      <h2>¿Cuántos días a la semana puedes entrenar?</h2>
+      <div class="option" onclick="selectDays(1)">1</div>
+      <div class="option" onclick="selectDays(2)">2</div>
+      <div class="option" onclick="selectDays(3)">3</div>
+      <div class="option" onclick="selectDays(4)">4</div>
+      <div class="option" onclick="selectDays(5)">5</div>
+    </div>
+
+    <!-- PREGUNTA 10: DURACIÓN -->
+    <div class="question" id="q10">
+      <h2>¿Cuánto tiempo por sesión?</h2>
+      <div class="option" onclick="selectDuration('30 min')">30 min</div>
+      <div class="option" onclick="selectDuration('45 min')">45 min</div>
+      <div class="option" onclick="selectDuration('1 hr')">1 hr</div>
+      <div class="option" onclick="selectDuration('+1 hr')">+1 hr</div>
+    </div>
+
+    <!-- PANTALLA FINAL -->
+    <div class="question" id="finish">
+      <h2>¡Gracias! 💪</h2>
+      <p id="finishMessage">Guardando tu perfil fitness...</p>
+      <button id="continuar" style="display:none;" onclick="goToHome()">Continuar</button>
+    </div>
+  </div>
+
+
+  <script>
+    // =============================================
+    // OBJETO PARA ALMACENAR RESPUESTAS
+    // =============================================
+    const questionnaireData = {
+      gender: null,
+      age: null,
+      height: null,
+      weight: null,
+      fitnessLevel: null,
+      mainGoal: null,
+      medicalConditions: null,
+      trainingLocation: null,
+      trainingDaysPerWeek: null,
+      sessionDuration: null
+    };
+
+    // Obtener userId del localStorage (debe guardarse después del registro)
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+      alert('Error: No se encontró información del usuario. Por favor inicia sesión nuevamente.');
+      window.location.href = 'login.html';
+    }
+
+    // =============================================
+    // FUNCIONES PARA CAPTURAR RESPUESTAS
+    // =============================================
+    function selectGender(gender) {
+      questionnaireData.gender = gender;
+      nextQuestion('q2');
+    }
+
+    function selectLevel(level) {
+      questionnaireData.fitnessLevel = level;
+      nextQuestion('q6');
+    }
+
+    function selectGoal(goal) {
+      questionnaireData.mainGoal = goal;
+      nextQuestion('q7');
+    }
+
+    function selectLocation(location) {
+      questionnaireData.trainingLocation = location;
+      nextQuestion('q9');
+    }
+
+    function selectDays(days) {
+      questionnaireData.trainingDaysPerWeek = days;
+      nextQuestion('q10');
+    }
+
+    function selectDuration(duration) {
+      questionnaireData.sessionDuration = duration;
+      finishQuestionnaire(); // Última pregunta, enviar datos
+    }
+
+    // =============================================
+    // VALIDACIONES CON CAPTURA DE DATOS
+    // =============================================
+    function validarEdad() {
+      const edad = document.getElementById("edad");
+      const error = document.getElementById("errorEdad");
+      const valor = parseInt(edad.value);
+
+      edad.classList.remove("invalid", "valid");
+      error.textContent = "";
+
+      if (!valor) {
+        error.textContent = "Por favor ingresa tu edad.";
+        edad.classList.add("invalid");
+        return;
+      }
+      if (valor < 14 || valor > 100) {
+        error.textContent = "La edad debe estar entre 14 y 100 años.";
+        edad.classList.add("invalid");
+        return;
+      }
+
+      questionnaireData.age = valor;
+      edad.classList.add("valid");
+      nextQuestion("q3");
+    }
+
+    function validarAltura() {
+      const altura = document.getElementById("altura");
+      const error = document.getElementById("errorAltura");
+      const valor = parseInt(altura.value);
+
+      altura.classList.remove("invalid", "valid");
+      error.textContent = "";
+
+      if (!valor) {
+        error.textContent = "Por favor ingresa tu altura.";
+        altura.classList.add("invalid");
+        return;
+      }
+      if (valor < 100 || valor > 250) {
+        error.textContent = "La altura debe estar entre 100 y 250 cm.";
+        altura.classList.add("invalid");
+        return;
+      }
+
+      questionnaireData.height = valor;
+      altura.classList.add("valid");
+      nextQuestion("q4");
+    }
+
+    function validarPeso() {
+      const peso = document.getElementById("peso");
+      const error = document.getElementById("errorPeso");
+      const valor = parseInt(peso.value);
+
+      peso.classList.remove("invalid", "valid");
+      error.textContent = "";
+
+      if (!valor) {
+        error.textContent = "Por favor ingresa tu peso.";
+        peso.classList.add("invalid");
+        return;
+      }
+      if (valor < 30 || valor > 300) {
+        error.textContent = "El peso debe estar entre 30 y 300 kg.";
+        peso.classList.add("invalid");
+        return;
+      }
+
+      questionnaireData.weight = valor;
+      peso.classList.add("valid");
+      nextQuestion("q5");
+    }
+
+    function validarCondicion() {
+      const condicion = document.getElementById("condicion");
+      const error = document.getElementById("errorCondicion");
+      const valor = condicion.value.trim();
+
+      condicion.classList.remove("invalid", "valid");
+      error.textContent = "";
+
+      if (!valor) {
+        error.textContent = "Debes escribir una respuesta (o escribe 'ninguna').";
+        condicion.classList.add("invalid");
+        return;
+      }
+
+      questionnaireData.medicalConditions = valor;
+      condicion.classList.add("valid");
+      nextQuestion("q8");
+    }
+
+    // =============================================
+    // NAVEGACIÓN ENTRE PREGUNTAS
+    // =============================================
+    function nextQuestion(nextId) {
+      const current = document.querySelector(".question.active");
+      current.classList.remove("active");
+      document.getElementById(nextId).classList.add("active");
+      updateLogoPosition(nextId);
+    }
+
+    function updateLogoPosition(nextId) {
+      const logo = document.querySelector(".logo-container");
+      if (nextId !== "q1") {
+        logo.classList.add("logo-centered");
+      } else {
+        logo.classList.remove("logo-centered");
+      }
+    }
+
+    // =============================================
+    // ENVIAR DATOS A MONGODB
+    // =============================================
+    async function finishQuestionnaire() {
+      const current = document.querySelector(".question.active");
+      current.classList.remove("active");
+      document.getElementById("finish").classList.add("active");
+      updateLogoPosition("finish");
+
+      console.log('📤 Enviando cuestionario a MongoDB:', questionnaireData);
+
+      try {
+        // 🔐 OBTENER TOKEN DEL LOCALSTORAGE
+        const authToken = localStorage.getItem('token') || localStorage.getItem('authToken');
+        
+        if (!authToken) {
+          throw new Error('No se encontró token de autenticación. Por favor inicia sesión nuevamente.');
+        }
+
+        const response = await fetch(`${CONFIG.API_URL}/api/questionnaire`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}` // ✅ AGREGAR AUTHORIZATION HEADER
+          },
+          body: JSON.stringify({
+            userId: userId,
+            ...questionnaireData
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          console.log('✅ Cuestionario guardado:', data);
+          localStorage.setItem('fitnessProfile', JSON.stringify(questionnaireData));
+          console.log('💾 Perfil guardado en localStorage:', questionnaireData);
+          document.getElementById('finishMessage').textContent =
+            '¡Perfil fitness guardado exitosamente! 🎉 Redirigiendo';
+          // ⭐ REDIRECCIÓN AUTOMÁTICA
+          setTimeout(() => {
+            window.location.href = 'home.html';
+          }, 2000); // Redirige después de 2 segundos
+
+        } else {
+          throw new Error(data.message || 'Error al guardar');
+        }
+
+
+      } catch (error) {
+        console.error('❌ Error:', error);
+        
+        // Mostrar mensaje específico para token faltante
+        if (error.message.includes('token')) {
+          document.getElementById('finishMessage').innerHTML =
+            '🔐 Tu sesión expiró.<br>Por favor inicia sesión nuevamente.';
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 3000);
+        } else {
+          document.getElementById('finishMessage').innerHTML =
+            '⚠️ Hubo un problema al guardar tu perfil.<br>Por favor intenta de nuevo.';
+
+          // Mostrar botón para reintentar
+          const retryBtn = document.createElement('button');
+          retryBtn.textContent = 'Reintentar';
+          retryBtn.onclick = finishQuestionnaire;
+          document.getElementById('finish').appendChild(retryBtn);
+        }
+      }
+    }
+
+    function goToHome() {
+      window.location.href = 'home.html';
+    }
+
+    // =============================================
+    // LIMITAR DÍGITOS EN INPUTS
+    // =============================================
+    document.getElementById("edad").addEventListener("input", function () {
+      if (this.value.length > 3) this.value = this.value.slice(0, 3);
+    });
+
+    document.getElementById("altura").addEventListener("input", function () {
+      if (this.value.length > 3) this.value = this.value.slice(0, 3);
+    });
+
+    document.getElementById("peso").addEventListener("input", function () {
+      if (this.value.length > 3) this.value = this.value.slice(0, 3);
+    });
+  </script>
+  <!-- PROTECCIÓN DE AUTENTICACIÓN -->
+
+</body>
+
+</html>

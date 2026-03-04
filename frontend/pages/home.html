@@ -1,0 +1,4913 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitAiid - Tu Plataforma Fitness con IA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="../scripts/config.js"></script>
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #0a0a0a;
+      --bg-card: #111111;
+      --bg-card-hover: #1a1a1a;
+      --accent: #ff3d00;
+      --accent-light: #ff6b3d;
+      --accent-dark: #cc3100;
+      --accent-glow: rgba(255, 61, 0, 0.3);
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0b0;
+      --text-muted: #707070;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --info: #3b82f6;
+      --gradient-accent: linear-gradient(135deg, var(--accent), var(--accent-light));
+      --gradient-dark: linear-gradient(180deg, transparent, var(--bg-primary));
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Oswald', 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      min-height: 100vh;
+      padding-top: 80px;
+    }
+
+    /* ============================================
+       NAVBAR MEJORADO Y COMPLETAMENTE RESPONSIVO
+       ============================================ */
+    .navbar-header {
+      width: 100%;
+      padding: 15px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(12, 12, 12, 0.95);
+      backdrop-filter: blur(10px);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9999;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      border-bottom: 1px solid rgba(255, 61, 0, 0.1);
+    }
+
+    /* Logo Section */
+    .navbar-header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      z-index: 10001;
+    }
+
+    .navbar-header .logo img {
+      width: 55px;
+      height: 55px;
+      object-fit: contain;
+    }
+
+    .navbar-header .brand-text h2 {
+      color: #ff2e00;
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    .navbar-header .brand-text p {
+      font-size: 12px;
+      color: #ccc;
+      font-weight: 400;
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    /* Desktop Menu */
+    .navbar-header .menu {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .navbar-header .menu a {
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      text-decoration: none;
+      padding-bottom: 5px;
+      transition: all 0.3s ease;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+    }
+
+    .navbar-header .menu a:hover {
+      color: #ff2e00;
+      border-bottom-color: #ff2e00;
+    }
+
+    .navbar-header .menu a.active {
+      color: #ff2e00;
+      border-bottom: 3px solid #ff2e00;
+    }
+
+    .navbar-header .menu .profile-link {
+      color: #ff2e00;
+      font-weight: 600;
+    }
+
+    .navbar-header .menu .logout-btn {
+      background: linear-gradient(135deg, #ff4444, #cc0000);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s;
+      font-family: "Oswald", sans-serif;
+      white-space: nowrap;
+    }
+
+    .navbar-header .menu .logout-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);
+    }
+
+    /* Navbar Actions (Bell + Hamburger) */
+    .navbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      z-index: 10001;
+    }
+
+    /* Notification Bell */
+    .navbar-header .bell {
+      font-size: 22px;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.2s;
+      background: transparent;
+      border: none;
+      color: white;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .navbar-header .bell:hover {
+      transform: scale(1.1);
+    }
+
+    .navbar-header .bell.pending::after {
+      content: '!';
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 16px;
+      height: 16px;
+      background: #ff2e00;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse 2s infinite;
+    }
+
+    .navbar-header .bell.active::after {
+      content: '✓';
+      background: #22c55e;
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+      }
+    }
+
+    /* Hamburger Button */
+    .navbar-toggle {
+      display: none;
+      background: none;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      font-size: 24px;
+      cursor: pointer;
+      flex-shrink: 0;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      width: 44px;
+      height: 44px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .navbar-toggle:hover {
+      background: rgba(255, 61, 0, 0.1);
+      border-color: var(--accent-light);
+      color: var(--accent-light);
+    }
+
+    .navbar-toggle:active {
+      transform: scale(0.95);
+    }
+
+    /* ============================================
+       RESPONSIVE NAVBAR
+       ============================================ */
+    
+    @media (max-width: 1024px) {
+      .navbar-header {
+        padding: 15px 40px;
+      }
+
+      .navbar-header .menu {
+        gap: 25px;
+      }
+
+      .navbar-header .menu a {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-top: 70px;
+      }
+
+      .navbar-header {
+        padding: 12px 15px;
+      }
+
+      .navbar-header .logo img {
+        width: 45px;
+        height: 45px;
+      }
+
+      .navbar-header .brand-text h2 {
+        font-size: 18px;
+      }
+
+      .navbar-header .brand-text p {
+        font-size: 10px;
+      }
+
+      /* Mostrar hamburger menu */
+      .navbar-toggle {
+        display: flex;
+      }
+
+      /* Menu móvil */
+      .navbar-header .menu {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: rgba(12, 12, 12, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        justify-content: flex-start;
+        border-bottom: 2px solid transparent;
+        flex: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .navbar-header .menu.active {
+        max-height: 450px;
+        border-bottom-color: rgba(255, 61, 0, 0.3);
+      }
+
+      .navbar-header .menu a,
+      .navbar-header .menu .logout-btn {
+        font-size: 15px;
+        padding: 16px 25px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        border-left: 3px solid transparent;
+        border-top: none;
+        border-right: none;
+        width: 100%;
+        text-align: left;
+        transition: all 0.3s ease;
+        border-radius: 0;
+      }
+
+      .navbar-header .menu a:hover,
+      .navbar-header .menu .logout-btn:hover {
+        background: rgba(255, 61, 0, 0.05);
+        border-left-color: var(--accent);
+        padding-left: 30px;
+        border-bottom-color: rgba(255, 255, 255, 0.05);
+      }
+
+      .navbar-header .menu a.active {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        border-left: 3px solid #ff2e00;
+        background: rgba(255, 61, 0, 0.08);
+      }
+
+      .navbar-header .menu .profile-link {
+        display: block;
+        width: 100%;
+      }
+
+      .navbar-header .menu .logout-btn {
+        background: rgba(255, 68, 68, 0.1);
+        color: #ff9999;
+        font-size: 15px;
+        border-left: 3px solid transparent;
+      }
+
+      .navbar-header .menu .logout-btn:hover {
+        background: rgba(255, 68, 68, 0.2);
+        border-left-color: #ff4444;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .navbar-header .bell {
+        font-size: 20px;
+        padding: 6px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar-header {
+        padding: 10px 12px;
+      }
+
+      .navbar-header .logo img {
+        width: 40px;
+        height: 40px;
+      }
+
+      .navbar-header .brand-text h2 {
+        font-size: 16px;
+      }
+
+      .navbar-header .brand-text p {
+        font-size: 9px;
+      }
+
+      .navbar-toggle {
+        font-size: 20px;
+        width: 40px;
+        height: 40px;
+        padding: 6px 10px;
+      }
+
+      .navbar-header .bell {
+        font-size: 18px;
+      }
+
+      .navbar-actions {
+        gap: 10px;
+      }
+    }
+    /* ============================================
+       HERO SECTION
+       ============================================ */
+    .hero {
+      min-height: 100vh;
+      padding: 120px 60px 60px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(ellipse at 30% 20%, var(--accent-glow) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(255, 107, 61, 0.1) 0%, transparent 40%);
+      pointer-events: none;
+    }
+
+    .hero-container {
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-content {
+      padding-right: 40px;
+    }
+
+    .hero-greeting {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .hero-greeting .wave {
+      font-size: 32px;
+      animation: wave 2s ease-in-out infinite;
+    }
+
+    @keyframes wave {
+      0%, 100% {
+        transform: rotate(0deg);
+      }
+      25% {
+        transform: rotate(20deg);
+      }
+      75% {
+        transform: rotate(-10deg);
+      }
+    }
+
+    .hero-greeting span {
+      font-size: 18px;
+      color: var(--text-secondary);
+    }
+
+    .hero-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .hero-title .username {
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .hero-motivation {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 32px;
+    }
+
+    .hero-motivation .quote-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 61, 0, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .hero-motivation p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .hero-motivation p strong {
+      color: var(--accent);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .hero-stat {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px 24px;
+      flex: 1;
+      transition: all 0.3s ease;
+    }
+
+    .hero-stat:hover {
+      border-color: var(--accent);
+      transform: translateY(-5px);
+    }
+
+    .hero-stat-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 61, 0, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .hero-stat-value {
+      font-family: 'Oswald', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .hero-stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 32px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--gradient-accent);
+      color: white;
+      box-shadow: 0 10px 30px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px var(--accent-glow);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Hero Right - Dashboard Cards */
+    .hero-dashboard {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .dashboard-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 28px;
+      transition: all 0.3s ease;
+    }
+
+    .dashboard-card:hover {
+      border-color: rgba(255, 61, 0, 0.3);
+      transform: translateX(-5px);
+    }
+
+    .dashboard-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .dashboard-card-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dashboard-card-title i {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 61, 0, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--accent);
+    }
+
+    .dashboard-card-title h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .dashboard-card-badge {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--success);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Calories Card */
+    .calories-content {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .calories-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent) 0% 75%, var(--bg-secondary) 75% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .calories-circle::before {
+      content: '';
+      position: absolute;
+      width: 110px;
+      height: 110px;
+      background: var(--bg-card);
+      border-radius: 50%;
+    }
+
+    .calories-circle-inner {
+      position: relative;
+      text-align: center;
+      z-index: 1;
+    }
+
+    .calories-circle-value {
+      font-family: 'Oswald', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .calories-circle-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .calories-details {
+      flex: 1;
+    }
+
+    .calories-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .calories-row:last-child {
+      border-bottom: none;
+    }
+
+    .calories-row-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .calories-row-label i {
+      font-size: 14px;
+    }
+
+    .calories-row-value {
+      font-family: 'Oswald', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    /* Distribution Card Styles */
+    .distribution-card {
+      min-height: 320px;
+    }
+
+    .distribution-content {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .chart-container-home {
+      width: 100%;
+      max-width: 150px;
+      height: 200px;
+      position: relative;
+      margin: 0 auto;
+    }
+
+    .chart-container-home canvas {
+      max-height: 200px !important;
+    }
+
+    .distribution-legend {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .legend-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateX(5px);
+    }
+
+    .legend-item-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .legend-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .legend-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .legend-percentage {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-left: 4px;
+    }
+
+    .empty-chart-message {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-chart-message i {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.3;
+    }
+
+    .empty-chart-message p {
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .empty-chart-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: var(--gradient-accent);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .empty-chart-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    /* Fitty Card */
+    .fitty-card {
+      background: linear-gradient(135deg, var(--bg-card), rgba(255, 61, 0, 0.05));
+      border-color: rgba(255, 61, 0, 0.2);
+    }
+
+    .fitty-content {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .fitty-avatar {
+      width: 70px;
+      height: 70px;
+      background: var(--gradient-accent);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .fitty-avatar::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      width: 14px;
+      height: 14px;
+      background: var(--success);
+      border: 3px solid var(--bg-card);
+      border-radius: 50%;
+    }
+
+    .fitty-message {
+      flex: 1;
+    }
+
+    .fitty-message h4 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .fitty-message p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .fitty-btn {
+      background: var(--gradient-accent);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .fitty-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px var(--accent-glow);
+    }
+    /* ============================================
+       QUICK ACCESS SECTION
+       ============================================ */
+    .quick-access {
+      padding: 80px 60px;
+      background: var(--bg-secondary);
+      position: relative;
+    }
+
+    .quick-access::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    .section-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-subtitle {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 42px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .quick-access-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 24px;
+    }
+
+    .quick-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 32px 24px;
+      text-align: center;
+      transition: all 0.4s ease;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quick-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-accent);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .quick-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .quick-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .quick-card-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 61, 0, 0.1);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px;
+      transition: all 0.3s ease;
+    }
+
+    .quick-card:hover .quick-card-icon {
+      background: var(--gradient-accent);
+      transform: scale(1.1);
+    }
+
+    .quick-card:hover .quick-card-icon i {
+      color: white;
+    }
+
+    .quick-card-icon i {
+      color: var(--accent);
+      transition: color 0.3s ease;
+    }
+
+    .quick-card h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .quick-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ============================================
+       TODAY'S PLAN SECTION
+       ============================================ */
+    .today-plan {
+      padding: 80px 60px;
+      background: var(--bg-primary);
+    }
+
+    .today-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
+
+    /* ============================================
+       CIRCUITO FUNCIONAL - OPTIMIZADO
+       ============================================ */
+    .workout-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 24px 32px 28px 32px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      min-height: 650px;
+    }
+
+    .workout-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .workout-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .workout-info h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .workout-info p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .workout-badge {
+      background: rgba(255, 61, 0, 0.1);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .workout-exercises {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 20px;
+      overflow-y: auto;
+      padding-right: 4px;
+      justify-content: space-evenly;
+    }
+
+    .workout-exercises::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .workout-exercises::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    .workout-exercises::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 10px;
+    }
+
+    .exercise-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 20px 20px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      min-height: 70px;
+    }
+
+    .exercise-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--gradient-accent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .exercise-item:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    .exercise-item:hover::before {
+      opacity: 1;
+    }
+
+    .exercise-number {
+      width: 36px;
+      height: 36px;
+      background: var(--gradient-accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(255, 61, 0, 0.3);
+    }
+
+    .exercise-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .exercise-info h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .exercise-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .exercise-duration {
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      color: var(--accent);
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .workout-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .workout-stats {
+      display: flex;
+      gap: 24px;
+    }
+
+    .workout-stat {
+      text-align: center;
+    }
+
+    .workout-stat-value {
+      font-family: 'Oswald', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .workout-stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* Streak Card */
+    .streak-card {
+      background: linear-gradient(135deg, var(--bg-card), rgba(255, 61, 0, 0.08));
+      border: 1px solid rgba(255, 61, 0, 0.2);
+      border-radius: 24px;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .streak-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      animation: pulse-streak 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-streak {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+
+    .streak-value {
+      font-family: 'Oswald', sans-serif;
+      font-size: 64px;
+      font-weight: 700;
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    .streak-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+    }
+
+    .streak-days {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .streak-day {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+    }
+
+    .streak-day.completed {
+      background: var(--gradient-accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .streak-day.today {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .streak-message {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .streak-message strong {
+      color: var(--accent);
+    }
+
+    /* ============================================
+       EJERCICIO ALEATORIO DEL DÍA
+       ============================================ */
+    .random-exercise-card {
+      background: linear-gradient(135deg, var(--bg-card), rgba(255, 61, 0, 0.08));
+      border: 1px solid rgba(255, 61, 0, 0.2);
+      border-radius: 24px;
+      padding: 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .random-exercise-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(255, 61, 0, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .exercise-header {
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .exercise-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .exercise-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .exercise-display {
+      transition: all 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s ease;
+    }
+
+    .exercise-display:hover {
+      border-color: var(--accent);
+    }
+
+    .exercise-emoji {
+      font-size: 56px;
+      margin-bottom: 16px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .exercise-name {
+      font-family: 'Oswald', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .exercise-details {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .exercise-detail {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      background: var(--bg-card);
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .exercise-detail i {
+      color: var(--accent);
+      font-size: 14px;
+    }
+
+    .exercise-benefit {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 0 16px;
+    }
+
+    .random-btn {
+      width: 100%;
+      background: var(--gradient-accent);
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .random-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px var(--accent-glow);
+    }
+
+    .random-btn:active {
+      transform: translateY(0);
+    }
+
+    .random-btn i {
+      font-size: 18px;
+      animation: rotate 0.6s ease-in-out;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .random-btn.loading i {
+      animation: rotate 0.6s linear infinite;
+    }
+    /* =============================================
+       DESAFÍO RÁPIDO: 60 SEGUNDOS - VERSIÓN COMPACTA
+       ============================================= */
+    .challenge-60-card {
+      background: linear-gradient(145deg, var(--bg-card), #0d0d0d);
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      position: relative;
+      overflow: hidden;
+      margin-top: 24px;
+      max-height: 520px;
+    }
+
+    .challenge-60-card::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -30%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      animation: challenge-glow 4s ease-in-out infinite;
+    }
+
+    @keyframes challenge-glow {
+      0%, 100% {
+        opacity: 0.2;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.4;
+        transform: scale(1.1);
+      }
+    }
+
+    .challenge-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .challenge-title-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .challenge-icon {
+      font-size: 36px;
+      filter: drop-shadow(0 0 15px var(--accent-glow));
+    }
+
+    .challenge-title {
+      font-size: 18px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+      letter-spacing: 1px;
+    }
+
+    .challenge-subtitle {
+      color: var(--text-secondary);
+      font-size: 12px;
+      margin: 4px 0 0 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .challenge-streak {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 61, 0, 0.1);
+      padding: 6px 12px;
+      border-radius: 50px;
+      border: 1px solid rgba(255, 61, 0, 0.2);
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 13px;
+    }
+
+    .challenge-streak i {
+      animation: fire-flicker 1.5s ease-in-out infinite;
+      font-size: 14px;
+    }
+
+    @keyframes fire-flicker {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+    }
+
+    /* Estados del desafío */
+    .challenge-state {
+      display: none;
+      animation: challenge-fade-in 0.4s ease;
+    }
+
+    .challenge-state.active {
+      display: block;
+    }
+
+    @keyframes challenge-fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Estado Inicial */
+    .challenge-exercise-preview {
+      text-align: center;
+      padding: 16px 0;
+    }
+
+    .challenge-exercise-emoji {
+      font-size: 56px;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 0 20px var(--accent-glow));
+      animation: exercise-bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes exercise-bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    .challenge-exercise-name {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px 0;
+      letter-spacing: 2px;
+    }
+
+    .challenge-exercise-desc {
+      color: var(--text-secondary);
+      font-size: 13px;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .challenge-start-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--gradient-accent);
+      border: none;
+      border-radius: 14px;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 16px 0;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(255, 61, 0, 0.3);
+      font-family: 'Oswald', sans-serif;
+    }
+
+    .challenge-start-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 61, 0, 0.5);
+    }
+
+    .challenge-start-btn i {
+      font-size: 16px;
+    }
+
+    .challenge-records {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .challenge-record-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: center;
+    }
+
+    .record-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .record-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* Estado Activo */
+    .challenge-timer-container {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      margin: 16px auto;
+    }
+
+    .challenge-timer-circle {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .timer-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.05);
+      stroke-width: 6;
+    }
+
+    .timer-progress {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 565.48;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear;
+      filter: drop-shadow(0 0 8px var(--accent-glow));
+    }
+
+    .challenge-timer-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .challenge-timer {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      text-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .challenge-timer-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .challenge-counter-container {
+      text-align: center;
+      margin: 16px 0;
+    }
+
+    .challenge-counter {
+      font-size: 56px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+      animation: counter-pulse 0.3s ease;
+    }
+
+    @keyframes counter-pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+
+    .challenge-count-btn {
+      width: 100%;
+      max-width: 280px;
+      padding: 18px;
+      background: var(--gradient-accent);
+      border: none;
+      border-radius: 14px;
+      color: white;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      box-shadow: 0 6px 20px rgba(255, 61, 0, 0.4);
+      font-family: 'Oswald', sans-serif;
+    }
+
+    .challenge-count-btn:active {
+      transform: scale(0.95);
+    }
+
+    .challenge-stop-btn {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 12px;
+      transition: all 0.3s ease;
+      font-family: 'Oswald', sans-serif;
+    }
+
+    .challenge-stop-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Estado Resultado */
+    .challenge-result-animation {
+      text-align: center;
+      margin-bottom: 16px;
+      position: relative;
+      height: 70px;
+    }
+
+    .result-confetti {
+      font-size: 48px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: confetti-fall 2s ease infinite;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        transform: translateX(-50%) translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(-50%) translateY(60px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .result-trophy {
+      font-size: 60px;
+      filter: drop-shadow(0 0 20px var(--accent-glow));
+      animation: trophy-bounce 1s ease-in-out infinite;
+    }
+
+    @keyframes trophy-bounce {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+
+    .challenge-result-title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), #ffaa00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0 0 12px 0;
+    }
+
+    .challenge-result-score {
+      text-align: center;
+      margin: 16px 0;
+    }
+
+    .result-score-value {
+      display: block;
+      font-size: 52px;
+      font-weight: 700;
+      color: var(--accent);
+      text-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .result-score-label {
+      display: block;
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .challenge-result-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .result-stat {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .result-stat-icon {
+      font-size: 28px;
+    }
+
+    .result-stat-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .result-stat-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .result-stat-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .challenge-result-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .challenge-retry-btn,
+    .challenge-share-btn {
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.3s ease;
+      border: none;
+      font-family: 'Oswald', sans-serif;
+    }
+
+    .challenge-retry-btn {
+      background: var(--gradient-accent);
+      color: white;
+      box-shadow: 0 4px 12px rgba(255, 61, 0, 0.3);
+    }
+
+    .challenge-retry-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 61, 0, 0.5);
+    }
+
+    .challenge-share-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+
+    .challenge-share-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* =============================================
+       BOTÓN DE AYUDA EN EJERCICIOS
+       ============================================= */
+    .exercise-help-btn {
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 61, 0, 0.1);
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+      margin-left: 8px;
+    }
+
+    .exercise-help-btn:hover {
+      background: var(--gradient-accent);
+      color: white;
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(255, 61, 0, 0.4);
+    }
+
+    .exercise-help-btn i {
+      font-size: 14px;
+    }
+
+    /* =============================================
+       MINI CHAT DE AYUDA DE EJERCICIO
+       ============================================= */
+    .exercise-chat-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(5px);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .exercise-chat-overlay.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .exercise-chat-modal {
+      background: var(--bg-card);
+      border: 2px solid var(--accent);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .exercise-chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      background: linear-gradient(135deg, var(--bg-card), rgba(255, 61, 0, 0.05));
+    }
+
+    .exercise-chat-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .exercise-chat-title i {
+      width: 40px;
+      height: 40px;
+      background: var(--gradient-accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: white;
+    }
+
+    .exercise-chat-title h4 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+      color: var(--text-primary);
+    }
+
+    .exercise-chat-title p {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin: 2px 0 0 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .exercise-chat-close {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .exercise-chat-close:hover {
+      background: rgba(255, 61, 0, 0.1);
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: rotate(90deg);
+    }
+
+    .exercise-chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 400px;
+    }
+
+    .exercise-chat-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .exercise-chat-messages::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .exercise-chat-messages::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 10px;
+    }
+
+    .exercise-message {
+      display: flex;
+      gap: 10px;
+      animation: messageSlideIn 0.3s ease;
+    }
+
+    @keyframes messageSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .exercise-message.user {
+      flex-direction: row-reverse;
+    }
+
+    .exercise-message-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .exercise-message.bot .exercise-message-avatar {
+      background: var(--gradient-accent);
+      color: white;
+    }
+
+    .exercise-message.user .exercise-message-avatar {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+    }
+
+    .exercise-message-content {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 12px 16px;
+      max-width: 75%;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .exercise-message.bot .exercise-message-content {
+      border-left: 3px solid var(--accent);
+      background: rgba(255, 61, 0, 0.05);
+    }
+
+    .exercise-message.user .exercise-message-content {
+      background: rgba(255, 255, 255, 0.1);
+      text-align: right;
+    }
+
+    .exercise-typing {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .exercise-typing i {
+      color: var(--accent);
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .exercise-chat-input {
+      display: flex;
+      gap: 12px;
+      padding: 16px 20px;
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+    }
+
+    .exercise-chat-input input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    .exercise-chat-input input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .exercise-chat-input input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .exercise-chat-input button {
+      width: 44px;
+      height: 44px;
+      background: var(--gradient-accent);
+      border: none;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(255, 61, 0, 0.3);
+    }
+
+    .exercise-chat-input button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 61, 0, 0.5);
+    }
+
+    .exercise-chat-input button:active {
+      transform: translateY(0);
+    }
+    /* ============================================
+       ESTILOS PARA MODALES DE CALCULADORAS
+       ============================================ */
+    .calc-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(5px);
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 20px;
+    }
+
+    .calc-modal.active {
+      display: flex;
+    }
+
+    .calc-modal-content {
+      background: #1a1a1a;
+      width: 100%;
+      max-width: 420px;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      border: 2px solid #ff3d00;
+      color: white;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .calc-modal-close {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      color: #ff3d00;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      background: none;
+      border: none;
+      transition: color 0.3s;
+    }
+
+    .calc-modal-close:hover {
+      color: #ff6b3d;
+    }
+
+    .calc-modal-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: #ff3d00;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      font-family: 'Oswald', sans-serif;
+    }
+
+    .calc-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .calc-form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .calc-form-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ff3d00;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .calc-form-input,
+    .calc-form-select {
+      width: 100%;
+      height: 42px;
+      background: transparent;
+      border: 2px solid #ff3d00;
+      border-radius: 8px;
+      padding: 0 12px;
+      color: white;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    .calc-form-input:focus,
+    .calc-form-select:focus {
+      outline: none;
+      border-color: #ff6b3d;
+    }
+
+    .calc-form-input::placeholder {
+      color: #707070;
+    }
+
+    .calc-form-select option {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .calc-radio-group {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-top: 8px;
+    }
+
+    .calc-radio-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #b0b0b0;
+    }
+
+    .calc-radio-label input[type="radio"] {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ff3d00;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .calc-radio-label input[type="radio"]:checked {
+      background: #ff3d00;
+    }
+
+    .calc-submit-btn {
+      width: 100%;
+      height: 48px;
+      background: linear-gradient(135deg, #ff3d00, #ff6b3d);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Oswald', sans-serif;
+      margin-top: 8px;
+    }
+
+    .calc-submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 61, 0, 0.4);
+    }
+
+    .calc-result {
+      display: none;
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .calc-result.active {
+      display: block;
+    }
+
+    .calc-result-title {
+      font-size: 18px;
+      color: #ff6b3d;
+      margin-bottom: 16px;
+    }
+
+    .calc-result-value {
+      font-size: 52px;
+      font-weight: 700;
+      color: #ff3d00;
+      font-family: 'Oswald', sans-serif;
+      margin-bottom: 8px;
+    }
+
+    .calc-result-label {
+      font-size: 16px;
+      color: #b0b0b0;
+      margin-bottom: 24px;
+    }
+
+    .calc-reset-btn {
+      background: transparent;
+      color: #ff3d00;
+      border: 2px solid #ff3d00;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      font-family: 'Oswald', sans-serif;
+    }
+
+    .calc-reset-btn:hover {
+      background: #ff3d00;
+      color: white;
+    }
+
+    /* ============================================
+       MODAL DE SELECCIÓN DE HERRAMIENTAS
+       ============================================ */
+    .tools-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .tools-modal.active {
+      display: flex;
+    }
+
+    .tools-modal-content {
+      background: var(--bg-card);
+      width: 100%;
+      max-width: 1000px;
+      padding: 48px;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+      border: 2px solid var(--accent);
+      position: relative;
+    }
+
+    .tools-modal-close {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      color: var(--accent);
+      font-size: 32px;
+      font-weight: bold;
+      cursor: pointer;
+      background: none;
+      border: none;
+      transition: all 0.3s;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .tools-modal-close:hover {
+      background: rgba(255, 61, 0, 0.1);
+      transform: rotate(90deg);
+    }
+
+    .tools-modal-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .tools-modal-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .tools-modal-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .tools-grid-modal {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .tool-card-modal {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-color);
+      border-radius: 20px;
+      padding: 32px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-card-modal::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-accent);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .tool-card-modal:hover {
+      border-color: var(--accent);
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(255, 61, 0, 0.3);
+    }
+
+    .tool-card-modal:hover::before {
+      transform: scaleX(1);
+    }
+
+    .tool-icon-modal {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 61, 0, 0.1);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 20px;
+      transition: all 0.3s ease;
+    }
+
+    .tool-card-modal:hover .tool-icon-modal {
+      background: var(--gradient-accent);
+      transform: scale(1.1);
+    }
+
+    .tool-card-modal:hover .tool-icon-modal i {
+      color: white;
+    }
+
+    .tool-icon-modal i {
+      color: var(--accent);
+      transition: color 0.3s ease;
+    }
+
+    .tool-name-modal {
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .tool-description-modal {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ============================================
+       MODAL DE NOTIFICACIONES PUSH
+       ============================================ */
+    .notification-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .notification-modal.active {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .notification-modal-content {
+      background: #0d0d0d;
+      border: 1px solid rgba(255, 80, 0, 0.25);
+      border-radius: 28px;
+      padding: 0;
+      max-width: 460px;
+      width: 92%;
+      text-align: center;
+      box-shadow:
+        0 40px 100px rgba(0, 0, 0, 0.8),
+        0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+        0 0 80px rgba(255, 61, 0, 0.08);
+      animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .notification-modal-content::before {
+      content: '';
+      display: block;
+      height: 4px;
+      background: linear-gradient(90deg, #ff2200, #ff6a00, #ffaa00, #ff6a00, #ff2200);
+      background-size: 300% 100%;
+      animation: fireStripe 2s linear infinite;
+    }
+
+    @keyframes fireStripe {
+      0% {
+        background-position: 0% 0%;
+      }
+      100% {
+        background-position: 300% 0%;
+      }
+    }
+
+    .notification-modal-content::after {
+      content: '';
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 320px;
+      height: 200px;
+      background: radial-gradient(ellipse, rgba(255, 61, 0, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .notification-modal-inner {
+      padding: 36px 36px 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .modal-icon-notification {
+      font-size: 68px;
+      margin-bottom: 6px;
+      display: inline-block;
+      animation: bellRing 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 28px rgba(255, 140, 0, 0.8));
+    }
+
+    @keyframes bellRing {
+      0%, 55%, 100% {
+        transform: rotate(0deg) scale(1);
+      }
+      60% {
+        transform: rotate(-18deg) scale(1.1);
+      }
+      65% {
+        transform: rotate(18deg) scale(1.1);
+      }
+      70% {
+        transform: rotate(-12deg) scale(1.07);
+      }
+      75% {
+        transform: rotate(12deg) scale(1.07);
+      }
+      80% {
+        transform: rotate(0deg) scale(1);
+      }
+    }
+
+    .modal-pretitle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(255, 61, 0, 0.15), rgba(255, 106, 0, 0.1));
+      border: 1px solid rgba(255, 80, 0, 0.3);
+      border-radius: 999px;
+      padding: 4px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #ff7a3d;
+      font-family: 'Inter', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 14px;
+    }
+
+    .notification-modal-content h3 {
+      font-size: 30px;
+      font-weight: 700;
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff 30%, #ffb899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+    }
+
+    .notification-modal-content > .notification-modal-inner > p {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 24px;
+      line-height: 1.6;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .modal-benefits {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+    }
+
+    .benefit-item::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, #ff3d00, #ff9500);
+      opacity: 0;
+      transition: opacity 0.25s;
+      border-radius: 3px 0 0 3px;
+    }
+
+    .benefit-item:hover {
+      background: rgba(255, 61, 0, 0.07);
+      border-color: rgba(255, 61, 0, 0.2);
+      transform: translateX(5px);
+    }
+
+    .benefit-item:hover::after {
+      opacity: 1;
+    }
+
+    .benefit-icon {
+      font-size: 22px;
+      min-width: 32px;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .benefit-texts {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .benefit-texts b {
+      font-size: 13px;
+      font-weight: 600;
+      color: #f0f0f0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .benefit-texts small {
+      font-size: 11.5px;
+      color: #666;
+      font-family: 'Inter', sans-serif;
+      line-height: 1.4;
+    }
+
+    .modal-actions-notification {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-notification-primary {
+      padding: 16px 32px;
+      border: none;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      background: linear-gradient(135deg, #ff2200 0%, #ff6a00 50%, #ff9500 100%);
+      color: white;
+      box-shadow:
+        0 8px 30px rgba(255, 61, 0, 0.5),
+        0 2px 8px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-notification-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-notification-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 40px rgba(255, 61, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn-notification-primary:hover::before {
+      left: 150%;
+    }
+
+    .btn-notification-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-notification-secondary {
+      padding: 11px 32px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: transparent;
+      color: #555;
+    }
+
+    .btn-notification-secondary:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.12);
+      color: #888;
+    }
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .footer {
+      background: var(--bg-primary);
+      padding: 80px 60px 40px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      gap: 50px;
+    }
+
+    .footer-col h3 {
+      font-family: 'Oswald', sans-serif;
+      color: var(--accent);
+      margin-bottom: 20px;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .footer-col a {
+      display: block;
+      color: var(--text-secondary);
+      text-decoration: none;
+      margin-bottom: 12px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .footer-col a:hover {
+      color: var(--accent);
+      padding-left: 5px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .footer-logo img {
+      height: 50px;
+      filter: drop-shadow(0 0 10px var(--accent-glow));
+    }
+
+    .footer-logo span {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .footer-desc {
+      line-height: 1.7;
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 12px;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+      margin: 0;
+      padding: 0;
+    }
+
+    .footer-social a:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+      padding-left: 0;
+    }
+
+    .footer-col p {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .footer-col p i {
+      color: var(--accent);
+      width: 16px;
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 60px auto 0;
+      padding-top: 30px;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .footer-bottom span {
+      color: var(--accent);
+    }
+
+    /* ============================================
+       RESPONSIVE COMPLETO
+       ============================================ */
+    
+    /* Tablet Grande (1024px - 1200px) */
+    @media (max-width: 1200px) {
+      .hero-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero-content {
+        padding-right: 0;
+        text-align: center;
+      }
+
+      .hero-greeting {
+        justify-content: center;
+      }
+
+      .hero-motivation {
+        justify-content: center;
+      }
+
+      .hero-stats {
+        justify-content: center;
+      }
+
+      .hero-actions {
+        justify-content: center;
+      }
+
+      .quick-access-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .today-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Tablet (768px - 1024px) */
+    @media (max-width: 1024px) {
+      .hero {
+        padding: 100px 40px 60px;
+      }
+
+      .hero-title {
+        font-size: 48px;
+      }
+
+      .hero-subtitle {
+        font-size: 24px;
+      }
+
+      .quick-access {
+        padding: 60px 40px;
+      }
+
+      .today-plan {
+        padding: 60px 40px;
+      }
+
+      .section-title {
+        font-size: 36px;
+      }
+    }
+
+    /* Mobile Grande (481px - 768px) */
+    @media (max-width: 768px) {
+      .hero {
+        padding: 80px 20px 40px;
+        min-height: auto;
+      }
+
+      .hero-title {
+        font-size: 36px;
+      }
+
+      .hero-subtitle {
+        font-size: 20px;
+      }
+
+      .hero-greeting .wave {
+        font-size: 28px;
+      }
+
+      .hero-greeting span {
+        font-size: 16px;
+      }
+
+      .hero-stats {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .quick-access {
+        padding: 60px 20px;
+      }
+
+      .quick-access-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        font-size: 32px;
+      }
+
+      .today-plan {
+        padding: 60px 20px;
+      }
+
+      .workout-card {
+        min-height: auto;
+      }
+
+      .fitty-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .calories-content {
+        flex-direction: column;
+      }
+
+      .footer {
+        padding: 60px 20px 30px;
+      }
+
+      .footer-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .footer-logo {
+        justify-content: center;
+      }
+
+      .footer-social {
+        justify-content: center;
+      }
+
+      .tools-grid-modal {
+        grid-template-columns: 1fr;
+      }
+
+      .tools-modal-content {
+        padding: 32px 24px;
+      }
+
+      .tools-modal-title {
+        font-size: 28px;
+      }
+
+      .challenge-60-card {
+        padding: 20px;
+        max-height: none;
+      }
+
+      .challenge-header {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .challenge-records {
+        grid-template-columns: 1fr;
+      }
+
+      .challenge-result-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .challenge-result-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .exercise-chat-modal {
+        max-width: 100%;
+        max-height: 90vh;
+        margin: 0 10px;
+      }
+
+      .exercise-help-btn {
+        width: 28px;
+        height: 28px;
+      }
+
+      .exercise-help-btn i {
+        font-size: 12px;
+      }
+
+      .notification-modal-inner {
+        padding: 28px 20px 24px;
+      }
+
+      .modal-icon-notification {
+        font-size: 52px;
+      }
+
+      .notification-modal-content h3 {
+        font-size: 24px;
+      }
+
+      .benefit-item {
+        padding: 11px 13px;
+      }
+    }
+
+    /* Mobile Pequeño (320px - 480px) */
+    @media (max-width: 480px) {
+      .hero-title {
+        font-size: 28px;
+      }
+
+      .hero-subtitle {
+        font-size: 18px;
+      }
+
+      .hero-stat-value {
+        font-size: 24px;
+      }
+
+      .dashboard-card {
+        padding: 20px;
+      }
+
+      .section-title {
+        font-size: 24px;
+      }
+
+      .quick-card h3 {
+        font-size: 18px;
+      }
+
+      .quick-card-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+      }
+    }
+
+    /* Ajustes adicionales para elementos específicos en mobile */
+    @media (max-width: 768px) {
+      /* Asegurar que las grillas sean de una columna en mobile */
+      .dashboard-grid,
+      .stats-grid,
+      .grid-container,
+      [style*="display: grid"] {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+      }
+
+      /* Asegurar que las tarjetas ocupen todo el ancho */
+      .card,
+      .stat-card,
+      .chart-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+
+      /* Ajustar padding de contenedores en mobile */
+      .section-container {
+        padding: 0 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR MEJORADO -->
+  <header class="navbar-header">
+    <div class="logo">
+      <img src="../img/logo.png" alt="FitAiid Logo">
+      <div class="brand-text">
+        <h2>FitAiid</h2>
+        <p>Transforma Tu Cuerpo</p>
+      </div>
+    </div>
+
+    <nav class="menu" id="navbar-menu">
+      <a href="home.html" class="active">Inicio</a>
+      <a href="entrenador.html">Entrenamiento</a>
+      <a href="chatbot.html">Coach Virtual</a>
+      <a href="nutricion.html">Nutrición</a>
+      <a href="estadisticas.html">Estadísticas</a>
+      <a href="perfil.html" class="profile-link">Mi Perfil</a>
+      <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+    </nav>
+
+    <div class="navbar-actions">
+      <button id="notificationBell" class="bell">🔔</button>
+      <button class="navbar-toggle" id="navbar-toggle">☰</button>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-greeting">
+          <span class="wave">👋</span>
+          <span id="greetingText">¡Buenos días!</span>
+        </div>
+        <h1 class="hero-title">
+          BIENVENIDO, <span class="username" id="userName">USUARIO</span>
+        </h1>
+        <h2 class="hero-subtitle">¿Listo para entrenar hoy?</h2>
+
+        <div class="hero-motivation">
+          <div class="quote-icon">💪</div>
+          <p id="motivationalQuote">"<strong>El único mal entrenamiento</strong> es el que no hiciste."</p>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-icon">
+              <i class="fas fa-fire"></i>
+            </div>
+            <div class="hero-stat-value" id="streakCount">7</div>
+            <div class="hero-stat-label">Días de racha</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-icon">
+              <i class="fas fa-dumbbell"></i>
+            </div>
+            <div class="hero-stat-value" id="workoutsCount">24</div>
+            <div class="hero-stat-label">Entrenamientos</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-icon">
+              <i class="fas fa-trophy"></i>
+            </div>
+            <div class="hero-stat-value" id="goalsCount">5</div>
+            <div class="hero-stat-label">Metas logradas</div>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <a href="entrenador.html" class="btn btn-primary">
+            <i class="fas fa-play"></i> Empezar Entreno
+          </a>
+          <a href="nutricion.html" class="btn btn-secondary">
+            <i class="fas fa-utensils"></i> Ver Nutrición
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-dashboard">
+        <!-- Distribution Chart Card -->
+        <div class="dashboard-card distribution-card">
+          <div class="dashboard-card-header">
+            <div class="dashboard-card-title">
+              <i class="fas fa-bullseye"></i>
+              <h3>Distribución de Entrenamientos</h3>
+            </div>
+            <span class="dashboard-card-badge" id="totalWorkoutsDistribution">0 rutinas</span>
+          </div>
+          <div class="distribution-content">
+            <div class="chart-container-home">
+              <canvas id="distributionChart"></canvas>
+            </div>
+            <div class="distribution-legend" id="distributionLegend">
+              <!-- Se genera dinámicamente -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Fitty Card -->
+        <div class="dashboard-card fitty-card">
+          <div class="fitty-content">
+            <div class="fitty-avatar">🤖</div>
+            <div class="fitty-message">
+              <h4>Fitty dice:</h4>
+              <p id="fittyMessage">¡Hola! Hoy es un gran día para superar tus límites. ¿Empezamos con tu rutina?</p>
+            </div>
+            <a href="chatbot.html" class="fitty-btn">
+              Hablar <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK ACCESS SECTION -->
+  <section class="quick-access">
+    <div class="section-container">
+      <div class="section-header">
+        <p class="section-subtitle">Acceso Rápido</p>
+        <h2 class="section-title">¿Qué quieres hacer hoy?</h2>
+      </div>
+
+      <div class="quick-access-grid">
+        <a href="chatbot.html" class="quick-card">
+          <div class="quick-card-icon">
+            <i class="fas fa-robot"></i>
+          </div>
+          <h3>Coach Virtual</h3>
+          <p>Habla con Fitty para obtener consejos personalizados</p>
+        </a>
+
+        <a href="nutricion.html" class="quick-card">
+          <div class="quick-card-icon">
+            <i class="fas fa-apple-alt"></i>
+          </div>
+          <h3>Nutrición</h3>
+          <p>Planes alimenticios adaptados a tus metas</p>
+        </a>
+
+        <a href="entrenador.html" class="quick-card">
+          <div class="quick-card-icon">
+            <i class="fas fa-dumbbell"></i>
+          </div>
+          <h3>Entrenamientos</h3>
+          <p>Rutinas diseñadas para tu nivel</p>
+        </a>
+
+        <a href="estadisticas.html" class="quick-card">
+          <div class="quick-card-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h3>Estadísticas</h3>
+          <p>Monitorea tu progreso y resultados</p>
+        </a>
+
+        <a href="#herramientas" class="quick-card" onclick="event.preventDefault(); abrirModalHerramientas();">
+          <div class="quick-card-icon">
+            <i class="fas fa-calculator"></i>
+          </div>
+          <h3>Herramientas Fitness</h3>
+          <p>Calculadoras de IMC, macros y consumo de agua</p>
+        </a>
+      </div>
+    </div>
+  </section>
+  <!-- TODAY'S PLAN SECTION -->
+  <section class="today-plan">
+    <div class="section-container">
+      <div class="section-header">
+        <p class="section-subtitle">Tu Plan de Hoy</p>
+        <h2 class="section-title">Rutina Sugerida</h2>
+      </div>
+
+      <div class="today-grid">
+        <!-- WORKOUT CARD -->
+        <div class="workout-card">
+          <div class="workout-header">
+            <div class="workout-info">
+              <h3>Circuito Funcional</h3>
+              <p>Entreno completo para cualquier objetivo</p>
+            </div>
+            <span class="workout-badge">Todos los niveles</span>
+          </div>
+
+          <div class="workout-exercises">
+            <div class="exercise-item">
+              <div class="exercise-number">1</div>
+              <div class="exercise-info">
+                <h4>Jumping Jacks</h4>
+                <p>Activa tu cuerpo y eleva el ritmo cardíaco</p>
+              </div>
+              <span class="exercise-duration">3 min</span>
+              <button class="exercise-help-btn"
+                onclick="abrirAyudaEjercicio('Jumping Jacks', 'Activa tu cuerpo y eleva el ritmo cardíaco')">
+                <i class="fas fa-question"></i>
+              </button>
+            </div>
+
+            <div class="exercise-item">
+              <div class="exercise-number">2</div>
+              <div class="exercise-info">
+                <h4>Sentadillas + Salto</h4>
+                <p>3 series x 15 repeticiones</p>
+              </div>
+              <span class="exercise-duration">6 min</span>
+              <button class="exercise-help-btn"
+                onclick="abrirAyudaEjercicio('Sentadillas + Salto', '3 series x 15 repeticiones')">
+                <i class="fas fa-question"></i>
+              </button>
+            </div>
+
+            <div class="exercise-item">
+              <div class="exercise-number">3</div>
+              <div class="exercise-info">
+                <h4>Flexiones (rodillas o completas)</h4>
+                <p>3 series x 10-15 repeticiones</p>
+              </div>
+              <span class="exercise-duration">5 min</span>
+              <button class="exercise-help-btn"
+                onclick="abrirAyudaEjercicio('Flexiones (rodillas o completas)', '3 series x 10-15 repeticiones')">
+                <i class="fas fa-question"></i>
+              </button>
+            </div>
+
+            <div class="exercise-item">
+              <div class="exercise-number">4</div>
+              <div class="exercise-info">
+                <h4>Plancha abdominal</h4>
+                <p>3 series x 30-45 segundos</p>
+              </div>
+              <span class="exercise-duration">4 min</span>
+              <button class="exercise-help-btn"
+                onclick="abrirAyudaEjercicio('Plancha abdominal', '3 series x 30-45 segundos')">
+                <i class="fas fa-question"></i>
+              </button>
+            </div>
+
+            <div class="exercise-item">
+              <div class="exercise-number">5</div>
+              <div class="exercise-info">
+                <h4>Zancadas alternadas</h4>
+                <p>3 series x 12 cada pierna</p>
+              </div>
+              <span class="exercise-duration">6 min</span>
+              <button class="exercise-help-btn"
+                onclick="abrirAyudaEjercicio('Zancadas alternadas', '3 series x 12 cada pierna')">
+                <i class="fas fa-question"></i>
+              </button>
+            </div>
+
+            <div class="exercise-item">
+              <div class="exercise-number">6</div>
+              <div class="exercise-info">
+                <h4>Burpees</h4>
+                <p>3 series x 8-10 repeticiones</p>
+              </div>
+              <span class="exercise-duration">5 min</span>
+              <button class="exercise-help-btn"
+                onclick="abrirAyudaEjercicio('Burpees', '3 series x 8-10 repeticiones')">
+                <i class="fas fa-question"></i>
+              </button>
+            </div>
+
+            <div class="exercise-item">
+              <div class="exercise-number">7</div>
+              <div class="exercise-info">
+                <h4>Estiramientos</h4>
+                <p>Recuperación y flexibilidad</p>
+              </div>
+              <span class="exercise-duration">3 min</span>
+              <button class="exercise-help-btn"
+                onclick="abrirAyudaEjercicio('Estiramientos', 'Recuperación y flexibilidad')">
+                <i class="fas fa-question"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="workout-footer">
+            <div class="workout-stats">
+              <div class="workout-stat">
+                <div class="workout-stat-value">32</div>
+                <div class="workout-stat-label">Minutos</div>
+              </div>
+              <div class="workout-stat">
+                <div class="workout-stat-value">300</div>
+                <div class="workout-stat-label">Calorías</div>
+              </div>
+              <div class="workout-stat">
+                <div class="workout-stat-value">7</div>
+                <div class="workout-stat-label">Ejercicios</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIDEBAR CON EJERCICIO ALEATORIO Y DESAFÍO -->
+        <div>
+          <!-- EJERCICIO ALEATORIO DEL DÍA -->
+          <div class="random-exercise-card">
+            <div class="exercise-header">
+              <h3 class="exercise-title">🎲 Ejercicio del Día</h3>
+              <p class="exercise-subtitle">Descubre un nuevo ejercicio</p>
+            </div>
+
+            <div class="exercise-display" id="exerciseDisplay">
+              <div class="exercise-emoji" id="exerciseEmoji">💪</div>
+              <h4 class="exercise-name" id="exerciseName">Flexiones</h4>
+              <div class="exercise-details">
+                <div class="exercise-detail">
+                  <i class="fas fa-redo"></i>
+                  <span id="exerciseSets">3 series</span>
+                </div>
+                <div class="exercise-detail">
+                  <i class="fas fa-hashtag"></i>
+                  <span id="exerciseReps">12 reps</span>
+                </div>
+              </div>
+              <p class="exercise-benefit" id="exerciseBenefit">Fortalece pecho, hombros y tríceps</p>
+            </div>
+
+            <button class="random-btn" onclick="generateRandomExercise()">
+              <i class="fas fa-shuffle"></i>
+              <span>Sorpréndeme</span>
+            </button>
+          </div>
+
+          <!-- DESAFÍO RÁPIDO: 60 SEGUNDOS -->
+          <div class="challenge-60-card">
+            <div class="challenge-header">
+              <div class="challenge-title-row">
+                <div class="challenge-icon">🎯</div>
+                <div>
+                  <h3 class="challenge-title">DESAFÍO RÁPIDO</h3>
+                  <p class="challenge-subtitle">¿Cuántas repeticiones puedes hacer?</p>
+                </div>
+              </div>
+              <div class="challenge-streak">
+                <i class="fas fa-fire"></i>
+                <span id="challengeStreak">0</span> días
+              </div>
+            </div>
+
+            <!-- Estado Inicial -->
+            <div id="challengeInitial" class="challenge-state active">
+              <div class="challenge-exercise-preview">
+                <div class="challenge-exercise-emoji" id="challengeExerciseEmoji">🏃</div>
+                <h4 class="challenge-exercise-name" id="challengeExerciseName">BURPEES</h4>
+                <p class="challenge-exercise-desc">60 segundos - ¡Demuestra tu poder!</p>
+              </div>
+
+              <button class="challenge-start-btn" onclick="iniciarDesafio()">
+                <i class="fas fa-play"></i>
+                COMENZAR DESAFÍO
+              </button>
+
+              <div class="challenge-records">
+                <div class="challenge-record-item">
+                  <span class="record-label">🏆 Tu récord</span>
+                  <span class="record-value" id="personalRecord">-</span>
+                </div>
+                <div class="challenge-record-item">
+                  <span class="record-label">👑 Top global</span>
+                  <span class="record-value" id="globalRecord">-</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Estado Activo (Desafío en curso) -->
+            <div id="challengeActive" class="challenge-state">
+              <div class="challenge-timer-container">
+                <svg class="challenge-timer-circle" viewBox="0 0 200 200">
+                  <circle class="timer-bg" cx="100" cy="100" r="90"></circle>
+                  <circle class="timer-progress" id="timerProgress" cx="100" cy="100" r="90"></circle>
+                </svg>
+                <div class="challenge-timer-content">
+                  <div class="challenge-timer" id="challengeTimer">60</div>
+                  <div class="challenge-timer-label">segundos</div>
+                </div>
+              </div>
+
+              <div class="challenge-counter-container">
+                <div class="challenge-counter" id="challengeCounter">0</div>
+                <button class="challenge-count-btn" id="countBtn">
+                  <i class="fas fa-plus"></i>
+                  CONTAR REP
+                </button>
+              </div>
+
+              <button class="challenge-stop-btn" onclick="detenerDesafio()">
+                <i class="fas fa-stop"></i>
+                Detener
+              </button>
+            </div>
+
+            <!-- Estado Resultado -->
+            <div id="challengeResult" class="challenge-state">
+              <div class="challenge-result-animation">
+                <div class="result-confetti">🎉</div>
+                <div class="result-trophy">🏆</div>
+              </div>
+
+              <h3 class="challenge-result-title" id="resultTitle">¡INCREÍBLE!</h3>
+              <div class="challenge-result-score">
+                <span class="result-score-value" id="resultScore">0</span>
+                <span class="result-score-label">repeticiones</span>
+              </div>
+
+              <div class="challenge-result-stats">
+                <div class="result-stat">
+                  <div class="result-stat-icon">📈</div>
+                  <div class="result-stat-content">
+                    <span class="result-stat-label">Mejora vs récord</span>
+                    <span class="result-stat-value" id="improvementPercent">-</span>
+                  </div>
+                </div>
+                <div class="result-stat">
+                  <div class="result-stat-icon">⚡</div>
+                  <div class="result-stat-content">
+                    <span class="result-stat-label">Ritmo</span>
+                    <span class="result-stat-value" id="paceValue">-</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="challenge-result-actions">
+                <button class="challenge-retry-btn" onclick="reiniciarDesafio()">
+                  <i class="fas fa-redo"></i>
+                  Intentar de nuevo
+                </button>
+                <button class="challenge-share-btn" onclick="compartirResultado()">
+                  <i class="fas fa-share-alt"></i>
+                  Compartir
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MINI CHAT DE AYUDA DE EJERCICIO -->
+  <div class="exercise-chat-overlay" id="exerciseChatOverlay" onclick="cerrarAyudaEjercicio()">
+    <div class="exercise-chat-modal" onclick="event.stopPropagation()">
+      <div class="exercise-chat-header">
+        <div class="exercise-chat-title">
+          <i class="fas fa-robot"></i>
+          <div>
+            <h4>Fitty Coach</h4>
+            <p id="exerciseChatSubtitle">Ayuda con ejercicio</p>
+          </div>
+        </div>
+        <button class="exercise-chat-close" onclick="cerrarAyudaEjercicio()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="exercise-chat-messages" id="exerciseChatMessages">
+        <!-- Mensajes se cargan dinámicamente -->
+      </div>
+
+      <div class="exercise-chat-input">
+        <input type="text" id="exerciseChatInput" placeholder="Pregunta sobre este ejercicio..."
+          onkeypress="handleExerciseChatKeypress(event)" />
+        <button onclick="enviarPreguntaEjercicio()">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE SELECCIÓN DE HERRAMIENTAS -->
+  <div id="modalHerramientas" class="tools-modal">
+    <div class="tools-modal-content">
+      <button onclick="cerrarModalHerramientas()" class="tools-modal-close">&times;</button>
+
+      <div class="tools-modal-header">
+        <h2 class="tools-modal-title">Herramientas Fitness</h2>
+        <p class="tools-modal-subtitle">Elige una calculadora</p>
+      </div>
+
+      <div class="tools-grid-modal">
+        <div class="tool-card-modal" onclick="abrirModalIMC(); cerrarModalHerramientas();">
+          <div class="tool-icon-modal">
+            <i class="fas fa-weight-scale"></i>
+          </div>
+          <h3 class="tool-name-modal">Calculadora de IMC</h3>
+          <p class="tool-description-modal">Calcula tu Índice de Masa Corporal y descubre en qué rango te encuentras</p>
+        </div>
+
+        <div class="tool-card-modal" onclick="abrirModalAgua(); cerrarModalHerramientas();">
+          <div class="tool-icon-modal">
+            <i class="fas fa-droplet"></i>
+          </div>
+          <h3 class="tool-name-modal">Consumo de Agua</h3>
+          <p class="tool-description-modal">Descubre cuánta agua debes tomar diariamente según tu peso y edad</p>
+        </div>
+
+        <div class="tool-card-modal" onclick="abrirModalMacronutrientes(); cerrarModalHerramientas();">
+          <div class="tool-icon-modal">
+            <i class="fas fa-utensils"></i>
+          </div>
+          <h3 class="tool-name-modal">Macronutrientes</h3>
+          <p class="tool-description-modal">Calcula tus necesidades calóricas diarias según tu actividad y objetivos</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CALCULADORA IMC -->
+  <div id="modalIMC" class="calc-modal">
+    <div class="calc-modal-content">
+      <button onclick="cerrarModalIMC()" class="calc-modal-close">&times;</button>
+      <h2 class="calc-modal-title">Calculadora de IMC</h2>
+
+      <form id="formIMC" class="calc-form">
+        <div class="calc-form-group">
+          <label class="calc-form-label">Peso (kg)</label>
+          <input type="number" id="pesoIMC" class="calc-form-input" min="40" max="300" step="0.1" placeholder="Ej: 70">
+        </div>
+        <div class="calc-form-group">
+          <label class="calc-form-label">Altura (cm)</label>
+          <input type="number" id="alturaIMC" class="calc-form-input" min="120" max="210" placeholder="Ej: 170">
+        </div>
+        <button type="button" onclick="calcularIMC()" class="calc-submit-btn">Calcular</button>
+      </form>
+
+      <div id="resultadoIMC" class="calc-result">
+        <p class="calc-result-title">Tu IMC es:</p>
+        <p id="valorIMC" class="calc-result-value"></p>
+        <p id="clasificacionIMC" class="calc-result-label"></p>
+        <button onclick="reiniciarIMC()" class="calc-reset-btn">Calcular nuevamente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CALCULADORA DE AGUA -->
+  <div id="modalAgua" class="calc-modal">
+    <div class="calc-modal-content">
+      <button onclick="cerrarModalAgua()" class="calc-modal-close">&times;</button>
+      <h2 class="calc-modal-title">Calculadora de Consumo de Agua</h2>
+
+      <form id="formAgua" class="calc-form">
+        <div class="calc-form-group">
+          <label class="calc-form-label">Peso (kg)</label>
+          <input type="number" id="pesoAgua" class="calc-form-input" min="30" max="300" step="0.1" placeholder="Ej: 70">
+        </div>
+        <div class="calc-form-group">
+          <label class="calc-form-label">Edad (años)</label>
+          <input type="number" id="edadAgua" class="calc-form-input" min="1" max="120" placeholder="Ej: 25">
+        </div>
+        <button type="button" onclick="calcularAgua()" class="calc-submit-btn">Calcular</button>
+      </form>
+
+      <div id="resultadoAgua" class="calc-result">
+        <p class="calc-result-title">Debes tomar aproximadamente:</p>
+        <p id="valorAgua" class="calc-result-value"></p>
+        <p class="calc-result-label">de agua al día</p>
+        <button onclick="reiniciarAgua()" class="calc-reset-btn">Calcular nuevamente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CALCULADORA DE MACRONUTRIENTES -->
+  <div id="modalMacronutrientes" class="calc-modal">
+    <div class="calc-modal-content">
+      <button onclick="cerrarModalMacronutrientes()" class="calc-modal-close">&times;</button>
+      <h2 class="calc-modal-title">Calculadora de Macronutrientes</h2>
+
+      <form id="formMacronutrientes" class="calc-form">
+        <div class="calc-form-group">
+          <label class="calc-form-label">Edad</label>
+          <input type="number" id="edad" class="calc-form-input" min="14" max="90" placeholder="Ej: 25">
+        </div>
+
+        <div class="calc-form-group">
+          <label class="calc-form-label">Género</label>
+          <div class="calc-radio-group">
+            <label class="calc-radio-label">
+              <input type="radio" name="genero" value="masculino">
+              <span>Masculino</span>
+            </label>
+            <label class="calc-radio-label">
+              <input type="radio" name="genero" value="femenino">
+              <span>Femenino</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="calc-form-group">
+          <label class="calc-form-label">Altura (cm)</label>
+          <input type="number" id="altura" class="calc-form-input" min="120" max="210" placeholder="Ej: 170">
+        </div>
+
+        <div class="calc-form-group">
+          <label class="calc-form-label">Peso (kg)</label>
+          <input type="number" id="peso" class="calc-form-input" min="30" max="200" placeholder="Ej: 70">
+        </div>
+
+        <div class="calc-form-group">
+          <label class="calc-form-label">Nivel de Actividad</label>
+          <select id="actividad" class="calc-form-select">
+            <option value="">Selecciona tu nivel</option>
+            <option value="sedentario">Sedentario (poco o ningún ejercicio)</option>
+            <option value="ligero">Ligero (ejercicio 1-3 días/semana)</option>
+            <option value="moderado">Moderado (ejercicio 3-5 días/semana)</option>
+            <option value="intenso">Intenso (ejercicio 6-7 días/semana)</option>
+          </select>
+        </div>
+
+        <div class="calc-form-group">
+          <label class="calc-form-label">Meta</label>
+          <select id="meta" class="calc-form-select">
+            <option value="">Selecciona tu meta</option>
+            <option value="bajar">Bajar de Peso</option>
+            <option value="mantener">Mantener Peso</option>
+            <option value="subir">Subir de Peso</option>
+          </select>
+        </div>
+
+        <button type="button" onclick="calcularMacronutrientes()" class="calc-submit-btn">Calcular</button>
+      </form>
+
+      <div id="resultadoMacronutrientes" class="calc-result">
+        <p class="calc-result-title">Necesitas consumir:</p>
+        <p id="valorKcal" class="calc-result-value"></p>
+        <p class="calc-result-label">por día</p>
+        <button onclick="reiniciarMacronutrientes()" class="calc-reset-btn">Calcular nuevamente</button>
+      </div>
+    </div>
+  </div>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- COLUMNA 1 — LOGO + DESCRIPCIÓN -->
+      <div class="footer-col">
+        <div class="footer-logo">
+          <img src="../img/logo.png" alt="logo">
+          <span>FitAiid</span>
+        </div>
+        <p class="footer-desc">
+          Transforma tu cuerpo con FitAiid, tu aliado de confianza en fitness.
+          Ofrecemos coach virtual, planes de entrenamiento a medida y asesoramiento
+          nutricional integral basado en IA.
+        </p>
+        <div class="footer-social">
+          <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="Twitter">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube">
+            <i class="fab fa-youtube"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- COLUMNA 2 — NOSOTROS -->
+      <div class="footer-col">
+        <h3>Nosotros</h3>
+        <a href="entrenador.html">Entrenamiento</a>
+        <a href="chatbot.html">Coach Virtual</a>
+        <a href="nutricion.html">Nutrición</a>
+        <a href="estadisticas.html">Estadísticas</a>
+      </div>
+
+      <!-- COLUMNA 3 — RECURSOS -->
+      <div class="footer-col">
+        <h3>Recursos</h3>
+        <a href="#herramientas" onclick="event.preventDefault(); abrirModalHerramientas();">Herramientas Fitness</a>
+        <a href="nutricion.html">Guías de Nutrición</a>
+        <a href="perfil.html">Mi perfil</a>
+      </div>
+
+      <!-- COLUMNA 4 — PROGRAMAS -->
+      <div class="footer-col">
+        <h3>Programas</h3>
+        <a href="#bajar-de-peso">Pérdida De Peso</a>
+        <a href="#ganar-masa-muscular">Ganar Músculo</a>
+        <a href="#entrena">Vida Saludable</a>
+      </div>
+
+      <!-- COLUMNA 5 — CONTACTO -->
+      <div class="footer-col">
+        <h3>Contacto</h3>
+        <p><i class="fas fa-location-dot"></i> Colombia</p>
+        <p><i class="fas fa-phone"></i> 3202363622</p>
+        <p><i class="fas fa-envelope"></i> contacto@fitaiid.com</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2025 <span>FitAiid</span> — Todos los derechos reservados.
+    </div>
+  </footer>
+
+  <!-- MODAL DE NOTIFICACIONES PUSH -->
+  <div id="notificationModal" class="notification-modal">
+    <div class="notification-modal-content">
+      <div class="notification-modal-inner">
+        <div class="modal-icon-notification">🔔</div>
+        <div class="modal-pretitle">⚡ Alertas inteligentes</div>
+        <h3>Activa las<br>Notificaciones</h3>
+        <p>Mantente al máximo — recibe alertas personalizadas en tiempo real</p>
+
+        <div class="modal-benefits">
+          <div class="benefit-item">
+            <span class="benefit-icon">✅</span>
+            <div class="benefit-texts">
+              <b>Rutina completada</b>
+              <small>Celebramos cada entreno al instante</small>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">🏆</span>
+            <div class="benefit-texts">
+              <b>Logros desbloqueados</b>
+              <small>Entérate al momento de cada medalla</small>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">🔥</span>
+            <div class="benefit-texts">
+              <b>¡No pierdas tu racha!</b>
+              <small>Te avisamos antes de que se rompa tu streak</small>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">⏰</span>
+            <div class="benefit-texts">
+              <b>Sin actividad 3+ días</b>
+              <small>Recordatorio para que nunca abandones</small>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">💪</span>
+            <div class="benefit-texts">
+              <b>Motivación diaria</b>
+              <small>Mensajes que te impulsan a dar el 100%</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions-notification">
+          <button id="btnActivarNotificaciones" class="btn-notification-primary">
+            🔔 &nbsp;Activar Notificaciones
+          </button>
+          <button id="btnCancelarNotificaciones" class="btn-notification-secondary">
+            Ahora no
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts para cargar datos del usuario y notificaciones push -->
+  <script src="../scripts/home.js"></script>
+  <script src="../scripts/notifications.js"></script>
+  <!-- SCRIPTS PRINCIPALES -->
+  <script>
+    // ============================================
+    // 🔒 PROTECCIÓN Y AUTENTICACIÓN
+    // ============================================
+    const token = localStorage.getItem("token") || localStorage.getItem("authToken");
+    const userId = localStorage.getItem("userId");
+
+    if (!token || !userId) {
+      console.log("❌ No autenticado, redirigiendo a login...");
+      window.location.replace("login.html");
+    } else {
+      console.log("✅ Usuario autenticado en home");
+    }
+
+    // ============================================
+    // 👤 OBTENER DATOS DEL USUARIO
+    // ============================================
+    const userString = localStorage.getItem('user');
+    if (userString) {
+      try {
+        const user = JSON.parse(userString);
+        const userName = user.firstName || 'USUARIO';
+        document.getElementById('userName').textContent = userName.toUpperCase();
+
+        // Personalizar saludo según hora del día
+        const hour = new Date().getHours();
+        let greeting = '';
+        if (hour < 12) greeting = '¡Buenos días!';
+        else if (hour < 19) greeting = '¡Buenas tardes!';
+        else greeting = '¡Buenas noches!';
+
+        document.getElementById('greetingText').textContent = greeting;
+      } catch (e) {
+        console.error('Error al parsear usuario:', e);
+      }
+    }
+
+    // ============================================
+    // 💪 FRASES MOTIVACIONALES DIARIAS
+    // ============================================
+    const motivationalQuotes = [
+      '"<strong>El único mal entrenamiento</strong> es el que no hiciste."',
+      '"<strong>Tu cuerpo puede</strong> aguantar casi todo. Es tu mente la que tienes que convencer."',
+      '"<strong>No cuentes los días</strong>, haz que los días cuenten."',
+      '"<strong>El dolor que sientes hoy</strong> será la fuerza que sentirás mañana."',
+      '"<strong>Sé más fuerte</strong> que tus excusas."',
+      '"<strong>Cada repetición</strong> te acerca más a tu mejor versión."',
+      '"<strong>El éxito no es dado</strong>, se gana en el gimnasio."'
+    ];
+
+    const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+    document.getElementById('motivationalQuote').innerHTML = motivationalQuotes[dayOfYear % motivationalQuotes.length];
+
+    // ============================================
+    // 🤖 MENSAJES DE FITTY
+    // ============================================
+    const fittyMessages = [
+      "¡Hola! Hoy es un gran día para superar tus límites. ¿Empezamos con tu rutina?",
+      "¡Hey campeón! Tu cuerpo te lo agradecerá. ¿Listo para entrenar?",
+      "Recuerda: cada día que entrenas es un día que te acercas a tu meta. 💪",
+      "¡Vamos! No hay excusas hoy. Tu mejor versión te está esperando.",
+      "El progreso es progreso, sin importar cuán pequeño sea. ¡Tú puedes!"
+    ];
+
+    document.getElementById('fittyMessage').textContent = fittyMessages[Math.floor(Math.random() * fittyMessages.length)];
+
+    // ============================================
+    // 🚪 FUNCIÓN LOGOUT
+    // ============================================
+    function logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("user");
+      localStorage.removeItem("userEmail");
+
+      console.log("🚪 Sesión cerrada");
+      window.location.href = "login.html";
+    }
+
+    // ============================================
+    // 🎲 EJERCICIO ALEATORIO DEL DÍA
+    // ============================================
+    const exercises = [
+      { name: 'Flexiones', emoji: '💪', sets: '3 series', reps: '12 reps', benefit: 'Fortalece pecho, hombros y tríceps' },
+      { name: 'Sentadillas', emoji: '🦵', sets: '4 series', reps: '15 reps', benefit: 'Desarrolla piernas y glúteos' },
+      { name: 'Plancha', emoji: '🧘', sets: '3 series', reps: '45 seg', benefit: 'Fortalece el core y mejora la postura' },
+      { name: 'Burpees', emoji: '🔥', sets: '3 series', reps: '10 reps', benefit: 'Ejercicio completo de cuerpo entero' },
+      { name: 'Zancadas', emoji: '👟', sets: '3 series', reps: '12 c/u', benefit: 'Tonifica piernas y mejora el equilibrio' },
+      { name: 'Mountain Climbers', emoji: '⛰️', sets: '3 series', reps: '20 reps', benefit: 'Cardio intenso y core' },
+      { name: 'Fondos en Silla', emoji: '🪑', sets: '3 series', reps: '10 reps', benefit: 'Fortalece tríceps y hombros' },
+      { name: 'Jumping Jacks', emoji: '🏃', sets: '4 series', reps: '30 reps', benefit: 'Cardio y calentamiento completo' },
+      { name: 'Abdominales', emoji: '🔥', sets: '3 series', reps: '20 reps', benefit: 'Define el abdomen y core' },
+      { name: 'Elevaciones de Talón', emoji: '🦶', sets: '3 series', reps: '15 reps', benefit: 'Fortalece pantorrillas' },
+      { name: 'Superman', emoji: '🦸', sets: '3 series', reps: '15 reps', benefit: 'Fortalece espalda baja' },
+      { name: 'Puente de Glúteos', emoji: '🍑', sets: '3 series', reps: '15 reps', benefit: 'Activa glúteos y core' },
+      { name: 'Flexiones Diamante', emoji: '💎', sets: '3 series', reps: '8 reps', benefit: 'Tríceps y pecho intenso' },
+      { name: 'Saltos de Tijera', emoji: '✂️', sets: '3 series', reps: '12 c/u', benefit: 'Cardio y piernas' },
+      { name: 'Plancha Lateral', emoji: '↔️', sets: '3 series', reps: '30 seg', benefit: 'Fortalece oblicuos' },
+      { name: 'Rodillas Altas', emoji: '🏋️', sets: '3 series', reps: '30 seg', benefit: 'Cardio de alta intensidad' },
+      { name: 'Curl de Bíceps (Botella)', emoji: '🍶', sets: '3 series', reps: '15 reps', benefit: 'Fortalece bíceps' },
+      { name: 'Press de Hombros', emoji: '🙌', sets: '3 series', reps: '12 reps', benefit: 'Desarrolla hombros' },
+      { name: 'Estocadas Inversas', emoji: '⬅️', sets: '3 series', reps: '10 c/u', benefit: 'Glúteos y cuádriceps' },
+      { name: 'Bicicleta Abdominal', emoji: '🚴', sets: '3 series', reps: '20 reps', benefit: 'Define oblicuos y abdomen' }
+    ];
+
+    function generateRandomExercise() {
+      const btn = document.querySelector('.random-btn');
+      const btnIcon = btn.querySelector('i');
+
+      // Añadir clase loading
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      // Simular carga
+      setTimeout(() => {
+        const randomExercise = exercises[Math.floor(Math.random() * exercises.length)];
+
+        // Actualizar contenido con animación
+        const display = document.getElementById('exerciseDisplay');
+        display.style.opacity = '0';
+        display.style.transform = 'scale(0.95)';
+
+        setTimeout(() => {
+          document.getElementById('exerciseEmoji').textContent = randomExercise.emoji;
+          document.getElementById('exerciseName').textContent = randomExercise.name;
+          document.getElementById('exerciseSets').textContent = randomExercise.sets;
+          document.getElementById('exerciseReps').textContent = randomExercise.reps;
+          document.getElementById('exerciseBenefit').textContent = randomExercise.benefit;
+
+          display.style.opacity = '1';
+          display.style.transform = 'scale(1)';
+
+          btn.classList.remove('loading');
+          btn.disabled = false;
+        }, 300);
+      }, 600);
+    }
+
+    // ============================================
+    // 🎯 DESAFÍO 60 SEGUNDOS
+    // ============================================
+    let desafioTimer = null;
+    let desafioTiempoRestante = 60;
+    let desafioContador = 0;
+
+    function iniciarDesafio() {
+      // Cambiar al estado activo
+      document.getElementById('challengeInitial').classList.remove('active');
+      document.getElementById('challengeActive').classList.add('active');
+
+      // Reiniciar variables
+      desafioTiempoRestante = 60;
+      desafioContador = 0;
+      document.getElementById('challengeTimer').textContent = '60';
+      document.getElementById('challengeCounter').textContent = '0';
+
+      // Iniciar timer
+      const circumference = 2 * Math.PI * 90;
+      const timerProgress = document.getElementById('timerProgress');
+
+      desafioTimer = setInterval(() => {
+        desafioTiempoRestante--;
+        document.getElementById('challengeTimer').textContent = desafioTiempoRestante;
+
+        // Actualizar círculo de progreso
+        const offset = circumference - (desafioTiempoRestante / 60) * circumference;
+        timerProgress.style.strokeDashoffset = offset;
+
+        if (desafioTiempoRestante <= 0) {
+          finalizarDesafio();
+        }
+      }, 1000);
+
+      // Event listener para contar repeticiones
+      const countBtn = document.getElementById('countBtn');
+      countBtn.onclick = () => {
+        desafioContador++;
+        document.getElementById('challengeCounter').textContent = desafioContador;
+        
+        // Animación del contador
+        const counter = document.getElementById('challengeCounter');
+        counter.style.animation = 'none';
+        setTimeout(() => {
+          counter.style.animation = 'counter-pulse 0.3s ease';
+        }, 10);
+      };
+    }
+
+    function detenerDesafio() {
+      clearInterval(desafioTimer);
+      document.getElementById('challengeActive').classList.remove('active');
+      document.getElementById('challengeInitial').classList.add('active');
+    }
+
+    function finalizarDesafio() {
+      clearInterval(desafioTimer);
+
+      // Mostrar resultado
+      document.getElementById('challengeActive').classList.remove('active');
+      document.getElementById('challengeResult').classList.add('active');
+
+      // Actualizar valores
+      document.getElementById('resultScore').textContent = desafioContador;
+
+      // Calcular mejora (simulado - en producción vendría del backend)
+      const personalRecordValue = 15; // Simulado
+      const mejora = desafioContador > personalRecordValue ? 
+        `+${Math.round(((desafioContador - personalRecordValue) / personalRecordValue) * 100)}%` : 
+        'Nuevo récord';
+      document.getElementById('improvementPercent').textContent = mejora;
+
+      // Calcular ritmo
+      const ritmo = (desafioContador / 60).toFixed(1);
+      document.getElementById('paceValue').textContent = `${ritmo}/seg`;
+
+      // Título según rendimiento
+      let titulo = '¡INCREÍBLE!';
+      if (desafioContador < 10) titulo = '¡BUEN INTENTO!';
+      else if (desafioContador < 20) titulo = '¡MUY BIEN!';
+      else if (desafioContador < 30) titulo = '¡EXCELENTE!';
+      else titulo = '¡INCREÍBLE!';
+      document.getElementById('resultTitle').textContent = titulo;
+    }
+
+    function reiniciarDesafio() {
+      document.getElementById('challengeResult').classList.remove('active');
+      document.getElementById('challengeInitial').classList.add('active');
+      
+      // Reiniciar círculo de progreso
+      document.getElementById('timerProgress').style.strokeDashoffset = 0;
+    }
+
+    function compartirResultado() {
+      const texto = `¡Acabo de hacer ${desafioContador} repeticiones en 60 segundos en FitAiid! 🔥💪`;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: 'Mi desafío FitAiid',
+          text: texto
+        }).catch(err => console.log('Error al compartir:', err));
+      } else {
+        // Fallback: copiar al portapapeles
+        navigator.clipboard.writeText(texto).then(() => {
+          alert('¡Resultado copiado al portapapeles!');
+        });
+      }
+    }
+
+    // ============================================
+    // 💬 SISTEMA DE AYUDA DE EJERCICIOS
+    // ============================================
+    let currentExerciseName = '';
+    let currentExerciseDesc = '';
+
+    function abrirAyudaEjercicio(exerciseName, exerciseDesc) {
+      currentExerciseName = exerciseName;
+      currentExerciseDesc = exerciseDesc;
+      
+      document.getElementById('exerciseChatSubtitle').textContent = exerciseName;
+      document.getElementById('exerciseChatOverlay').classList.add('active');
+      
+      // Limpiar mensajes previos
+      const messagesContainer = document.getElementById('exerciseChatMessages');
+      messagesContainer.innerHTML = '';
+      
+      // Mensaje de bienvenida de Fitty
+      const welcomeMessage = `
+        <div class="exercise-message bot">
+          <div class="exercise-message-avatar">🤖</div>
+          <div class="exercise-message-content">
+            ¡Hola! Soy Fitty, tu coach virtual. Estoy aquí para ayudarte con <strong>${exerciseName}</strong>. 
+            ¿Tienes alguna pregunta sobre la técnica, beneficios o variaciones de este ejercicio?
+          </div>
+        </div>
+      `;
+      messagesContainer.innerHTML = welcomeMessage;
+    }
+
+    function cerrarAyudaEjercicio() {
+      document.getElementById('exerciseChatOverlay').classList.remove('active');
+    }
+
+    function handleExerciseChatKeypress(event) {
+      if (event.key === 'Enter') {
+        enviarPreguntaEjercicio();
+      }
+    }
+
+    function enviarPreguntaEjercicio() {
+      const input = document.getElementById('exerciseChatInput');
+      const pregunta = input.value.trim();
+      
+      if (!pregunta) return;
+      
+      const messagesContainer = document.getElementById('exerciseChatMessages');
+      
+      // Agregar mensaje del usuario
+      const userMessage = `
+        <div class="exercise-message user">
+          <div class="exercise-message-avatar">👤</div>
+          <div class="exercise-message-content">${pregunta}</div>
+        </div>
+      `;
+      messagesContainer.innerHTML += userMessage;
+      
+      // Limpiar input
+      input.value = '';
+      
+      // Mostrar indicador de escritura
+      const typingIndicator = `
+        <div class="exercise-message bot exercise-typing">
+          <div class="exercise-message-avatar">🤖</div>
+          <div class="exercise-message-content">
+            <i class="fas fa-spinner"></i> Fitty está escribiendo...
+          </div>
+        </div>
+      `;
+      messagesContainer.innerHTML += typingIndicator;
+      
+      // Scroll al final
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      
+      // Simular respuesta de Fitty (en producción esto sería una llamada a la API)
+      setTimeout(() => {
+        // Remover indicador de escritura
+        const typingElement = messagesContainer.querySelector('.exercise-typing');
+        if (typingElement) typingElement.remove();
+        
+        // Respuesta simulada (en producción vendría de OpenAI)
+        const respuesta = generarRespuestaEjercicio(pregunta, currentExerciseName);
+        
+        const botMessage = `
+          <div class="exercise-message bot">
+            <div class="exercise-message-avatar">🤖</div>
+            <div class="exercise-message-content">${respuesta}</div>
+          </div>
+        `;
+        messagesContainer.innerHTML += botMessage;
+        
+        // Scroll al final
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }, 1500);
+    }
+
+    function generarRespuestaEjercicio(pregunta, ejercicio) {
+      // Respuestas simuladas - en producción esto se conectaría con OpenAI
+      const respuestas = {
+        'tecnica': `Para realizar <strong>${ejercicio}</strong> correctamente:\n\n1. Mantén la postura adecuada\n2. Controla el movimiento\n3. Respira de forma constante\n4. Evita movimientos bruscos`,
+        'beneficios': `Los principales beneficios de <strong>${ejercicio}</strong> son:\n\n✅ Fortalecimiento muscular\n✅ Mejora de la resistencia\n✅ Quema de calorías\n✅ Mejora de la coordinación`,
+        'variaciones': `Algunas variaciones de <strong>${ejercicio}</strong> que puedes probar:\n\n💪 Versión principiante\n💪 Versión intermedia\n💪 Versión avanzada\n💪 Con peso adicional`,
+        'default': `Entiendo tu pregunta sobre <strong>${ejercicio}</strong>. Este es un excelente ejercicio que trabaja múltiples grupos musculares. ¿Te gustaría saber más sobre la técnica correcta, beneficios o variaciones?`
+      };
+      
+      // Detectar tipo de pregunta
+      const preguntaLower = pregunta.toLowerCase();
+      if (preguntaLower.includes('técnica') || preguntaLower.includes('como') || preguntaLower.includes('cómo')) {
+        return respuestas.tecnica;
+      } else if (preguntaLower.includes('beneficio') || preguntaLower.includes('para que') || preguntaLower.includes('para qué')) {
+        return respuestas.beneficios;
+      } else if (preguntaLower.includes('variacion') || preguntaLower.includes('variación') || preguntaLower.includes('otra forma')) {
+        return respuestas.variaciones;
+      } else {
+        return respuestas.default;
+      }
+    }
+    // ============================================
+    // 🧮 FUNCIONES MODAL DE SELECCIÓN DE HERRAMIENTAS
+    // ============================================
+    function abrirModalHerramientas() {
+      document.getElementById('modalHerramientas').classList.add('active');
+    }
+
+    function cerrarModalHerramientas() {
+      document.getElementById('modalHerramientas').classList.remove('active');
+    }
+
+    // ============================================
+    // 📊 CALCULADORA IMC
+    // ============================================
+    function abrirModalIMC() {
+      document.getElementById('modalIMC').classList.add('active');
+    }
+
+    function cerrarModalIMC() {
+      document.getElementById('modalIMC').classList.remove('active');
+      reiniciarIMC();
+      abrirModalHerramientas();
+    }
+
+    function calcularIMC() {
+      const peso = parseFloat(document.getElementById('pesoIMC').value);
+      const altura = parseFloat(document.getElementById('alturaIMC').value);
+
+      if (!peso || !altura || peso <= 0 || altura <= 0) {
+        alert('Por favor ingresa peso y altura válidos.');
+        return;
+      }
+
+      const alturaM = altura / 100;
+      const imc = peso / (alturaM * alturaM);
+
+      let clasificacion = '';
+      if (imc < 18.5) clasificacion = 'Bajo peso';
+      else if (imc < 24.9) clasificacion = 'Peso normal';
+      else if (imc < 29.9) clasificacion = 'Sobrepeso';
+      else clasificacion = 'Obesidad';
+
+      document.getElementById('formIMC').style.display = 'none';
+      document.getElementById('resultadoIMC').classList.add('active');
+      document.getElementById('valorIMC').textContent = imc.toFixed(1);
+      document.getElementById('clasificacionIMC').textContent = clasificacion;
+    }
+
+    function reiniciarIMC() {
+      document.getElementById('formIMC').reset();
+      document.getElementById('formIMC').style.display = 'flex';
+      document.getElementById('resultadoIMC').classList.remove('active');
+    }
+
+    // ============================================
+    // 💧 CALCULADORA DE AGUA
+    // ============================================
+    function abrirModalAgua() {
+      document.getElementById('modalAgua').classList.add('active');
+    }
+
+    function cerrarModalAgua() {
+      document.getElementById('modalAgua').classList.remove('active');
+      reiniciarAgua();
+      abrirModalHerramientas();
+    }
+
+    function calcularAgua() {
+      const peso = parseFloat(document.getElementById('pesoAgua').value);
+      const edad = parseInt(document.getElementById('edadAgua').value);
+
+      if (!peso || !edad) {
+        alert("Por favor ingresa todos los datos");
+        return;
+      }
+
+      // Fórmula simple: adultos necesitan ~35 ml por kg de peso
+      // Ajuste según edad: niños y ancianos necesitan menos
+      let litros = peso * 0.035; // litros por kg
+
+      if (edad < 14) litros *= 0.8;      // niños
+      else if (edad > 65) litros *= 0.9; // ancianos
+
+      litros = litros.toFixed(2);
+
+      document.getElementById('formAgua').style.display = 'none';
+      document.getElementById('valorAgua').textContent = litros + " litros";
+      document.getElementById('resultadoAgua').classList.add('active');
+    }
+
+    function reiniciarAgua() {
+      document.getElementById('formAgua').reset();
+      document.getElementById('formAgua').style.display = 'flex';
+      document.getElementById('resultadoAgua').classList.remove('active');
+    }
+
+    // ============================================
+    // 🍽️ CALCULADORA DE MACRONUTRIENTES
+    // ============================================
+    function abrirModalMacronutrientes() {
+      document.getElementById('modalMacronutrientes').classList.add('active');
+    }
+
+    function cerrarModalMacronutrientes() {
+      document.getElementById('modalMacronutrientes').classList.remove('active');
+      reiniciarMacronutrientes();
+      abrirModalHerramientas();
+    }
+
+    function calcularMacronutrientes() {
+      const edad = parseInt(document.getElementById('edad').value);
+      const altura = parseFloat(document.getElementById('altura').value);
+      const peso = parseFloat(document.getElementById('peso').value);
+      const actividad = document.getElementById('actividad').value;
+      const meta = document.getElementById('meta').value;
+
+      // Detectar género
+      const genero = document.querySelector('input[name="genero"]:checked');
+      if (!genero) {
+        alert('Por favor selecciona tu género');
+        return;
+      }
+
+      if (!edad || !altura || !peso || !actividad || !meta) {
+        alert('Por favor completa todos los campos');
+        return;
+      }
+
+      let bmr = 0;
+
+      // Fórmulas Harris-Benedict revisadas
+      if (genero.value === "masculino") {
+        bmr = 88.362 + (13.397 * peso) + (4.799 * altura) - (5.677 * edad);
+      } else {
+        bmr = 447.593 + (9.247 * peso) + (3.098 * altura) - (4.330 * edad);
+      }
+
+      // Factor de actividad
+      let factorActividad = 1.2;
+      if (actividad === 'ligero') factorActividad = 1.375;
+      if (actividad === 'moderado') factorActividad = 1.55;
+      if (actividad === 'intenso') factorActividad = 1.725;
+
+      // Calorías totales
+      let calorias = bmr * factorActividad;
+
+      // Ajuste según meta
+      if (meta === 'bajar') calorias -= 400;
+      if (meta === 'subir') calorias += 400;
+
+      // Mostrar resultado
+      document.getElementById('formMacronutrientes').style.display = 'none';
+      document.getElementById('resultadoMacronutrientes').classList.add('active');
+      document.getElementById('valorKcal').textContent = `${Math.round(calorias)} kcal`;
+    }
+
+    function reiniciarMacronutrientes() {
+      document.getElementById('formMacronutrientes').reset();
+      document.getElementById('formMacronutrientes').style.display = 'flex';
+      document.getElementById('resultadoMacronutrientes').classList.remove('active');
+    }
+
+    // ============================================
+    // 🔔 EVENT LISTENERS PARA CERRAR MODALES
+    // ============================================
+    document.getElementById('modalIMC').addEventListener('click', function (e) {
+      if (e.target === this) {
+        this.classList.remove('active');
+        reiniciarIMC();
+        abrirModalHerramientas();
+      }
+    });
+
+    document.getElementById('modalAgua').addEventListener('click', function (e) {
+      if (e.target === this) {
+        this.classList.remove('active');
+        reiniciarAgua();
+        abrirModalHerramientas();
+      }
+    });
+
+    document.getElementById('modalMacronutrientes').addEventListener('click', function (e) {
+      if (e.target === this) {
+        this.classList.remove('active');
+        reiniciarMacronutrientes();
+        abrirModalHerramientas();
+      }
+    });
+
+    document.getElementById('modalHerramientas').addEventListener('click', function (e) {
+      if (e.target === this) {
+        cerrarModalHerramientas();
+      }
+    });
+
+    // ============================================
+    // 📱 HAMBURGER MENU (MOBILE)
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🔧 Initializing hamburger menu...');
+      
+      const hamburger = document.getElementById('navbar-toggle');
+      const navMenu = document.getElementById('navbar-menu');
+      const menuItems = document.querySelectorAll('.navbar-header .menu a, .navbar-header .menu .logout-btn');
+      const navbar = document.querySelector('.navbar-header');
+      
+      if (!hamburger) {
+        console.warn('⚠️ Hamburger button not found');
+        return;
+      }
+      
+      if (!navMenu) {
+        console.warn('⚠️ Navigation menu not found');
+        return;
+      }
+
+      console.log('✅ Hamburger menu elements found');
+      console.log('📱 Hamburger:', hamburger);
+      console.log('📋 Menu:', navMenu);
+
+      // Toggle menu al hacer clic en el hamburger
+      hamburger.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('🔄 Hamburger clicked - Toggling menu');
+        navMenu.classList.toggle('active');
+        console.log('Menu active:', navMenu.classList.contains('active'));
+      });
+
+      // Cerrar menu cuando se hace clic en un item
+      menuItems.forEach(function(item) {
+        item.addEventListener('click', function(e) {
+          console.log('🔗 Menu item clicked:', this.textContent);
+          navMenu.classList.remove('active');
+        });
+      });
+
+      // Cerrar menu cuando se hace clic fuera del navbar
+      document.addEventListener('click', function(e) {
+        if (navbar && !navbar.contains(e.target)) {
+          console.log('👆 Click outside navbar - closing menu');
+          navMenu.classList.remove('active');
+        }
+      });
+
+      console.log('✅ Hamburger menu setup complete!');
+    });
+
+    // ============================================
+    // 📊 CARGAR ESTADÍSTICAS (OPCIONAL)
+    // ============================================
+    function loadUserStats() {
+      // Aquí podrías hacer fetch a tu backend para obtener stats reales
+      // Por ahora usamos valores de ejemplo
+      const stats = {
+        streak: 7,
+        workouts: 24,
+        goals: 5
+      };
+
+      document.getElementById('streakCount').textContent = stats.streak;
+      document.getElementById('workoutsCount').textContent = stats.workouts;
+      document.getElementById('goalsCount').textContent = stats.goals;
+    }
+
+    // Cargar estadísticas al inicio (opcional)
+    // loadUserStats();
+
+    // ============================================
+    // 🎨 ANIMACIONES Y EFECTOS ADICIONALES
+    // ============================================
+    
+    // Efecto parallax suave en el hero
+    window.addEventListener('scroll', function() {
+      const scrolled = window.pageYOffset;
+      const hero = document.querySelector('.hero');
+      if (hero && scrolled < window.innerHeight) {
+        hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+      }
+    });
+
+    // Animación de entrada para las cards
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observar todas las cards
+    document.querySelectorAll('.quick-card, .dashboard-card').forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(card);
+    });
+
+    // ============================================
+    // 🔄 ACTUALIZACIÓN PERIÓDICA (OPCIONAL)
+    // ============================================
+    
+    // Actualizar datos cada 5 minutos
+    setInterval(() => {
+      // loadUserStats();
+      console.log('🔄 Verificando actualizaciones...');
+    }, 300000); // 5 minutos
+
+    // ============================================
+    // ⚡ OPTIMIZACIÓN DE RENDIMIENTO
+    // ============================================
+    
+    // Lazy loading para imágenes
+    if ('loading' in HTMLImageElement.prototype) {
+      const images = document.querySelectorAll('img[loading="lazy"]');
+      images.forEach(img => {
+        img.src = img.dataset.src;
+      });
+    } else {
+      // Fallback para navegadores que no soportan lazy loading
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js';
+      document.body.appendChild(script);
+    }
+
+    // ============================================
+    // 🐛 DEBUGGING Y LOGS (DESARROLLO)
+    // ============================================
+    
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      console.log('🔧 Modo desarrollo activado');
+      console.log('👤 Usuario:', userString ? JSON.parse(userString) : 'No disponible');
+      console.log('🎯 Token:', token ? '✅ Presente' : '❌ Ausente');
+      console.log('📱 Viewport:', window.innerWidth + 'x' + window.innerHeight);
+    }
+
+    // ============================================
+    // ✅ INICIALIZACIÓN COMPLETA
+    // ============================================
+    console.log('✅ FitAiid Home - Inicialización completa');
+    console.log('🎨 Tema:', 'Dark Mode');
+    console.log('📱 Responsive:', 'Activo');
+    console.log('🔔 Notificaciones:', 'Disponible');
+  </script>
+</body>
+
+</html>

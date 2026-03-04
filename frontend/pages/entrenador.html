@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitAiid - Entrenador IA Personal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../styles/entrenador.css" />
+  <script src="../scripts/config.js"></script>
+</head>
+
+<body>
+  <!-- NAVBAR MEJORADO -->
+  <header class="navbar-header">
+    <div class="logo">
+      <img src="../img/logo.png" alt="FitAiid Logo" />
+      <div class="brand-text">
+        <h2>FitAiid</h2>
+        <p>Transforma Tu Cuerpo</p>
+      </div>
+    </div>
+
+    <nav class="menu" id="navbar-menu">
+      <a href="home.html">Inicio</a>
+      <a href="entrenador.html" class="active">Entrenamiento</a>
+      <a href="chatbot.html">Coach Virtual</a>
+      <a href="nutricion.html">Nutrición</a>
+      <a href="estadisticas.html">Estadísticas</a>
+      <a href="perfil.html" class="profile-link">Mi Perfil</a>
+      <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+    </nav>
+
+    <div class="navbar-actions">
+      <button id="notificationBell" class="bell" style="display: none;"></button>
+      <button class="navbar-toggle" id="navbar-toggle">☰</button>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <i class="fas fa-robot"></i>
+          <span>Entrenador IA Personalizado</span>
+        </div>
+        <h1>TU RUTINA <span class="accent">PERFECTA</span></h1>
+        <p class="hero-subtitle">
+          Generada por inteligencia artificial basada en tu perfil fitness,
+          objetivos y disponibilidad. Cada ejercicio adaptado a ti.
+        </p>
+
+        <div class="profile-summary" id="profileSummary">
+          <div class="profile-item">
+            <i class="fas fa-bullseye"></i>
+            <span id="userGoal">Cargando...</span>
+          </div>
+          <div class="profile-item">
+            <i class="fas fa-signal"></i>
+            <span id="userLevel">Cargando...</span>
+          </div>
+          <div class="profile-item">
+            <i class="fas fa-calendar-week"></i>
+            <span id="userDays">Cargando...</span>
+          </div>
+          <div class="profile-item">
+            <i class="fas fa-location-dot"></i>
+            <span id="userLocation">Cargando...</span>
+          </div>
+        </div>
+
+        <button class="btn-generate" id="btnGenerate" onclick="generarRutina()">
+          <i class="fas fa-wand-magic-sparkles"></i>
+          Generar Mi Rutina Personalizada
+        </button>
+      </div>
+
+      <!-- FITTY COACH CARD -->
+      <div class="fitty-card">
+        <div class="fitty-header">
+          <div class="fitty-avatar">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div class="fitty-info">
+            <h3>Fitty</h3>
+            <span class="fitty-status">
+              <i class="fas fa-circle"></i> Tu Coach IA
+            </span>
+          </div>
+        </div>
+        <div class="fitty-message" id="fittyMessage">
+          ¡Hola! Soy Fitty, tu entrenador personal con IA.
+          Estoy listo para crear una rutina perfecta basada en tus objetivos.
+          ¡Haz clic en el botón para comenzar! 💪
+        </div>
+        <div class="fitty-tips">
+          <h4><i class="fas fa-lightbulb"></i> Tip del día</h4>
+          <p id="dailyTip">La consistencia supera a la intensidad. Es mejor entrenar 30 minutos todos los días que 2
+            horas una vez a la semana.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOADING OVERLAY -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="loading-spinner">
+        <i class="fas fa-dumbbell"></i>
+      </div>
+      <h2>Generando tu rutina personalizada...</h2>
+      <p id="loadingMessage">Fitty está analizando tu perfil fitness</p>
+      <div class="loading-steps">
+        <div class="loading-step active" id="step1">
+          <i class="fas fa-user-check"></i>
+          <span>Analizando perfil</span>
+        </div>
+        <div class="loading-step" id="step2">
+          <i class="fas fa-brain"></i>
+          <span>Diseñando ejercicios</span>
+        </div>
+        <div class="loading-step" id="step3">
+          <i class="fas fa-calendar-alt"></i>
+          <span>Organizando semana</span>
+        </div>
+        <div class="loading-step" id="step4">
+          <i class="fas fa-check-circle"></i>
+          <span>¡Listo!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RUTINA SECTION (Se muestra después de generar) -->
+  <section class="rutina-section" id="rutinaSection">
+    <div class="rutina-container">
+      <div class="rutina-header">
+        <div class="rutina-title">
+          <h2><i class="fas fa-calendar-week"></i> Tu Rutina Semanal</h2>
+          <p>Personalizada para <span id="rutinaUserName">ti</span></p>
+        </div>
+        <div class="rutina-actions">
+          <button class="btn-secondary" onclick="generarRutina()">
+            <i class="fas fa-sync-alt"></i> Regenerar
+          </button>
+          <button class="btn-secondary" onclick="guardarRutina()">
+            <i class="fas fa-save"></i> Guardar
+          </button>
+        </div>
+      </div>
+
+      <!-- TABS DE DÍAS -->
+      <div class="days-tabs" id="daysTabs">
+        <!-- Se generan dinámicamente -->
+      </div>
+
+      <!-- CONTENIDO DEL DÍA SELECCIONADO -->
+      <div class="day-content" id="dayContent">
+        <!-- Se genera dinámicamente -->
+      </div>
+
+      <!-- RESUMEN SEMANAL -->
+      <div class="weekly-summary" id="weeklySummary">
+        <h3><i class="fas fa-chart-pie"></i> Resumen Semanal</h3>
+        <div class="summary-stats">
+          <div class="summary-stat">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-value" id="totalMinutes">0</div>
+            <div class="stat-label">Minutos totales</div>
+          </div>
+          <div class="summary-stat">
+            <div class="stat-icon"><i class="fas fa-fire"></i></div>
+            <div class="stat-value" id="totalCalories">0</div>
+            <div class="stat-label">Calorías estimadas</div>
+          </div>
+          <div class="summary-stat">
+            <div class="stat-icon"><i class="fas fa-dumbbell"></i></div>
+            <div class="stat-value" id="totalExercises">0</div>
+            <div class="stat-label">Ejercicios</div>
+          </div>
+          <div class="summary-stat">
+            <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+            <div class="stat-value" id="totalDays">0</div>
+            <div class="stat-label">Días de entreno</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAT CON FITTY (Flotante) -->
+  <div class="chat-fab" id="chatFab" onclick="toggleChat()">
+    <i class="fas fa-comments"></i>
+    <span class="chat-badge">1</span>
+  </div>
+
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <div class="chat-avatar">
+          <i class="fas fa-robot"></i>
+        </div>
+        <div>
+          <h4>Fitty Coach</h4>
+          <span>En línea</span>
+        </div>
+      </div>
+      <button class="chat-close" onclick="toggleChat()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="message bot">
+        <div class="message-content">
+          ¡Hola! Soy Fitty 🤖 ¿Tienes dudas sobre tu rutina?
+          Puedo ayudarte a modificar ejercicios, resolver dudas sobre técnica o motivarte. ¡Pregúntame lo que quieras!
+        </div>
+      </div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="chatInput" placeholder="Escribe tu pregunta..." onkeypress="handleChatKeypress(event)" />
+      <button onclick="sendChatMessage()">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- COLUMNA 1 — LOGO + DESCRIPCIÓN -->
+      <div class="footer-col">
+        <div class="footer-logo">
+          <img src="../img/logo.png" alt="logo">
+          <span>FitAiid</span>
+        </div>
+        <p class="footer-desc">
+          Transforma tu cuerpo con FitAiid, tu aliado de confianza en fitness.
+          Ofrecemos coach virtual, planes de entrenamiento a medida y asesoramiento
+          nutricional integral basado en IA.
+        </p>
+        <div class="footer-social">
+          <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><i
+              class="fab fa-facebook-f"></i></a>
+          <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i
+              class="fab fa-instagram"></i></a>
+          <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="Twitter"><i
+              class="fab fa-twitter"></i></a>
+          <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i
+              class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <!-- COLUMNA 2 — NOSOTROS -->
+      <div class="footer-col">
+        <h3>Nosotros</h3>
+        <a href="home.html">Inicio</a>
+        <a href="chatbot.html">Coach Virtual</a>
+        <a href="nutricion.html">Nutricion</a>
+        <a href="estadisticas.html">Estadísticas</a>
+      </div>
+
+      <!-- COLUMNA 3 — RECURSOS -->
+      <div class="footer-col">
+        <h3>Recursos</h3>
+        <a href="herramientas.html">Herramientas Fitness</a>
+        <a href="videos.html"></a>
+        <a href="nutricion.html">Guías de Nutrición</a>
+        <a href="perfil.html">Mi Perfil</a>
+      </div>
+
+      <!-- COLUMNA 4 — PROGRAMAS -->
+      <div class="footer-col">
+        <h3>Programas</h3>
+        <a href="bajar-de-peso.html">Pérdida De Peso</a>
+        <a href="ganar-masa-muscular.html">Ganar Músculo</a>
+        <a href="plan-vida-saludable.html">Vida Saludable</a>
+      </div>
+
+      <!-- COLUMNA 5 — CONTACTO -->
+      <div class="footer-col">
+        <h3>Contacto</h3>
+        <p><i class="fas fa-location-dot"></i> Colombia</p>
+        <p><i class="fas fa-phone"></i> 3202363622</p>
+        <p><i class="fas fa-envelope"></i>fitaiid@gmail.com</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2025 <span>FitAiid</span> — Todos los derechos reservados.
+    </div>
+  </footer>
+
+
+  <script src="../scripts/entrenador.js"></script>
+  <!-- MODAL: Explicación de Botones -->
+  <div class="modal-overlay" id="modalExplicacion">
+    <div class="modal-info">
+      <!-- Header del Modal -->
+      <div class="modal-info-header">
+        <div class="modal-icon-success">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h2>¡Tu Rutina Está Lista! 🔥</h2>
+        <p class="modal-subtitle">
+          Antes de empezar, déjanos explicarte cómo funciona
+        </p>
+      </div>
+
+      <!-- Contenido del Modal -->
+      <div class="modal-info-content">
+
+        <!-- Sección: ¿Qué hacer ahora? -->
+        <div class="info-section">
+          <div class="info-badge">
+            <i class="fas fa-question-circle"></i>
+            <span>¿Qué hacer ahora?</span>
+          </div>
+          <p class="info-text">
+            Tu rutina ha sido generada con inteligencia artificial basada en tu perfil fitness.
+            Ahora tienes dos opciones para continuar:
+          </p>
+        </div>
+
+        <!-- Botones Explicados -->
+        <div class="buttons-explanation">
+
+          <!-- Opción 1: Guardar -->
+          <div class="button-card guardar-card">
+            <div class="button-card-icon">
+              <i class="fas fa-save"></i>
+            </div>
+            <div class="button-card-content">
+              <h3>
+                <i class="fas fa-save"></i> Guardar
+              </h3>
+              <div class="button-badge recommended">⭐ Recomendado</div>
+              <p class="button-description">
+                <strong>Esta es tu rutina definitiva</strong>
+              </p>
+              <ul class="button-benefits">
+                <li><i class="fas fa-check"></i> Se guarda permanentemente en tu cuenta</li>
+                <li><i class="fas fa-check"></i> Disponible cada vez que inicies sesión</li>
+                <li><i class="fas fa-check"></i> Registra tu progreso día a día</li>
+                <li><i class="fas fa-check"></i> Sincronizada en todos tus dispositivos</li>
+              </ul>
+              <div class="button-action-tip">
+                <i class="fas fa-lightbulb"></i>
+                <span><strong>Consejo:</strong> Guarda esta rutina y síguela durante al menos 4 semanas para ver
+                  resultados reales</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Separador -->
+          <div class="or-separator">
+            <span>O</span>
+          </div>
+
+          <!-- Opción 2: Regenerar -->
+          <div class="button-card regenerar-card">
+            <div class="button-card-icon">
+              <i class="fas fa-sync-alt"></i>
+            </div>
+            <div class="button-card-content">
+              <h3>
+                <i class="fas fa-sync-alt"></i> Regenerar
+              </h3>
+              <div class="button-badge optional">Opcional</div>
+              <p class="button-description">
+                <strong>¿No te convenció esta rutina?</strong>
+              </p>
+              <ul class="button-benefits">
+                <li><i class="fas fa-info-circle"></i> Genera una rutina completamente nueva</li>
+                <li><i class="fas fa-info-circle"></i> Usa la misma IA pero con variaciones diferentes</li>
+                <li><i class="fas fa-info-circle"></i> Puedes regenerar cuantas veces quieras</li>
+              </ul>
+              <div class="button-warning-tip">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span><strong>¡Importante!</strong> Si regeneras sin guardar primero, perderás esta rutina para
+                  siempre</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Recordatorio Final -->
+        <div class="modal-reminder">
+          <i class="fas fa-star"></i>
+          <div>
+            <strong>Recuerda:</strong> Puedes regenerar una nueva rutina en cualquier momento haciendo clic en el botón
+            "Regenerar" que aparece en la parte superior de tu rutina. Tu rutina guardada se actualizará
+            automáticamente.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer del Modal -->
+      <div class="modal-info-footer">
+        <button class="btn-modal-primary" onclick="cerrarModalYGuardar()">
+          <i class="fas fa-save"></i>
+          Entendido, Guardar Mi Rutina
+        </button>
+        <button class="btn-modal-secondary" onclick="cerrarModal()">
+          <i class="fas fa-eye"></i>
+          Solo Ver la Rutina (No Guardar Ahora)
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // 📱 HAMBURGER MENU (MOBILE)
+    // ============================================
+    (function () {
+      console.log('🔧 Initializing hamburger menu...');
+
+      const hamburger = document.querySelector('.navbar-toggle');
+      const navMenu = document.querySelector('.navbar-header .menu');
+      const menuItems = document.querySelectorAll('.navbar-header .menu a, .navbar-header .menu button');
+      const navbar = document.querySelector('.navbar-header');
+
+      if (!hamburger) {
+        console.warn('⚠️ Hamburger button not found');
+        return;
+      }
+
+      if (!navMenu) {
+        console.warn('⚠️ Navigation menu not found');
+        return;
+      }
+
+      console.log('✅ Hamburger menu elements found');
+
+      // Click en el hamburger
+      hamburger.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('🔄 Hamburger clicked - Toggling menu');
+        navMenu.classList.toggle('active');
+        console.log('Menu active:', navMenu.classList.contains('active'));
+      });
+
+      // Click en items del menú
+      menuItems.forEach(function (item) {
+        item.addEventListener('click', function (e) {
+          console.log('🔗 Menu item clicked:', this.textContent);
+          navMenu.classList.remove('active');
+        });
+      });
+
+      // Click fuera del navbar para cerrar
+      document.addEventListener('click', function (e) {
+        if (navbar && !navbar.contains(e.target)) {
+          console.log('👆 Click outside navbar - closing menu');
+          navMenu.classList.remove('active');
+        }
+      });
+
+      console.log('✅ Hamburger menu setup complete!');
+    })();
+  </script>
+</body>
+
+</html>

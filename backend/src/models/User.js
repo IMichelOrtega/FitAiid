@@ -1,5 +1,5 @@
 // =============================================
-// MODELO USUARIO - FITAIID FITNESS PLATFORM
+// MODELO USUARIO - FITAIID 
 // =============================================
 
 const mongoose = require('mongoose');
@@ -9,13 +9,66 @@ const jwt = require('jsonwebtoken');
 console.log('👤 Iniciando creación del modelo User con seguridad avanzada...');
 
 // =============================================
-// ESQUEMA DEL USUARIO
+// ESQUEMA DE ENTRENAMIENTO COMPLETADO
 // =============================================
+const completedWorkoutSchema = new mongoose.Schema({
+    date: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    nombre: {
+        type: String,
+        required: true
+    },
+    enfoque: {
+        type: String,
+        required: true
+    },
+    duracionTotal: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    caloriasEstimadas: {
+        type: Number,
+        default: 0
+    },
+    ejerciciosCompletados: {
+        type: Number,
+        required: false,
+        min: 0
+    },
+    ejerciciosDetalles: [{
+        nombre: String,
+        series: Number,
+        repeticiones: String,
+        completado: Boolean
+    }]
+}, { _id: true, timestamps: true });
 
+// =============================================
+// LOGROS
+// =============================================
+const achievementSchema = new mongoose.Schema({
+    achievementId: {
+        type: String,
+        required: true
+    },
+    nombre: String,
+    unlockedAt: {
+        type: Date,
+        default: Date.now
+    }
+}, { _id: false });
+
+// =============================================
+// ESQUEMA PRINCIPAL DEL USUARIO
+// =============================================
 const userSchema = new mongoose.Schema({
     
     // =============================================
-    // INFORMACIÓN PERSONAL BÁSICA
+    // INFORMACIÓN PERSONAL
     // =============================================
     
     firstName: {
@@ -26,7 +79,7 @@ const userSchema = new mongoose.Schema({
         maxlength: [50, 'El nombre no puede tener más de 50 caracteres'],
         validate: {
             validator: function(name) {
-                const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+                const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ'\s]+$/;
                 return nameRegex.test(name);
             },
             message: 'El nombre solo puede contener letras y espacios'
@@ -41,34 +94,25 @@ const userSchema = new mongoose.Schema({
         maxlength: [50, 'El apellido no puede tener más de 50 caracteres'],
         validate: {
             validator: function(name) {
-                const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+                const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ'\s]+$/;
                 return nameRegex.test(name);
             },
             message: 'El apellido solo puede contener letras y espacios'
         }
     },
 
-    // =============================================
-    // INFORMACIÓN DE CONTACTO
-    // =============================================
-    
     phone: {
-        type: String,
-        trim: true,
-        validate: {
-            validator: function(phone) {
-                if (!phone) return true;
-                const phoneRegex = /^(\+57)?[3][0-9]{9}$/;
-                return phoneRegex.test(phone.replace(/\s/g, ''));
-            },
-            message: 'Por favor ingresa un número de teléfono colombiano válido (ej: +57 3123456789)'
-        }
-    },
+    type: String,
+    trim: true,
+    validate: {
+        validator: function(phone) {
+            if (!phone) return true;
+            return /^\d{10}$/.test(phone.replace(/\s/g, ''));
+        },
+        message: 'El número de teléfono debe tener exactamente 10 dígitos'
+    }
+},
 
-    // =============================================
-    // EMAIL - IDENTIFICADOR ÚNICO Y CRÍTICO
-    // =============================================
-    
     email: {
         type: String,
         required: [true, 'El email es obligatorio'],
@@ -85,10 +129,6 @@ const userSchema = new mongoose.Schema({
         index: true
     },
 
-    // =============================================
-    // CONTRASEÑA - SEGURIDAD CRÍTICA
-    // =============================================
-    
     password: {
         type: String,
         required: [true, 'La contraseña es obligatoria'],
@@ -104,7 +144,7 @@ const userSchema = new mongoose.Schema({
     },
 
     // =============================================
-    // VERIFICACIÓN DE EMAIL
+    // VERIFICACIÓN CORREO ELECTRÓNICO
     // =============================================
     
     isEmailVerified: {
@@ -133,7 +173,7 @@ const userSchema = new mongoose.Schema({
     },
 
     // =============================================
-    // ROLES Y PERMISOS
+    // ROL
     // =============================================
     
     role: {
@@ -145,10 +185,6 @@ const userSchema = new mongoose.Schema({
         default: 'customer',
         index: true
     },
-    
-    // =============================================
-    // ESTADO DE LA CUENTA
-    // =============================================
     
     isActive: {
         type: Boolean,
@@ -217,106 +253,286 @@ const userSchema = new mongoose.Schema({
     },
 
     // =============================================
-    // 🏋️ PERFIL FITNESS - DATOS DEL CUESTIONARIO
+    // 📸 AVATAR DEL USUARIO
+    // =============================================
+    
+    avatarUrl: {
+        type: String,
+        default: null,
+        validate: {
+            validator: function(url) {
+                if (!url) return true;
+                return url.startsWith('data:image/') || url.startsWith('http');
+            },
+            message: 'URL de avatar inválida'
+        }
+    },
+
+    // =============================================
+    // PERFIL FITNESS - DATOS DEL CUESTIONARIO
     // =============================================
     
     fitnessProfile: {
-        // Pregunta 1: Género
         gender: {
             type: String,
             enum: ['hombre', 'mujer', null],
             default: null
         },
-        
-        // Pregunta 2: Edad
         age: {
             type: Number,
             min: [14, 'La edad mínima es 14 años'],
             max: [100, 'La edad máxima es 100 años'],
             default: null
         },
-        
-        // Pregunta 3: Altura en cm
         height: {
             type: Number,
             min: [100, 'La altura mínima es 100 cm'],
             max: [250, 'La altura máxima es 250 cm'],
             default: null
         },
-        
-        // Pregunta 4: Peso en kg
         weight: {
             type: Number,
             min: [30, 'El peso mínimo es 30 kg'],
             max: [300, 'El peso máximo es 300 kg'],
             default: null
         },
-        
-        // Pregunta 5: Nivel de experiencia
         fitnessLevel: {
             type: String,
             enum: ['principiante', 'intermedio', 'avanzado', null],
             default: null,
             index: true
         },
-        
-        // Pregunta 6: Objetivo principal
         mainGoal: {
             type: String,
             enum: ['tonificar', 'ganar masa muscular', 'bajar de peso', null],
             default: null,
             index: true
         },
-        
-        // Pregunta 7: Lesión o condición médica
         medicalConditions: {
             type: String,
             default: '',
             maxlength: [500, 'Máximo 500 caracteres']
         },
-        
-        // Pregunta 8: Lugar de entrenamiento
         trainingLocation: {
             type: String,
             enum: ['casa', 'gym', null],
             default: null
         },
-        
-        // Pregunta 9: Días por semana
         trainingDaysPerWeek: {
             type: Number,
             min: [1, 'Mínimo 1 día'],
             max: [7, 'Máximo 7 días'],
             default: null
         },
-        
-        // Pregunta 10: Tiempo por sesión
         sessionDuration: {
             type: String,
             enum: ['30 min', '45 min', '1 hr', '+1 hr', null],
             default: null
         },
-        
-        // Control de cuestionario
         questionnaireCompleted: {
             type: Boolean,
             default: false,
             index: true
         },
-        
         questionnaireCompletedAt: {
             type: Date,
             default: null
         }
-    }
-    
-}, {
+    },
+    rutinaSemanal: [{
+        nombre: {
+            type: String,
+            trim: true
+        },
+        esDescanso: {
+            type: Boolean,
+            default: false
+        },
+        enfoque: {
+            type: String,
+            trim: true
+        },
+        duracion: {
+            type: String
+        },
+        duracionTotal: {
+            type: Number
+        },
+        caloriasEstimadas: {
+            type: Number,
+            default: 0
+        },
+        mensaje: {
+            type: String
+        },
+        ejercicios: [{
+            nombre: {
+                type: String,
+                required: true
+            },
+            series: {
+                type: Number,
+                default: 3
+            },
+            repeticiones: {
+                type: String
+            },
+            descanso: {
+                type: String
+            },
+            musculoObjetivo: {
+                type: String
+            },
+            tecnica: {
+                type: String
+            },
+            completado: {
+                type: Boolean,
+                default: false
+            }
+        }],
+        completado: {
+            type: Boolean,
+            default: false
+        },
+        fechaCompletado: {
+            type: Date,
+            default: null
+        }
+    }],
+
+
+
+
+
     // =============================================
-    // OPCIONES DEL SCHEMA
+    // 🔄 SISTEMA DE CICLO AUTOMÁTICO DE DÍAS
+    // =============================================
+    diaActualIndex: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
+    
+    cicloActual: {
+        type: Number,
+        default: 1,
+        min: 1
+    },
+    
+    fechaInicioRutina: {
+        type: Date,
+        default: null
+    },
+    
+    ultimoDiaCompletado: {
+        type: Date,
+        default: null
+    },
+    
+    diasCompletadosEsteCiclo: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
+
+    // =============================================
+    // 📊 SISTEMA DE ESTADÍSTICAS Y SEGUIMIENTO (NUEVO)
     // =============================================
     
+    fitnessStats: {
+        type: {
+            workoutHistory: [completedWorkoutSchema],
+            
+            totalWorkouts: {
+                type: Number,
+                default: 0,
+                min: 0
+            },
+            totalExercises: {
+                type: Number,
+                default: 0,
+                min: 0
+            },
+            totalMinutes: {
+                type: Number,
+                default: 0,
+                min: 0
+            },
+            totalCalories: {
+                type: Number,
+                default: 0,
+                min: 0
+            },
+            
+            currentStreak: {
+                type: Number,
+                default: 0,
+                min: 0
+            },
+            maxStreak: {
+                type: Number,
+                default: 0,
+                min: 0
+            },
+            lastWorkoutDate: {
+                type: Date,
+                default: null
+            },
+            
+            achievements: [achievementSchema],
+            
+            lastStatsUpdate: {
+                type: Date,
+                default: Date.now
+            }
+        },
+        default: {
+            workoutHistory: [],
+            totalWorkouts: 0,
+            totalExercises: 0,
+            totalMinutes: 0,
+            totalCalories: 0,
+            currentStreak: 0,
+            maxStreak: 0,
+            lastWorkoutDate: null,
+            achievements: [],
+            lastStatsUpdate: Date.now()
+        }
+    },
+    // =============================================
+    // 🔔 NOTIFICACIONES PUSH
+    // =============================================
+    
+    notificationsEnabled: {
+        type: Boolean,
+        default: false
+    },
+    // =============================================
+    // 💾 RUTINA ACTUAL Y GUARDADA
+    // =============================================
+    
+    currentRoutine: {
+        type: mongoose.Schema.Types.Mixed,
+        default: null
+    },
+    
+    savedRoutine: {
+        type: mongoose.Schema.Types.Mixed,
+        default: null
+    },
+    
+    routineHistory: [{
+        rutina: mongoose.Schema.Types.Mixed,
+        generatedAt: {
+            type: Date,
+            default: Date.now
+        },
+        savedAt: Date
+    }]
+},
+{
     timestamps: true,
-    
     toJSON: { 
         virtuals: true,
         transform: function(doc, ret) {
@@ -331,11 +547,12 @@ const userSchema = new mongoose.Schema({
             return ret;
         }
     },
-    
     toObject: { 
         virtuals: true 
     }
-});
+    
+}
+);
 
 // =============================================
 // CAMPOS VIRTUALES - PROPIEDADES CALCULADAS
@@ -345,34 +562,22 @@ userSchema.virtual('fullName').get(function() {
     return `${this.firstName} ${this.lastName}`;
 });
 
-userSchema.virtual('age').get(function() {
-    if (!this.dateOfBirth) return null;
-    
-    const today = new Date();
-    const birthDate = new Date(this.dateOfBirth);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
+userSchema.virtual('bmi').get(function() {
+    if (!this.fitnessProfile?.weight || !this.fitnessProfile?.height) {
+        return null;
     }
-    
-    return age;
+    const heightInMeters = this.fitnessProfile.height / 100;
+    const bmi = this.fitnessProfile.weight / (heightInMeters * heightInMeters);
+    return Math.round(bmi * 10) / 10;
 });
 
-userSchema.virtual('fullAddress').get(function() {
-    if (!this.address || !this.address.street) return '';
-    
-    const parts = [];
-    if (this.address.street) parts.push(this.address.street);
-    if (this.address.city) parts.push(this.address.city);
-    if (this.address.state) parts.push(this.address.state);
-    if (this.address.zipCode) parts.push(`CP ${this.address.zipCode}`);
-    if (this.address.country && this.address.country !== 'Colombia') {
-        parts.push(this.address.country);
-    }
-    
-    return parts.join(', ');
+userSchema.virtual('bmiCategory').get(function() {
+    const bmi = this.bmi;
+    if (!bmi) return null;
+    if (bmi < 18.5) return 'Bajo peso';
+    if (bmi < 25) return 'Peso normal';
+    if (bmi < 30) return 'Sobrepeso';
+    return 'Obesidad';
 });
 
 userSchema.virtual('isLocked').get(function() {
@@ -396,101 +601,53 @@ userSchema.virtual('formattedTotalSpent').get(function() {
 });
 
 // =============================================
-// 🏋️ VIRTUALES FITNESS - IMC Y CATEGORÍA
-// =============================================
-
-userSchema.virtual('bmi').get(function() {
-    if (!this.fitnessProfile?.weight || !this.fitnessProfile?.height) {
-        return null;
-    }
-    
-    const heightInMeters = this.fitnessProfile.height / 100;
-    const bmi = this.fitnessProfile.weight / (heightInMeters * heightInMeters);
-    return Math.round(bmi * 10) / 10;
-});
-
-userSchema.virtual('bmiCategory').get(function() {
-    const bmi = this.bmi;
-    if (!bmi) return null;
-    
-    if (bmi < 18.5) return 'Bajo peso';
-    if (bmi < 25) return 'Peso normal';
-    if (bmi < 30) return 'Sobrepeso';
-    return 'Obesidad';
-});
-
-// =============================================
 // MIDDLEWARE PARA ENCRIPTACIÓN DE CONTRASEÑAS
 // =============================================
 
 userSchema.pre('save', async function(next) {
-    console.log(`🔍 Procesando usuario antes de guardar: ${this.email}`);
-    
     if (!this.isModified('password')) {
-        console.log(`💤 Usuario ${this.email}: contraseña no modificada, saltando encriptación`);
         return next();
     }
     
     try {
-        console.log(`🔐 Encriptando contraseña para usuario: ${this.email}`);
-        
         const saltRounds = 12;
-        const originalLength = this.password.length;
-        
         this.password = await bcrypt.hash(this.password, saltRounds);
-        
-        console.log(`✅ Contraseña encriptada exitosamente:`);
-        console.log(`   📧 Email: ${this.email}`);
-        console.log(`   📏 Longitud original: ${originalLength} caracteres`);
-        console.log(`   🔒 Longitud encriptada: ${this.password.length} caracteres`);
-        
+        console.log(`🔒 Contraseña encriptada para: ${this.email}`);
         next();
-        
     } catch (error) {
-        console.error(`❌ Error encriptando contraseña para ${this.email}:`);
-        console.error(`   🐛 Error: ${error.message}`);
+        console.error(`❌ Error encriptando contraseña:`, error.message);
         next(error);
     }
 });
 
 userSchema.post('save', function(doc) {
-    console.log(`✅ Usuario guardado exitosamente:`);
-    console.log(`   👤 Nombre: ${doc.fullName}`);
-    console.log(`   📧 Email: ${doc.email}`);
-    console.log(`   👑 Rol: ${doc.role}`);
-    console.log(`   🆔 ID: ${doc._id}`);
-});
-
-userSchema.pre('remove', function(next) {
-    console.log(`🗑️ Preparando eliminación de usuario: ${this.email}`);
-    next();
+    console.log(`✅ Usuario guardado: ${doc.email}`);
 });
 
 // =============================================
-// MÉTODOS DE INSTANCIA
+// MÉTODOS DE INSTANCIA (TODOS ORIGINALES + NUEVOS)
 // =============================================
 
 userSchema.methods.comparePassword = async function(candidatePassword) {
     try {
-        console.log(`🔍 Verificando contraseña para usuario: ${this.email}`);
-        
-        const startTime = Date.now();
-        const isMatch = await bcrypt.compare(candidatePassword, this.password);
-        const endTime = Date.now();
-        
-        if (isMatch) {
-            console.log(`✅ Contraseña CORRECTA para: ${this.email}`);
-        } else {
-            console.log(`❌ Contraseña INCORRECTA para: ${this.email}`);
-        }
-        
-        console.log(`   ⏱️ Tiempo de verificación: ${endTime - startTime}ms`);
-        return isMatch;
-        
+        return await bcrypt.compare(candidatePassword, this.password);
     } catch (error) {
-        console.error(`❌ Error verificando contraseña para ${this.email}:`);
-        throw new Error('Error interno al verificar contraseña');
+        throw new Error('Error al verificar contraseña');
     }
+};
+
+userSchema.methods.generateAuthToken = function() {
+    const payload = {
+        id: this._id,
+        email: this.email,
+        role: this.role
+    };
+    
+    return jwt.sign(
+        payload,
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRE || '30d' }
+    );
 };
 
 userSchema.methods.incrementLoginAttempts = function() {
@@ -537,7 +694,6 @@ userSchema.methods.addPurchase = function(orderTotal) {
 userSchema.methods.addToWishlist = function(productId) {
     if (!this.wishlist.includes(productId)) {
         this.wishlist.push(productId);
-        console.log(`❤️ Producto agregado a wishlist de ${this.email}`);
         return this.save();
     }
     return Promise.resolve(this);
@@ -545,33 +701,170 @@ userSchema.methods.addToWishlist = function(productId) {
 
 userSchema.methods.removeFromWishlist = function(productId) {
     this.wishlist = this.wishlist.filter(id => !id.equals(productId));
-    console.log(`💔 Producto removido de wishlist de ${this.email}`);
     return this.save();
 };
 
-userSchema.methods.generateAuthToken = function() {
-    console.log(`🎫 Generando token JWT para usuario: ${this.email}`);
+// =============================================
+// 🏋️ MÉTODOS FITNESS NUEVOS
+// =============================================
+
+userSchema.methods.registrarEntrenamiento = async function(workoutData) {
+    console.log(`📝 Registrando entrenamiento para ${this.email}`);
     
-    const payload = {
-        id: this._id,
-        email: this.email,
-        role: this.role
+    const workout = {
+        date: new Date(),
+        nombre: workoutData.nombre,
+        enfoque: workoutData.enfoque,
+        duracionTotal: workoutData.duracionTotal,
+        caloriasEstimadas: workoutData.caloriasEstimadas || 0,
+        ejerciciosCompletados: workoutData.ejercicios?.length || 0,
+        ejerciciosDetalles: workoutData.ejercicios || []
     };
     
-    const token = jwt.sign(
-        payload,
-        process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_EXPIRE || '30d' }
-    );
+    this.fitnessStats.workoutHistory.push(workout);
     
-    console.log('✅ Token JWT generado exitosamente');
-    return token;
+    this.fitnessStats.totalWorkouts += 1;
+    this.fitnessStats.totalExercises += workout.ejerciciosCompletados;
+    this.fitnessStats.totalMinutes += workout.duracionTotal;
+    this.fitnessStats.totalCalories += workout.caloriasEstimadas;
+    this.fitnessStats.lastWorkoutDate = workout.date;
+    this.fitnessStats.lastStatsUpdate = new Date();
+    
+    this.calcularRacha();
+    this.verificarLogros();
+    
+    await this.save();
+    
+    console.log(`✅ Entrenamiento registrado: ${workout.nombre}`);
+    console.log(`   📊 Total: ${this.fitnessStats.totalWorkouts} entrenamientos`);
+    console.log(`   🔥 Racha: ${this.fitnessStats.currentStreak} días`);
+    
+    return workout;
+};
+
+userSchema.methods.calcularRacha = function() {
+    const workouts = this.fitnessStats.workoutHistory;
+    
+    if (workouts.length === 0) {
+        this.fitnessStats.currentStreak = 0;
+        this.fitnessStats.maxStreak = 0;
+        return;
+    }
+    
+    const sortedWorkouts = workouts
+        .map(w => new Date(w.date))
+        .sort((a, b) => b - a);
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const lastWorkout = new Date(sortedWorkouts[0]);
+    lastWorkout.setHours(0, 0, 0, 0);
+    
+    const daysSinceLastWorkout = Math.floor((today - lastWorkout) / (1000 * 60 * 60 * 24));
+    
+    if (daysSinceLastWorkout <= 1) {
+        let currentStreak = 1;
+        
+        for (let i = 1; i < sortedWorkouts.length; i++) {
+            const currentDate = new Date(sortedWorkouts[i]);
+            currentDate.setHours(0, 0, 0, 0);
+            
+            const prevDate = new Date(sortedWorkouts[i - 1]);
+            prevDate.setHours(0, 0, 0, 0);
+            
+            const daysDiff = Math.floor((prevDate - currentDate) / (1000 * 60 * 60 * 24));
+            
+            if (daysDiff === 1) {
+                currentStreak++;
+            } else if (daysDiff === 0) {
+                continue;
+            } else {
+                break;
+            }
+        }
+        
+        this.fitnessStats.currentStreak = currentStreak;
+        this.fitnessStats.maxStreak = Math.max(
+            this.fitnessStats.maxStreak, 
+            currentStreak
+        );
+    } else {
+        this.fitnessStats.currentStreak = 0;
+    }
+};
+
+userSchema.methods.verificarLogros = function() {
+    const stats = this.fitnessStats;
+    const logros = [
+        {
+            id: 'first_workout',
+            nombre: 'Primera Rutina',
+            condicion: stats.totalWorkouts >= 1
+        },
+        {
+            id: 'week_streak',
+            nombre: 'Racha de 7 días',
+            condicion: stats.currentStreak >= 7
+        },
+        {
+            id: 'ten_workouts',
+            nombre: 'Dedicación',
+            condicion: stats.totalWorkouts >= 10
+        },
+        {
+            id: 'fifty_workouts',
+            nombre: 'Guerrero',
+            condicion: stats.totalWorkouts >= 50
+        },
+        {
+            id: 'month_streak',
+            nombre: 'Leyenda',
+            condicion: stats.currentStreak >= 30
+        },
+        {
+            id: 'hundred_exercises',
+            nombre: 'Incansable',
+            condicion: stats.totalExercises >= 100
+        }
+    ];
+    
+    logros.forEach(logro => {
+        if (logro.condicion) {
+            const yaDesbloqueado = stats.achievements.some(
+                a => a.achievementId === logro.id
+            );
+            
+            if (!yaDesbloqueado) {
+                stats.achievements.push({
+                    achievementId: logro.id,
+                    nombre: logro.nombre,
+                    unlockedAt: new Date()
+                });
+                console.log(`🏆 ¡Logro desbloqueado! ${logro.nombre}`);
+            }
+        }
+    });
+};
+
+userSchema.methods.obtenerEstadisticas = function() {
+    return {
+        totalWorkouts: this.fitnessStats.totalWorkouts,
+        totalExercises: this.fitnessStats.totalExercises,
+        totalMinutes: this.fitnessStats.totalMinutes,
+        totalHours: (this.fitnessStats.totalMinutes / 60).toFixed(1),
+        totalCalories: this.fitnessStats.totalCalories,
+        currentStreak: this.fitnessStats.currentStreak,
+        maxStreak: this.fitnessStats.maxStreak,
+        lastWorkoutDate: this.fitnessStats.lastWorkoutDate,
+        achievements: this.fitnessStats.achievements,
+        workoutHistory: this.fitnessStats.workoutHistory.slice(-30)
+    };
 };
 
 userSchema.methods.getPublicProfile = function() {
     return {
         id: this._id,
-        _id: this._id,
         firstName: this.firstName,
         lastName: this.lastName,
         fullName: this.fullName,
@@ -586,16 +879,14 @@ userSchema.methods.getPublicProfile = function() {
         formattedTotalSpent: this.formattedTotalSpent,
         loyaltyPoints: this.loyaltyPoints,
         createdAt: this.createdAt,
-        fitnessProfile: this.fitnessProfile || { // ⭐ AGREGAR FITNESS PROFILE
+        fitnessProfile: this.fitnessProfile || {
             questionnaireCompleted: false
         },
-        bmi: this.bmi, // ⭐ AGREGAR IMC
-        bmiCategory: this.bmiCategory // ⭐ AGREGAR CATEGORÍA IMC
+        bmi: this.bmi,
+        bmiCategory: this.bmiCategory,
+        fitnessStats: this.obtenerEstadisticas()
     };
 };
-// =============================================
-// 🏋️ MÉTODO FITNESS: Contexto para el chatbot
-// =============================================
 
 userSchema.methods.getFitnessContext = function() {
     const profile = this.fitnessProfile;
@@ -627,21 +918,18 @@ Usa esta información para personalizar tus recomendaciones.`;
 // =============================================
 
 userSchema.statics.findByEmail = function(email) {
-    console.log(`🔍 Buscando usuario por email: ${email}`);
     return this.findOne({ 
         email: email.toLowerCase() 
     }).select('+password');
 };
 
 userSchema.statics.findByCredentials = async function(email) {
-    console.log(`🔐 Buscando usuario para login: ${email}`);
     return this.findOne({ 
         email: email.toLowerCase() 
     }).select('+password');
 };
 
 userSchema.statics.getActiveUsers = function(limit = 50) {
-    console.log(`👥 Obteniendo usuarios activos (límite: ${limit})...`);
     return this.find({ isActive: true })
         .sort({ createdAt: -1 })
         .limit(limit)
@@ -649,56 +937,9 @@ userSchema.statics.getActiveUsers = function(limit = 50) {
 };
 
 userSchema.statics.getUsersByRole = function(role) {
-    console.log(`👑 Obteniendo usuarios con rol: ${role}...`);
     return this.find({ role: role, isActive: true })
         .sort({ createdAt: -1 });
 };
-
-userSchema.statics.getUserStats = function() {
-    console.log('📈 Calculando estadísticas de usuarios...');
-    
-    return this.aggregate([
-        {
-            $group: {
-                _id: null,
-                totalUsers: { $sum: 1 },
-                activeUsers: { $sum: { $cond: ['$isActive', 1, 0] } },
-                adminUsers: { $sum: { $cond: [{ $eq: ['$role', 'admin'] }, 1, 0] } },
-                customerUsers: { $sum: { $cond: [{ $eq: ['$role', 'customer'] }, 1, 0] } },
-                totalOrders: { $sum: '$totalOrders' },
-                totalSpent: { $sum: '$totalSpent' },
-                averageSpent: { $avg: '$totalSpent' },
-                totalLoyaltyPoints: { $sum: '$loyaltyPoints' }
-            }
-        }
-    ]);
-};
-
-userSchema.statics.getUsersByLevel = function(level) {
-    const spentRanges = {
-        'bronze': { min: 0, max: 499999 },
-        'silver': { min: 500000, max: 1999999 },
-        'gold': { min: 2000000, max: 4999999 },
-        'platinum': { min: 5000000, max: Infinity }
-    };
-    
-    const range = spentRanges[level];
-    if (!range) {
-        throw new Error('Nivel de cliente inválido');
-    }
-    
-    return this.find({
-        totalSpent: { 
-            $gte: range.min, 
-            $lt: range.max === Infinity ? Number.MAX_SAFE_INTEGER : range.max 
-        },
-        isActive: true
-    }).sort({ totalSpent: -1 });
-};
-
-// =============================================
-// 🏋️ MÉTODO ESTÁTICO FITNESS: Estadísticas
-// =============================================
 
 userSchema.statics.getFitnessStats = async function() {
     return this.aggregate([
@@ -730,6 +971,151 @@ userSchema.statics.getFitnessStats = async function() {
         }
     ]);
 };
+// =============================================
+// MÉTODOS PARA GESTIÓN DEL CICLO DE ENTRENAMIENTO
+// =============================================
+
+userSchema.methods.getDiaActual = function() {
+    if (!this.rutinaSemanal || this.rutinaSemanal.length === 0) {
+        return null;
+    }
+    
+    const diasSemana = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
+    const diaData = this.rutinaSemanal[this.diaActualIndex];
+    
+    return {
+        indice: this.diaActualIndex,
+        nombre: diasSemana[this.diaActualIndex],
+        ...diaData
+    };
+};
+
+userSchema.methods.completarDiaYAvanzar = async function() {
+    if (!this.rutinaSemanal || this.rutinaSemanal.length === 0) {
+        throw new Error('No hay rutina asignada');
+    }
+
+    const totalDias = this.rutinaSemanal.length;
+    const diasSemana = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
+    
+    this.rutinaSemanal[this.diaActualIndex].completado = true;
+    this.rutinaSemanal[this.diaActualIndex].fechaCompletado = new Date();
+    this.ultimoDiaCompletado = new Date();
+    this.diasCompletadosEsteCiclo += 1;
+    
+    // Buscar el siguiente día de ENTRENAMIENTO (saltar descansos)
+    let siguienteIndex = (this.diaActualIndex + 1) % totalDias;
+    while (this.rutinaSemanal[siguienteIndex]?.esDescanso && siguienteIndex !== 0) {
+        siguienteIndex = (siguienteIndex + 1) % totalDias;
+    }
+
+    let nuevoCiclo = false;
+    if (siguienteIndex <= this.diaActualIndex) {
+        nuevoCiclo = true;
+        this.cicloActual += 1;
+        this.diasCompletadosEsteCiclo = 0;
+        
+        this.rutinaSemanal.forEach(dia => {
+            dia.completado = false;
+            dia.fechaCompletado = null;
+        });
+        
+        console.log(`🔄 ¡Ciclo ${this.cicloActual - 1} completado! Iniciando ciclo ${this.cicloActual}`);
+    }
+    
+    const indexAnterior = this.diaActualIndex;
+    this.diaActualIndex = siguienteIndex;
+    
+    await this.save();
+    
+    return {
+        exito: true,
+        diaCompletado: diasSemana[indexAnterior],
+        indexCompletado: indexAnterior,
+        siguienteDia: diasSemana[siguienteIndex],
+        siguienteIndex: siguienteIndex,
+        nuevoCiclo: nuevoCiclo,
+        cicloActual: this.cicloActual,
+        mensaje: nuevoCiclo 
+            ? `¡Felicidades! Has completado el ciclo ${this.cicloActual - 1}. Empiezas de nuevo con ${diasSemana[siguienteIndex]}.`
+            : `Día ${diasSemana[indexAnterior]} completado. Siguiente: ${diasSemana[siguienteIndex]}.`
+    };
+};
+
+userSchema.methods.reiniciarRutina = async function() {
+    this.diaActualIndex = 0;
+    this.diasCompletadosEsteCiclo = 0;
+    
+    if (this.rutinaSemanal && this.rutinaSemanal.length > 0) {
+        this.rutinaSemanal.forEach(dia => {
+            dia.completado = false;
+            dia.fechaCompletado = null;
+        });
+    }
+    
+    await this.save();
+    
+    console.log('🔄 Rutina reiniciada al primer día');
+    return {
+        exito: true,
+        mensaje: 'Rutina reiniciada al primer día',
+        diaActual: this.getDiaActual()
+    };
+};
+
+userSchema.methods.getProgresoRutina = function() {
+    if (!this.rutinaSemanal || this.rutinaSemanal.length === 0) {
+        return null;
+    }
+    
+    const totalDias = this.rutinaSemanal.length;
+    const diasSemana = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
+    
+    return {
+        cicloActual: this.cicloActual,
+        diaActualIndex: this.diaActualIndex,
+        diaActualNombre: diasSemana[this.diaActualIndex],
+        totalDias: totalDias,
+        diasCompletadosEsteCiclo: this.diasCompletadosEsteCiclo,
+        porcentajeCiclo: Math.round((this.diasCompletadosEsteCiclo / totalDias) * 100),
+        fechaInicioRutina: this.fechaInicioRutina,
+        ultimoDiaCompletado: this.ultimoDiaCompletado,
+        rutinaSemanal: this.rutinaSemanal.map((dia, index) => ({
+            indice: index,
+            dia: diasSemana[index],
+            nombre: dia.nombre,
+            enfoque: dia.enfoque,
+            completado: dia.completado,
+            fechaCompletado: dia.fechaCompletado,
+            esActual: index === this.diaActualIndex
+        }))
+    };
+};
+
+userSchema.methods.inicializarRutina = async function() {
+    if (!this.rutinaSemanal || this.rutinaSemanal.length === 0) {
+        throw new Error('No hay rutina para inicializar');
+    }
+    
+    this.diaActualIndex = 0;
+    this.cicloActual = 1;
+    this.diasCompletadosEsteCiclo = 0;
+    this.fechaInicioRutina = new Date();
+    
+    this.rutinaSemanal.forEach(dia => {
+        dia.completado = false;
+        dia.fechaCompletado = null;
+    });
+    
+    await this.save();
+    
+    console.log('✅ Rutina inicializada correctamente');
+    return {
+        exito: true,
+        mensaje: 'Rutina inicializada',
+        primerDia: this.getDiaActual()
+    };
+};
 
 // =============================================
 // CREAR Y EXPORTAR EL MODELO
@@ -739,6 +1125,7 @@ const User = mongoose.model('User', userSchema);
 
 console.log('✅ Modelo User creado exitosamente');
 console.log('📋 Collection en MongoDB: users');
-console.log('🏋️ Campos fitness integrados correctamente');
+console.log('🏋️ Con sistema completo de estadísticas fitness');
+
 
 module.exports = User;

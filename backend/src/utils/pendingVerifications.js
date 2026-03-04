@@ -1,82 +1,105 @@
 // =============================================
 // ALMACENAMIENTO TEMPORAL DE VERIFICACIONES
+// VERSIÓN MONGODB - PERSISTE ENTRE REINICIOS
 // =============================================
 
-/**
- * Almacena códigos de verificación en memoria
- * Estructura: { email: { code, userData, expiresAt } }
- */
-const pendingVerifications = new Map();
+const mongoose = require('mongoose');
 
-/**
- * Guardar código de verificación temporal
- */
-const savePendingVerification = (email, code, userData) => {
-  const expiresAt = Date.now() + 15 * 60 * 1000; // 15 minutos
-  
-  pendingVerifications.set(email.toLowerCase(), {
-    code,
-    userData,
-    expiresAt
-  });
-  
-  console.log(`💾 Código temporal guardado para: ${email}`);
-  console.log(`⏰ Expira en: 15 minutos`);
+// =============================================
+// SCHEMA CON TTL AUTOMÁTICO (expira solo en MongoDB)
+// =============================================
+const pendingVerificationSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+  code: {
+    type: String,
+    required: true
+  },
+  userData: {
+    type: mongoose.Schema.Types.Mixed,
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    expires: 900 // ⏰ MongoDB elimina automáticamente después de 15 minutos (900 seg)
+  }
+});
+
+// Usar modelo existente si ya fue compilado (evita error en hot-reload)
+const PendingVerification = mongoose.models.PendingVerification 
+  || mongoose.model('PendingVerification', pendingVerificationSchema);
+
+// =============================================
+// GUARDAR CÓDIGO DE VERIFICACIÓN
+// =============================================
+const savePendingVerification = async (email, code, userData) => {
+  try {
+    // Upsert: si ya existe, lo reemplaza (para casos de reenvío)
+    await PendingVerification.findOneAndUpdate(
+      { email: email.toLowerCase() },
+      {
+        email: email.toLowerCase(),
+        code,
+        userData,
+        createdAt: new Date() // Resetea el TTL
+      },
+      { upsert: true, new: true }
+    );
+
+    console.log(`💾 Código temporal guardado en MongoDB para: ${email}`);
+    console.log(`⏰ Expira en: 15 minutos`);
+  } catch (error) {
+    console.error(`❌ Error guardando verificación pendiente: ${error.message}`);
+    throw error;
+  }
 };
 
-/**
- * Obtener datos de verificación pendiente
- */
-const getPendingVerification = (email) => {
-  const verification = pendingVerifications.get(email.toLowerCase());
-  
-  if (!verification) {
-    console.log(`❌ No hay verificación pendiente para: ${email}`);
-    return null;
-  }
-  
-  // Verificar si expiró
-  if (verification.expiresAt < Date.now()) {
-    console.log(`⏰ Código expirado para: ${email}`);
-    pendingVerifications.delete(email.toLowerCase());
-    return null;
-  }
-  
-  return verification;
-};
+// =============================================
+// OBTENER DATOS DE VERIFICACIÓN PENDIENTE
+// =============================================
+const getPendingVerification = async (email) => {
+  try {
+    const verification = await PendingVerification.findOne({
+      email: email.toLowerCase()
+    });
 
-/**
- * Eliminar verificación pendiente
- */
-const deletePendingVerification = (email) => {
-  const deleted = pendingVerifications.delete(email.toLowerCase());
-  if (deleted) {
-    console.log(`🗑️ Verificación eliminada para: ${email}`);
-  }
-  return deleted;
-};
-
-/**
- * Limpiar verificaciones expiradas (ejecutar periódicamente)
- */
-const cleanExpiredVerifications = () => {
-  const now = Date.now();
-  let cleaned = 0;
-  
-  for (const [email, verification] of pendingVerifications.entries()) {
-    if (verification.expiresAt < now) {
-      pendingVerifications.delete(email);
-      cleaned++;
+    if (!verification) {
+      console.log(`❌ No hay verificación pendiente para: ${email}`);
+      return null;
     }
-  }
-  
-  if (cleaned > 0) {
-    console.log(`🧹 Limpiados ${cleaned} códigos expirados`);
+
+    console.log(`✅ Verificación encontrada para: ${email}`);
+    return verification;
+  } catch (error) {
+    console.error(`❌ Error obteniendo verificación pendiente: ${error.message}`);
+    return null;
   }
 };
 
-// Limpiar cada 5 minutos
-setInterval(cleanExpiredVerifications, 5 * 60 * 1000);
+// =============================================
+// ELIMINAR VERIFICACIÓN PENDIENTE
+// =============================================
+const deletePendingVerification = async (email) => {
+  try {
+    const result = await PendingVerification.deleteOne({
+      email: email.toLowerCase()
+    });
+
+    if (result.deletedCount > 0) {
+      console.log(`🗑️ Verificación eliminada para: ${email}`);
+    }
+    return result.deletedCount > 0;
+  } catch (error) {
+    console.error(`❌ Error eliminando verificación: ${error.message}`);
+    return false;
+  }
+};
 
 module.exports = {
   savePendingVerification,
