@@ -203,10 +203,13 @@
     }
 
     @keyframes pulse {
-      0%, 100% {
+
+      0%,
+      100% {
         transform: scale(1);
         opacity: 1;
       }
+
       50% {
         transform: scale(1.1);
         opacity: 0.8;
@@ -244,7 +247,7 @@
     /* ============================================
        RESPONSIVE NAVBAR
        ============================================ */
-    
+
     @media (max-width: 1024px) {
       .navbar-header {
         padding: 15px 40px;
@@ -398,6 +401,7 @@
         gap: 10px;
       }
     }
+
     /* ============================================
        HERO SECTION
        ============================================ */
@@ -452,12 +456,16 @@
     }
 
     @keyframes wave {
-      0%, 100% {
+
+      0%,
+      100% {
         transform: rotate(0deg);
       }
+
       25% {
         transform: rotate(20deg);
       }
+
       75% {
         transform: rotate(-10deg);
       }
@@ -795,10 +803,18 @@
     }
 
     .distribution-legend {
+      max-height: 130px;
+      overflow-y: auto;
       width: 100%;
       display: flex;
       flex-direction: column;
       gap: 8px;
+      scrollbar-width: none;
+      /* Firefox */
+    }
+
+    .distribution-legend::-webkit-scrollbar {
+      display: none;
     }
 
     .legend-item {
@@ -959,6 +975,7 @@
       transform: scale(1.05);
       box-shadow: 0 8px 25px var(--accent-glow);
     }
+
     /* ============================================
        QUICK ACCESS SECTION
        ============================================ */
@@ -1309,9 +1326,12 @@
     }
 
     @keyframes pulse-streak {
-      0%, 100% {
+
+      0%,
+      100% {
         transform: scale(1);
       }
+
       50% {
         transform: scale(1.1);
       }
@@ -1453,9 +1473,12 @@
     }
 
     @keyframes bounce {
-      0%, 100% {
+
+      0%,
+      100% {
         transform: translateY(0);
       }
+
       50% {
         transform: translateY(-10px);
       }
@@ -1542,6 +1565,7 @@
       0% {
         transform: rotate(0deg);
       }
+
       100% {
         transform: rotate(360deg);
       }
@@ -1550,6 +1574,7 @@
     .random-btn.loading i {
       animation: rotate 0.6s linear infinite;
     }
+
     /* =============================================
        DESAFÍO RÁPIDO: 60 SEGUNDOS - VERSIÓN COMPACTA
        ============================================= */
@@ -1577,10 +1602,13 @@
     }
 
     @keyframes challenge-glow {
-      0%, 100% {
+
+      0%,
+      100% {
         opacity: 0.2;
         transform: scale(1);
       }
+
       50% {
         opacity: 0.4;
         transform: scale(1.1);
@@ -1641,9 +1669,12 @@
     }
 
     @keyframes fire-flicker {
-      0%, 100% {
+
+      0%,
+      100% {
         transform: scale(1);
       }
+
       50% {
         transform: scale(1.2);
       }
@@ -1664,6 +1695,7 @@
         opacity: 0;
         transform: translateY(10px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -1684,9 +1716,12 @@
     }
 
     @keyframes exercise-bounce {
-      0%, 100% {
+
+      0%,
+      100% {
         transform: translateY(0);
       }
+
       50% {
         transform: translateY(-8px);
       }
@@ -1835,9 +1870,12 @@
     }
 
     @keyframes counter-pulse {
-      0%, 100% {
+
+      0%,
+      100% {
         transform: scale(1);
       }
+
       50% {
         transform: scale(1.1);
       }
@@ -1914,6 +1952,7 @@
         transform: translateX(-50%) translateY(0) rotate(0deg);
         opacity: 1;
       }
+
       100% {
         transform: translateX(-50%) translateY(60px) rotate(360deg);
         opacity: 0;
@@ -1927,9 +1966,12 @@
     }
 
     @keyframes trophy-bounce {
-      0%, 100% {
+
+      0%,
+      100% {
         transform: scale(1);
       }
+
       50% {
         transform: scale(1.1);
       }
@@ -2107,6 +2149,7 @@
       from {
         opacity: 0;
       }
+
       to {
         opacity: 1;
       }
@@ -2130,6 +2173,7 @@
         transform: translateY(50px);
         opacity: 0;
       }
+
       to {
         transform: translateY(0);
         opacity: 1;
@@ -2233,6 +2277,7 @@
         opacity: 0;
         transform: translateY(10px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -2301,6 +2346,7 @@
       from {
         transform: rotate(0deg);
       }
+
       to {
         transform: rotate(360deg);
       }
@@ -2359,6 +2405,7 @@
     .exercise-chat-input button:active {
       transform: translateY(0);
     }
+
     /* ============================================
        ESTILOS PARA MODALES DE CALCULADORAS
        ============================================ */
@@ -2782,6 +2829,7 @@
       0% {
         background-position: 0% 0%;
       }
+
       100% {
         background-position: 300% 0%;
       }
@@ -2815,21 +2863,29 @@
     }
 
     @keyframes bellRing {
-      0%, 55%, 100% {
+
+      0%,
+      55%,
+      100% {
         transform: rotate(0deg) scale(1);
       }
+
       60% {
         transform: rotate(-18deg) scale(1.1);
       }
+
       65% {
         transform: rotate(18deg) scale(1.1);
       }
+
       70% {
         transform: rotate(-12deg) scale(1.07);
       }
+
       75% {
         transform: rotate(12deg) scale(1.07);
       }
+
       80% {
         transform: rotate(0deg) scale(1);
       }
@@ -2866,7 +2922,7 @@
       line-height: 1.1;
     }
 
-    .notification-modal-content > .notification-modal-inner > p {
+    .notification-modal-content>.notification-modal-inner>p {
       font-size: 13px;
       color: #888;
       margin-bottom: 24px;
@@ -3022,6 +3078,7 @@
       border-color: rgba(255, 255, 255, 0.12);
       color: #888;
     }
+
     /* ============================================
        FOOTER
        ============================================ */
@@ -3146,7 +3203,7 @@
     /* ============================================
        RESPONSIVE COMPLETO
        ============================================ */
-    
+
     /* Tablet Grande (1024px - 1200px) */
     @media (max-width: 1200px) {
       .hero-container {
@@ -3399,6 +3456,7 @@
 
     /* Ajustes adicionales para elementos específicos en mobile */
     @media (max-width: 768px) {
+
       /* Asegurar que las grillas sean de una columna en mobile */
       .dashboard-grid,
       .stats-grid,
@@ -4371,7 +4429,7 @@
       countBtn.onclick = () => {
         desafioContador++;
         document.getElementById('challengeCounter').textContent = desafioContador;
-        
+
         // Animación del contador
         const counter = document.getElementById('challengeCounter');
         counter.style.animation = 'none';
@@ -4399,8 +4457,8 @@
 
       // Calcular mejora (simulado - en producción vendría del backend)
       const personalRecordValue = 15; // Simulado
-      const mejora = desafioContador > personalRecordValue ? 
-        `+${Math.round(((desafioContador - personalRecordValue) / personalRecordValue) * 100)}%` : 
+      const mejora = desafioContador > personalRecordValue ?
+        `+${Math.round(((desafioContador - personalRecordValue) / personalRecordValue) * 100)}%` :
         'Nuevo récord';
       document.getElementById('improvementPercent').textContent = mejora;
 
@@ -4420,14 +4478,14 @@
     function reiniciarDesafio() {
       document.getElementById('challengeResult').classList.remove('active');
       document.getElementById('challengeInitial').classList.add('active');
-      
+
       // Reiniciar círculo de progreso
       document.getElementById('timerProgress').style.strokeDashoffset = 0;
     }
 
     function compartirResultado() {
       const texto = `¡Acabo de hacer ${desafioContador} repeticiones en 60 segundos en FitAiid! 🔥💪`;
-      
+
       if (navigator.share) {
         navigator.share({
           title: 'Mi desafío FitAiid',
@@ -4450,14 +4508,14 @@
     function abrirAyudaEjercicio(exerciseName, exerciseDesc) {
       currentExerciseName = exerciseName;
       currentExerciseDesc = exerciseDesc;
-      
+
       document.getElementById('exerciseChatSubtitle').textContent = exerciseName;
       document.getElementById('exerciseChatOverlay').classList.add('active');
-      
+
       // Limpiar mensajes previos
       const messagesContainer = document.getElementById('exerciseChatMessages');
       messagesContainer.innerHTML = '';
-      
+
       // Mensaje de bienvenida de Fitty
       const welcomeMessage = `
         <div class="exercise-message bot">
@@ -4484,11 +4542,11 @@
     function enviarPreguntaEjercicio() {
       const input = document.getElementById('exerciseChatInput');
       const pregunta = input.value.trim();
-      
+
       if (!pregunta) return;
-      
+
       const messagesContainer = document.getElementById('exerciseChatMessages');
-      
+
       // Agregar mensaje del usuario
       const userMessage = `
         <div class="exercise-message user">
@@ -4497,10 +4555,10 @@
         </div>
       `;
       messagesContainer.innerHTML += userMessage;
-      
+
       // Limpiar input
       input.value = '';
-      
+
       // Mostrar indicador de escritura
       const typingIndicator = `
         <div class="exercise-message bot exercise-typing">
@@ -4511,19 +4569,19 @@
         </div>
       `;
       messagesContainer.innerHTML += typingIndicator;
-      
+
       // Scroll al final
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      
+
       // Simular respuesta de Fitty (en producción esto sería una llamada a la API)
       setTimeout(() => {
         // Remover indicador de escritura
         const typingElement = messagesContainer.querySelector('.exercise-typing');
         if (typingElement) typingElement.remove();
-        
+
         // Respuesta simulada (en producción vendría de OpenAI)
         const respuesta = generarRespuestaEjercicio(pregunta, currentExerciseName);
-        
+
         const botMessage = `
           <div class="exercise-message bot">
             <div class="exercise-message-avatar">🤖</div>
@@ -4531,7 +4589,7 @@
           </div>
         `;
         messagesContainer.innerHTML += botMessage;
-        
+
         // Scroll al final
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       }, 1500);
@@ -4545,7 +4603,7 @@
         'variaciones': `Algunas variaciones de <strong>${ejercicio}</strong> que puedes probar:\n\n💪 Versión principiante\n💪 Versión intermedia\n💪 Versión avanzada\n💪 Con peso adicional`,
         'default': `Entiendo tu pregunta sobre <strong>${ejercicio}</strong>. Este es un excelente ejercicio que trabaja múltiples grupos musculares. ¿Te gustaría saber más sobre la técnica correcta, beneficios o variaciones?`
       };
-      
+
       // Detectar tipo de pregunta
       const preguntaLower = pregunta.toLowerCase();
       if (preguntaLower.includes('técnica') || preguntaLower.includes('como') || preguntaLower.includes('cómo')) {
@@ -4756,19 +4814,19 @@
     // ============================================
     // 📱 HAMBURGER MENU (MOBILE)
     // ============================================
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       console.log('🔧 Initializing hamburger menu...');
-      
+
       const hamburger = document.getElementById('navbar-toggle');
       const navMenu = document.getElementById('navbar-menu');
       const menuItems = document.querySelectorAll('.navbar-header .menu a, .navbar-header .menu .logout-btn');
       const navbar = document.querySelector('.navbar-header');
-      
+
       if (!hamburger) {
         console.warn('⚠️ Hamburger button not found');
         return;
       }
-      
+
       if (!navMenu) {
         console.warn('⚠️ Navigation menu not found');
         return;
@@ -4779,7 +4837,7 @@
       console.log('📋 Menu:', navMenu);
 
       // Toggle menu al hacer clic en el hamburger
-      hamburger.addEventListener('click', function(e) {
+      hamburger.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
         console.log('🔄 Hamburger clicked - Toggling menu');
@@ -4788,15 +4846,15 @@
       });
 
       // Cerrar menu cuando se hace clic en un item
-      menuItems.forEach(function(item) {
-        item.addEventListener('click', function(e) {
+      menuItems.forEach(function (item) {
+        item.addEventListener('click', function (e) {
           console.log('🔗 Menu item clicked:', this.textContent);
           navMenu.classList.remove('active');
         });
       });
 
       // Cerrar menu cuando se hace clic fuera del navbar
-      document.addEventListener('click', function(e) {
+      document.addEventListener('click', function (e) {
         if (navbar && !navbar.contains(e.target)) {
           console.log('👆 Click outside navbar - closing menu');
           navMenu.classList.remove('active');
@@ -4826,18 +4884,7 @@
     // Cargar estadísticas al inicio (opcional)
     // loadUserStats();
 
-    // ============================================
-    // 🎨 ANIMACIONES Y EFECTOS ADICIONALES
-    // ============================================
-    
-    // Efecto parallax suave en el hero
-    window.addEventListener('scroll', function() {
-      const scrolled = window.pageYOffset;
-      const hero = document.querySelector('.hero');
-      if (hero && scrolled < window.innerHeight) {
-        hero.style.transform = `translateY(${scrolled * 0.5}px)`;
-      }
-    });
+
 
     // Animación de entrada para las cards
     const observerOptions = {
@@ -4845,7 +4892,7 @@
       rootMargin: '0px 0px -50px 0px'
     };
 
-    const observer = new IntersectionObserver(function(entries) {
+    const observer = new IntersectionObserver(function (entries) {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.style.opacity = '1';
@@ -4865,7 +4912,7 @@
     // ============================================
     // 🔄 ACTUALIZACIÓN PERIÓDICA (OPCIONAL)
     // ============================================
-    
+
     // Actualizar datos cada 5 minutos
     setInterval(() => {
       // loadUserStats();
@@ -4875,7 +4922,7 @@
     // ============================================
     // ⚡ OPTIMIZACIÓN DE RENDIMIENTO
     // ============================================
-    
+
     // Lazy loading para imágenes
     if ('loading' in HTMLImageElement.prototype) {
       const images = document.querySelectorAll('img[loading="lazy"]');
@@ -4892,7 +4939,7 @@
     // ============================================
     // 🐛 DEBUGGING Y LOGS (DESARROLLO)
     // ============================================
-    
+
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       console.log('🔧 Modo desarrollo activado');
       console.log('👤 Usuario:', userString ? JSON.parse(userString) : 'No disponible');
