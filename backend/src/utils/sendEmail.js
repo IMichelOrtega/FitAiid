@@ -1,5 +1,21 @@
-const { Resend } = require('resend');
-const resend = new Resend(process.env.RESEND_API_KEY);
+console.log("📧 DEBUG EMAIL CONFIG:");
+console.log("  Host:", process.env.EMAIL_HOST);
+console.log("  User:", process.env.EMAIL_USER);
+console.log("  Port:", process.env.EMAIL_PORT);
+
+
+// backend/src/utils/sendEmail.js
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST || "smtp.gmail.com",
+  port: parseInt(process.env.EMAIL_PORT || "587"),
+  secure: false, // true para 465, false para otros
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 function verificationEmailHtml({ name, verifyUrl }) {
   return `
@@ -23,17 +39,16 @@ function verificationEmailHtml({ name, verifyUrl }) {
 
 async function sendVerificationEmail(to, name, verifyUrl) {
   try {
-    console.log('🔑 Resend API Key:', process.env.RESEND_API_KEY ? 'PRESENTE' : 'AUSENTE');
-    await resend.emails.send({
-      from: 'FitAiid <onboarding@resend.dev>',
+    await transporter.sendMail({
+      from: `"FitAiid" <${process.env.EMAIL_USER}>`,
       to,
-      subject: 'Verifica tu correo en FitAiid ✅',
+      subject: "Verifica tu correo en FitAiid ✅",
       html: verificationEmailHtml({ name, verifyUrl }),
     });
-    console.log(`📩 Correo enviado a: ${to}`);
+    console.log(`📩 Correo de verificación enviado a: ${to}`);
   } catch (error) {
-    console.error('❌ Error al enviar el correo:', error);
-    throw new Error('Error al enviar el correo de verificación');
+    console.error("❌ Error al enviar el correo:", error);
+    throw new Error("Error al enviar el correo de verificación");
   }
 }
 
