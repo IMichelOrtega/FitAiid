@@ -71,6 +71,7 @@ function construirSemanaCompleta(rutinaIA, trainingDaysPerWeek) {
 
 // Crear aplicación Express
 const app = express();
+app.set('trust proxy', 1);
 // =============================================
 // CORS CONFIGURACIÓN
 // =============================================
