@@ -34,7 +34,6 @@
     "node-cron": "^4.2.1",
     "nodemailer": "^7.0.10",
     "openai": "^6.8.1",
-    "resend": "^6.9.3",
     "stripe": "^18.4.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
