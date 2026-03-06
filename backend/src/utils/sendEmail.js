@@ -21,7 +21,10 @@ function verificationEmailHtml({ name, verifyUrl }) {
 }
 
 async function sendVerificationEmail(to, name, verifyUrl) {
+  console.log("📧 Intentando enviar email a:", to);
+  console.log("📧 API KEY existe?", !!process.env.MAILERSEND_API_KEY);
   try {
+    console.log("📧 Llamando a MailerSend API...");
     const response = await fetch("https://api.mailersend.com/v1/email", {
       method: "POST",
       headers: {
@@ -47,7 +50,8 @@ async function sendVerificationEmail(to, name, verifyUrl) {
 
     console.log(`📩 Correo de verificación enviado a: ${to}`);
   } catch (error) {
-    console.error("❌ Error al enviar el correo:", error);
+    console.error("❌ Error al enviar el correo:", error.message);
+    console.error("❌ Stack:", error.stack);
     throw new Error("Error al enviar el correo de verificación");
   }
 }
