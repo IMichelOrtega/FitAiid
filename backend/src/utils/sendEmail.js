@@ -1,21 +1,4 @@
-console.log("📧 DEBUG EMAIL CONFIG:");
-console.log("  Host:", process.env.EMAIL_HOST);
-console.log("  User:", process.env.EMAIL_USER);
-console.log("  Port:", process.env.EMAIL_PORT);
-
-
 // backend/src/utils/sendEmail.js
-const nodemailer = require('nodemailer');
-
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || "smtp.gmail.com",
-  port: parseInt(process.env.EMAIL_PORT || "587"),
-  secure: process.env.EMAIL_SECURE === "true", // true para 465, false para otros
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
 
 function verificationEmailHtml({ name, verifyUrl }) {
   return `
@@ -39,12 +22,29 @@ function verificationEmailHtml({ name, verifyUrl }) {
 
 async function sendVerificationEmail(to, name, verifyUrl) {
   try {
-    await transporter.sendMail({
-      from: `"FitAiid" <${process.env.EMAIL_USER}>`,
-      to,
-      subject: "Verifica tu correo en FitAiid ✅",
-      html: verificationEmailHtml({ name, verifyUrl }),
+    const response = await fetch("https://api.mailersend.com/v1/email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.MAILERSEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: {
+          email: process.env.EMAIL_USER,
+          name: "FitAiid",
+        },
+        to: [{ email: to, name: name || "usuario" }],
+        subject: "Verifica tu correo en FitAiid ✅",
+        html: verificationEmailHtml({ name, verifyUrl }),
+      }),
     });
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.error("❌ MailerSend API error:", error);
+      throw new Error("Error al enviar el correo de verificación");
+    }
+
     console.log(`📩 Correo de verificación enviado a: ${to}`);
   } catch (error) {
     console.error("❌ Error al enviar el correo:", error);
