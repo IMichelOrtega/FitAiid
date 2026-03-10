@@ -4539,7 +4539,7 @@
       }
     }
 
-    function enviarPreguntaEjercicio() {
+    async function enviarPreguntaEjercicio() {
       const input = document.getElementById('exerciseChatInput');
       const pregunta = input.value.trim();
 
@@ -4564,57 +4564,76 @@
         <div class="exercise-message bot exercise-typing">
           <div class="exercise-message-avatar">🤖</div>
           <div class="exercise-message-content">
-            <i class="fas fa-spinner"></i> Fitty está escribiendo...
+            <i class="fas fa-spinner fa-spin"></i> Fitty está escribiendo...
           </div>
         </div>
       `;
       messagesContainer.innerHTML += typingIndicator;
-
-      // Scroll al final
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-      // Simular respuesta de Fitty (en producción esto sería una llamada a la API)
-      setTimeout(() => {
+      try {
+        const API_URL = "https://fitaiid-production.up.railway.app";
+        const authToken = localStorage.getItem('token') || localStorage.getItem('authToken');
+        const uid = localStorage.getItem('userId');
+
+        const contexto = `Eres Fitty, un coach fitness experto. El usuario te pregunta sobre el ejercicio "${currentExerciseName}" (${currentExerciseDesc}). Responde de forma detallada, específica y útil sobre ESTE ejercicio en particular. Incluye pasos numerados si te preguntan la técnica, músculos específicos que trabaja, errores comunes reales, y consejos prácticos. No des respuestas genéricas. Responde en español. Pregunta del usuario: ${pregunta}`;
+
+        const response = await fetch(`${API_URL}/api/chat`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({
+            message: contexto,
+            user_id: uid || 'anonymous'
+          })
+        });
+
+        const data = await response.json();
+
         // Remover indicador de escritura
         const typingElement = messagesContainer.querySelector('.exercise-typing');
         if (typingElement) typingElement.remove();
 
-        // Respuesta simulada (en producción vendría de OpenAI)
-        const respuesta = generarRespuestaEjercicio(pregunta, currentExerciseName);
+        if (data.reply) {
+          // Formatear la respuesta (saltos de linea y negritas)
+          let formattedReply = data.reply
+            .replace(/\n/g, '<br>')
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+          const botMessage = `
+            <div class="exercise-message bot">
+              <div class="exercise-message-avatar">🤖</div>
+              <div class="exercise-message-content">${formattedReply}</div>
+            </div>
+          `;
+          messagesContainer.innerHTML += botMessage;
+        } else {
+          const botMessage = `
+            <div class="exercise-message bot">
+              <div class="exercise-message-avatar">🤖</div>
+              <div class="exercise-message-content">Lo siento, hubo un error al procesar tu pregunta. Intenta de nuevo.</div>
+            </div>
+          `;
+          messagesContainer.innerHTML += botMessage;
+        }
+
+      } catch (error) {
+        console.error('❌ Error en chat de ejercicio:', error);
+        const typingElement = messagesContainer.querySelector('.exercise-typing');
+        if (typingElement) typingElement.remove();
 
         const botMessage = `
           <div class="exercise-message bot">
             <div class="exercise-message-avatar">🤖</div>
-            <div class="exercise-message-content">${respuesta}</div>
+            <div class="exercise-message-content">Error de conexión. Verifica tu internet e intenta de nuevo. 🔌</div>
           </div>
         `;
         messagesContainer.innerHTML += botMessage;
-
-        // Scroll al final
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      }, 1500);
-    }
-
-    function generarRespuestaEjercicio(pregunta, ejercicio) {
-      // Respuestas simuladas - en producción esto se conectaría con OpenAI
-      const respuestas = {
-        'tecnica': `Para realizar <strong>${ejercicio}</strong> correctamente:\n\n1. Mantén la postura adecuada\n2. Controla el movimiento\n3. Respira de forma constante\n4. Evita movimientos bruscos`,
-        'beneficios': `Los principales beneficios de <strong>${ejercicio}</strong> son:\n\n✅ Fortalecimiento muscular\n✅ Mejora de la resistencia\n✅ Quema de calorías\n✅ Mejora de la coordinación`,
-        'variaciones': `Algunas variaciones de <strong>${ejercicio}</strong> que puedes probar:\n\n💪 Versión principiante\n💪 Versión intermedia\n💪 Versión avanzada\n💪 Con peso adicional`,
-        'default': `Entiendo tu pregunta sobre <strong>${ejercicio}</strong>. Este es un excelente ejercicio que trabaja múltiples grupos musculares. ¿Te gustaría saber más sobre la técnica correcta, beneficios o variaciones?`
-      };
-
-      // Detectar tipo de pregunta
-      const preguntaLower = pregunta.toLowerCase();
-      if (preguntaLower.includes('técnica') || preguntaLower.includes('como') || preguntaLower.includes('cómo')) {
-        return respuestas.tecnica;
-      } else if (preguntaLower.includes('beneficio') || preguntaLower.includes('para que') || preguntaLower.includes('para qué')) {
-        return respuestas.beneficios;
-      } else if (preguntaLower.includes('variacion') || preguntaLower.includes('variación') || preguntaLower.includes('otra forma')) {
-        return respuestas.variaciones;
-      } else {
-        return respuestas.default;
       }
+
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
     // ============================================
     // 🧮 FUNCIONES MODAL DE SELECCIÓN DE HERRAMIENTAS
