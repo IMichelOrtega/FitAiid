@@ -720,10 +720,71 @@ function agregarMensajeChat(texto, tipo) {
 
   const messageDiv = document.createElement('div');
   messageDiv.className = `message ${tipo}`;
-  messageDiv.innerHTML = `<div class="message-content">${texto}</div>`;
+
+  // Formatear solo mensajes del bot
+  const contenido = tipo === 'bot' ? formatearRespuestaChat(texto) : texto;
+  messageDiv.innerHTML = `<div class="message-content">${contenido}</div>`;
 
   chatMessages.appendChild(messageDiv);
   chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Formatear respuesta del bot con markdown a HTML estructurado
+function formatearRespuestaChat(texto) {
+  let formatted = texto;
+
+  // 1. Convertir **texto** a <strong>texto</strong>
+  formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+  // 2. Separar por líneas
+  const lines = formatted.split('\n');
+  let html = '';
+  let inOl = false;
+  let inUl = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i].trim();
+    if (!line) {
+      // Cerrar listas abiertas en líneas vacías
+      if (inOl) { html += '</ol>'; inOl = false; }
+      if (inUl) { html += '</ul>'; inUl = false; }
+      html += '<br>';
+      continue;
+    }
+
+    // Detectar listas numeradas: "1. ", "2. ", etc.
+    const numberedMatch = line.match(/^(\d+)[\.\)\-]\s+(.*)/);
+    if (numberedMatch) {
+      if (inUl) { html += '</ul>'; inUl = false; }
+      if (!inOl) { html += '<ol>'; inOl = true; }
+      html += `<li>${numberedMatch[2]}</li>`;
+      continue;
+    }
+
+    // Detectar listas con bullets: "- ", "• ", "✅ ", "⚠️ ", etc.
+    const bulletMatch = line.match(/^[-•●]\s+(.*)/);
+    const emojiListMatch = line.match(/^(✅|⚠️|💪|🔥|✔️|➡️|❌|🏋️|🦵|🧘|👟|⛰️|🔸|🔹|▪️)\s*(.*)/);
+    if (bulletMatch || emojiListMatch) {
+      if (inOl) { html += '</ol>'; inOl = false; }
+      if (!inUl) { html += '<ul class="chat-formatted-list">'; inUl = true; }
+      const content = bulletMatch ? bulletMatch[1] : (emojiListMatch[1] + ' ' + emojiListMatch[2]);
+      html += `<li>${content}</li>`;
+      continue;
+    }
+
+    // Cerrar listas abiertas si no estamos en una línea de lista
+    if (inOl) { html += '</ol>'; inOl = false; }
+    if (inUl) { html += '</ul>'; inUl = false; }
+
+    // Línea normal
+    html += `<p>${line}</p>`;
+  }
+
+  // Cerrar listas si quedaron abiertas
+  if (inOl) html += '</ol>';
+  if (inUl) html += '</ul>';
+
+  return html;
 }
 
 function mostrarEscribiendo() {
