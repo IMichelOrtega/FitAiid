@@ -1487,18 +1487,21 @@
   </script>
 
   <!-- Noticias API -->
+  <!--Scrip noticias-->
   <script>
-    const API_URL = "https://fitaiid-production.up.railway.app/noticias";
+    const API_KEY = "69ab3fff67ec43cd93c26393df9abf96"; // ⚠️ Reemplaza esto con tu clave personal de NewsAPI
+    const API_URL = `https://newsapi.org/v2/everything?q=fitness OR deporte OR nutrición OR alimentación OR yoga OR hidratación OR bienestar&language=es&sortBy=publishedAt&pageSize=6&apiKey=${API_KEY}`;
 
     async function cargarNoticias() {
       try {
         const respuesta = await fetch(API_URL);
         const data = await respuesta.json();
+
         const contenedor = document.getElementById("contenedor-noticias");
         contenedor.innerHTML = "";
 
         if (!data.articles || data.articles.length === 0) {
-          contenedor.innerHTML = `<p class="text-gray-400 text-center col-span-3">No se encontraron noticias en este momento.</p>`;
+          contenedor.innerHTML = `<p class="text-gray-400 text-center col-span-3">No se encontraron noticias de fitness en este momento.</p>`;
           return;
         }
 
@@ -1514,20 +1517,17 @@
           const imagen = noticia.urlToImage || "https://via.placeholder.com/400x250?text=Noticia+Fitness";
 
           const card = `
-            <div class="bg-neutral-900 rounded-2xl overflow-hidden shadow-2xl card-hover border border-neutral-800 
-              hover:border-red-600/30 transition-all duration-300">
-              <a href="${link}" target="_blank">
-                <img src="${imagen}" alt="${titulo}" class="w-full h-56 object-cover">
-                <div class="p-6 text-left">
-                  <h3 class="text-lg font-bold mb-2 line-clamp-2 hover:text-red-500 transition">${titulo}</h3>
-                  <p class="text-gray-400 text-sm mb-4">${fuente} | ${fecha}</p>
-                  <span class="inline-flex items-center gap-2 text-red-500 font-semibold hover:gap-3 transition-all">
-                    Leer más <i class="fas fa-arrow-right text-sm"></i>
-                  </span>
-                </div>
-              </a>
-            </div>
-          `;
+          <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-[1.02] transition-transform duration-300">
+            <a href="${link}" target="_blank">
+              <img src="${imagen}" alt="${titulo}" class="w-full h-56 object-cover">
+              <div class="p-5 text-left">
+                <h3 class="text-lg font-semibold mb-2">${titulo}</h3>
+                <p class="text-gray-400 text-sm mb-4">${fuente} | ${fecha}</p>
+                <span class="inline-block text-red-500 font-semibold hover:text-red-400">Leer más →</span>
+              </div>
+            </a>
+          </div>
+        `;
           contenedor.innerHTML += card;
         });
       } catch (error) {
@@ -1539,6 +1539,7 @@
 
     cargarNoticias();
   </script>
+
 
 </body>
 
