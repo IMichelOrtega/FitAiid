@@ -21,18 +21,18 @@ exports.getEstadisticas = async (req, res) => {
 
   // Buscar usuario en MongoDB
   const user = await User.findById(userId);
-  
+
   if (!user) {
     throw new AppError('Usuario no encontrado', 404);
   }
 
   // Obtener todos los entrenamientos del historial
   const workoutHistory = user.fitnessStats?.workoutHistory || [];
-  
+
   // Calcular estadísticas de esta semana
   const now = new Date();
   const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-  
+
   const thisWeekWorkouts = workoutHistory.filter(w => {
     const workoutDate = new Date(w.date);
     return workoutDate >= oneWeekAgo;
@@ -40,7 +40,7 @@ exports.getEstadisticas = async (req, res) => {
 
   // Calcular estadísticas de este mes
   const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-  
+
   const thisMonthWorkouts = workoutHistory.filter(w => {
     const workoutDate = new Date(w.date);
     return workoutDate >= oneMonthAgo;
@@ -74,7 +74,7 @@ exports.getGraficos = async (req, res) => {
   console.log(`📈 Obteniendo datos de gráficos para usuario: ${userId}`);
 
   const user = await User.findById(userId);
-  
+
   if (!user) {
     throw new AppError('Usuario no encontrado', 404);
   }
@@ -84,7 +84,7 @@ exports.getGraficos = async (req, res) => {
   // 1. GRÁFICO SEMANAL (por día de la semana)
   const diasSemana = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
   const countsPorDia = [0, 0, 0, 0, 0, 0, 0];
-  
+
   workouts.forEach(w => {
     const day = new Date(w.date).getDay();
     const adjustedDay = day === 0 ? 6 : day - 1;
@@ -94,11 +94,11 @@ exports.getGraficos = async (req, res) => {
   // 2. GRÁFICO MENSUAL (últimas 4 semanas)
   const now = new Date();
   const semanasCounts = [0, 0, 0, 0];
-  
+
   workouts.forEach(w => {
     const workoutDate = new Date(w.date);
     const weeksDiff = Math.floor((now - workoutDate) / (1000 * 60 * 60 * 24 * 7));
-    
+
     if (weeksDiff >= 0 && weeksDiff < 4) {
       semanasCounts[3 - weeksDiff]++;
     }
@@ -111,11 +111,11 @@ exports.getGraficos = async (req, res) => {
     enfoques[enfoque] = (enfoques[enfoque] || 0) + 1;
   });
 
-  const enfoquesLabels = Object.keys(enfoques).length > 0 
-    ? Object.keys(enfoques) 
+  const enfoquesLabels = Object.keys(enfoques).length > 0
+    ? Object.keys(enfoques)
     : ['Tren superior', 'Tren inferior', 'Full body'];
-  const enfoquesData = Object.keys(enfoques).length > 0 
-    ? Object.values(enfoques) 
+  const enfoquesData = Object.keys(enfoques).length > 0
+    ? Object.values(enfoques)
     : [0, 0, 0];
 
   // 4. DISTRIBUCIÓN POR HORARIO
@@ -125,10 +125,10 @@ exports.getGraficos = async (req, res) => {
     'Tarde': 0,
     'Noche': 0
   };
-  
+
   workouts.forEach(w => {
     const hour = new Date(w.date).getHours();
-    
+
     if (hour >= 5 && hour < 12) {
       horarios['Mañana']++;
     } else if (hour >= 12 && hour < 17) {
