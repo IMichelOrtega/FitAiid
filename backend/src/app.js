@@ -81,6 +81,10 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
   ? [
     process.env.FRONTEND_URL,
     'https://fit-aiid.vercel.app',
+    'https://www.fitaiid.com',
+    'https://fitaiid.com',
+
+
   ].filter(Boolean)
   : [
     'http://localhost:3000',
