@@ -21,7 +21,7 @@ const notificationScheduler = require('./services/notificationScheduler'); // Cr
 const { protect } = require('./middleware/auth'); // ✅ Importar protect middleware
 const AppError = require('./config/AppError'); // ✅ Importar AppError
 const catchAsync = require('./utils/catchAsync'); // ✅ Importar catchAsync
-
+const fetch = require("node-fetch");
 logger.info('🚀 Iniciando FitAiid Backend...');
 // =============================================
 // CONFIGURACIÓN SEMANA FITNESS
@@ -45,6 +45,7 @@ const DISTRIBUCION_ENTRENO = {
   5: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
   6: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
 };
+
 function construirSemanaCompleta(rutinaIA, trainingDaysPerWeek) {
   const diasEntreno = DISTRIBUCION_ENTRENO[trainingDaysPerWeek] || DISTRIBUCION_ENTRENO[3];
   let indexEntreno = 0;
@@ -72,6 +73,7 @@ function construirSemanaCompleta(rutinaIA, trainingDaysPerWeek) {
 // Crear aplicación Express
 const app = express();
 app.set('trust proxy', 1);
+
 // =============================================
 // CORS CONFIGURACIÓN
 // =============================================
@@ -79,6 +81,7 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
   ? [
     process.env.FRONTEND_URL,
     'https://fit-aiid.vercel.app',
+    'http://127.0.0.1:5500',
   ].filter(Boolean)
   : [
     'http://localhost:3000',
@@ -1469,7 +1472,21 @@ console.log('   👥 GET    /api/admin/users           — Listar usuarios');
 console.log('   📊 GET    /api/admin/stats           — KPIs del dashboard');
 console.log('   ⛔ PATCH  /api/admin/users/:id/status — Activar/Suspender');
 console.log('   🎭 PATCH  /api/admin/users/:id/role   — Cambiar rol');
+app.get("/noticias", async (req, res) => {
+  try {
 
+    const url = `https://newsapi.org/v2/everything?q=fitness OR deporte OR nutrición OR bienestar&language=es&sortBy=publishedAt&pageSize=6&apiKey=${process.env.NEWS_API_KEY}`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    res.json(data);
+
+  } catch (error) {
+    console.error("Error obteniendo noticias:", error);
+    res.status(500).json({ error: "Error cargando noticias" });
+  }
+});
 // Middleware para rutas no encontradas (404)
 app.use(notFound);
 // Middleware de manejo global de errores
