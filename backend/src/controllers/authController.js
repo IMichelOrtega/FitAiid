@@ -6,7 +6,7 @@ const User = require('../models/User');
 const logger = require('../config/logger');
 const AppError = require('../config/AppError');
 const crypto = require('crypto');
-const nodemailer = require('nodemailer');
+const { MailerSend, EmailParams, Sender, Recipient } = require("mailersend");
 console.log('🔐 Inicializando controlador de autenticación');
 const {
   savePendingVerification,
@@ -171,86 +171,86 @@ const registerWithCode = async (req, res) => {
  * @access  Público
  */
 const login = async (req, res) => {
-    const { email, password } = req.body;
-    
-    console.log(`🔐 Intento de login: ${email}`);
-    
-    // VALIDACIÓN 1: Verificar campos requeridos
-    if (!email || !password) {
-        throw new AppError('Email y contraseña son requeridos', 400);
-    }
-    
-    // BUSCAR USUARIO (incluye contraseña para verificar)
-    const user = await User.findByCredentials(email);
-    
-    if (!user) {
-      logger.warn('Login failed - User not found', { email, ip: req.ip });
-      throw new AppError('Email o contraseña incorrectos', 404);
-    }
-    
-    // VERIFICAR SI LA CUENTA ESTÁ ACTIVA
-    if (!user.isActive) {
-        console.log(`❌ Cuenta inactiva: ${email}`);
-        throw new AppError('Tu cuenta ha sido desactivada. Contacta soporte.', 401);
-    }
-    
-    // VERIFICAR SI LA CUENTA ESTÁ BLOQUEADA
-    if (user.isLocked) {
-        console.log(`🔒 Cuenta bloqueada: ${email}`);
-        throw new AppError('Demasiados intentos fallidos. Intenta en 30 minutos.', 401);
-    }
-    
-    // COMPARAR CONTRASEÑA
-    const isPasswordCorrect = await user.comparePassword(password);
-    
-    if (!isPasswordCorrect) {
-        logger.warn('Login failed - Invalid password', {
-            email,
-            ip: req.ip
-        });
-        
-        // Incrementar intentos fallidos
-        await user.incrementLoginAttempts();
-        
-        throw new AppError('Email o contraseña incorrectos', 401);
-    }
-    
-    // LOGIN EXITOSO
-    logger.audit('USER_LOGIN', {
-        userId: user._id,
-        email: user.email,
-        ip: req.ip,
-        userAgent: req.get('user-agent')
+  const { email, password } = req.body;
+
+  console.log(`🔐 Intento de login: ${email}`);
+
+  // VALIDACIÓN 1: Verificar campos requeridos
+  if (!email || !password) {
+    throw new AppError('Email y contraseña son requeridos', 400);
+  }
+
+  // BUSCAR USUARIO (incluye contraseña para verificar)
+  const user = await User.findByCredentials(email);
+
+  if (!user) {
+    logger.warn('Login failed - User not found', { email, ip: req.ip });
+    throw new AppError('Email o contraseña incorrectos', 404);
+  }
+
+  // VERIFICAR SI LA CUENTA ESTÁ ACTIVA
+  if (!user.isActive) {
+    console.log(`❌ Cuenta inactiva: ${email}`);
+    throw new AppError('Tu cuenta ha sido desactivada. Contacta soporte.', 401);
+  }
+
+  // VERIFICAR SI LA CUENTA ESTÁ BLOQUEADA
+  if (user.isLocked) {
+    console.log(`🔒 Cuenta bloqueada: ${email}`);
+    throw new AppError('Demasiados intentos fallidos. Intenta en 30 minutos.', 401);
+  }
+
+  // COMPARAR CONTRASEÑA
+  const isPasswordCorrect = await user.comparePassword(password);
+
+  if (!isPasswordCorrect) {
+    logger.warn('Login failed - Invalid password', {
+      email,
+      ip: req.ip
     });
 
-    logger.info('Login exitoso', { email: user.email });
-    
-    // Resetear intentos fallidos
-    await user.resetLoginAttempts();
-    
-    // GENERAR TOKEN JWT
-    const token = user.generateAuthToken();
-    
-    // OBTENER PERFIL PÚBLICO
-    const publicProfile = user.getPublicProfile();
+    // Incrementar intentos fallidos
+    await user.incrementLoginAttempts();
 
-    const userResponse = {
-        ...publicProfile,
-        role: user.role,
-        fitnessProfile: user.fitnessProfile || { questionnaireCompleted: false }
-    };
-    
-    console.log(`🎫 Token generado para: ${user.email}`);
-    
-    // RESPUESTA EXITOSA
-    res.status(200).json({
-      success: true,
-      message: 'Login exitoso',
-      data: {
-        token,
-        user: userResponse
-      }
-    });
+    throw new AppError('Email o contraseña incorrectos', 401);
+  }
+
+  // LOGIN EXITOSO
+  logger.audit('USER_LOGIN', {
+    userId: user._id,
+    email: user.email,
+    ip: req.ip,
+    userAgent: req.get('user-agent')
+  });
+
+  logger.info('Login exitoso', { email: user.email });
+
+  // Resetear intentos fallidos
+  await user.resetLoginAttempts();
+
+  // GENERAR TOKEN JWT
+  const token = user.generateAuthToken();
+
+  // OBTENER PERFIL PÚBLICO
+  const publicProfile = user.getPublicProfile();
+
+  const userResponse = {
+    ...publicProfile,
+    role: user.role,
+    fitnessProfile: user.fitnessProfile || { questionnaireCompleted: false }
+  };
+
+  console.log(`🎫 Token generado para: ${user.email}`);
+
+  // RESPUESTA EXITOSA
+  res.status(200).json({
+    success: true,
+    message: 'Login exitoso',
+    data: {
+      token,
+      user: userResponse
+    }
+  });
 };
 
 // =============================================
@@ -263,36 +263,36 @@ const login = async (req, res) => {
  * @access  Privado (requiere token)
  */
 const getProfile = async (req, res) => {
-    // req.user será agregado por middleware de autenticación (Parte 3C3)
-    // Por ahora usamos ID de query params para testing
-    const userId = req.query.userId || req.user?.id;
-    
-    if (!userId) {
-        throw new AppError('ID de usuario requerido', 400);
-    }
-    
-    console.log(`👤 Obteniendo perfil: ${userId}`);
-    
-    // BUSCAR USUARIO
-    const user = await User.findById(userId)
-        .populate('wishlist', 'name price mainImage')  // Incluir productos de wishlist
-        .select('-password');  // Excluir contraseña
-    
-    if (!user) {
-        console.log(`❌ Usuario no encontrado: ${userId}`);
-        throw new AppError('Usuario no encontrado', 404);
-    }
-    
-    // OBTENER PERFIL PÚBLICO
-    const publicProfile = user.getPublicProfile();
-    
-    console.log(`✅ Perfil obtenido: ${user.email}`);
-    
-    // RESPUESTA EXITOSA
-    res.status(200).json({
-        success: true,
-        user: publicProfile
-    });
+  // req.user será agregado por middleware de autenticación (Parte 3C3)
+  // Por ahora usamos ID de query params para testing
+  const userId = req.query.userId || req.user?.id;
+
+  if (!userId) {
+    throw new AppError('ID de usuario requerido', 400);
+  }
+
+  console.log(`👤 Obteniendo perfil: ${userId}`);
+
+  // BUSCAR USUARIO
+  const user = await User.findById(userId)
+    .populate('wishlist', 'name price mainImage')  // Incluir productos de wishlist
+    .select('-password');  // Excluir contraseña
+
+  if (!user) {
+    console.log(`❌ Usuario no encontrado: ${userId}`);
+    throw new AppError('Usuario no encontrado', 404);
+  }
+
+  // OBTENER PERFIL PÚBLICO
+  const publicProfile = user.getPublicProfile();
+
+  console.log(`✅ Perfil obtenido: ${user.email}`);
+
+  // RESPUESTA EXITOSA
+  res.status(200).json({
+    success: true,
+    user: publicProfile
+  });
 };
 
 // =============================================
@@ -305,64 +305,64 @@ const getProfile = async (req, res) => {
  * @access  Privado (requiere token)
  */
 const updateProfile = async (req, res) => {
-    // Por ahora usamos userId de query params para testing
-    const userId = req.query.userId || req.user?.id;
-    
-    if (!userId) {
-        throw new AppError('ID de usuario requerido', 400);
+  // Por ahora usamos userId de query params para testing
+  const userId = req.query.userId || req.user?.id;
+
+  if (!userId) {
+    throw new AppError('ID de usuario requerido', 400);
+  }
+
+  console.log(`✏️ Actualizando perfil: ${userId}`);
+
+  // CAMPOS PERMITIDOS PARA ACTUALIZAR
+  const allowedUpdates = [
+    'firstName',
+    'lastName',
+    'phone',
+    'dateOfBirth',
+    'gender',
+    'avatar',
+    'address'
+  ];
+
+  // FILTRAR SOLO CAMPOS PERMITIDOS
+  const updates = {};
+  Object.keys(req.body).forEach(key => {
+    if (allowedUpdates.includes(key)) {
+      updates[key] = req.body[key];
     }
-    
-    console.log(`✏️ Actualizando perfil: ${userId}`);
-    
-    // CAMPOS PERMITIDOS PARA ACTUALIZAR
-    const allowedUpdates = [
-        'firstName', 
-        'lastName', 
-        'phone', 
-        'dateOfBirth',
-        'gender',
-        'avatar',
-        'address'
-    ];
-    
-    // FILTRAR SOLO CAMPOS PERMITIDOS
-    const updates = {};
-    Object.keys(req.body).forEach(key => {
-        if (allowedUpdates.includes(key)) {
-            updates[key] = req.body[key];
-        }
-    });
-    
-    // VALIDAR QUE HAY ALGO QUE ACTUALIZAR
-    if (Object.keys(updates).length === 0) {
-        throw new AppError('No hay campos para actualizar', 400);
+  });
+
+  // VALIDAR QUE HAY ALGO QUE ACTUALIZAR
+  if (Object.keys(updates).length === 0) {
+    throw new AppError('No hay campos para actualizar', 400);
+  }
+
+  // ACTUALIZAR USUARIO
+  const user = await User.findByIdAndUpdate(
+    userId,
+    updates,
+    {
+      new: true,           // Retornar documento actualizado
+      runValidators: true  // Ejecutar validaciones
     }
-    
-    // ACTUALIZAR USUARIO
-    const user = await User.findByIdAndUpdate(
-        userId,
-        updates,
-        { 
-            new: true,           // Retornar documento actualizado
-            runValidators: true  // Ejecutar validaciones
-        }
-    );
-    
-    if (!user) {
-        throw new AppError('Usuario no encontrado', 404);
-    }
-    
-    console.log(`✅ Perfil actualizado: ${user.email}`);
-    
-    // OBTENER PERFIL PÚBLICO ACTUALIZADO
-    const publicProfile = user.getPublicProfile();
-    
-    // RESPUESTA EXITOSA
-    res.status(200).json({
-        success: true,
-        message: 'Perfil actualizado exitosamente',
-        user: publicProfile
-    });
+  );
+
+  if (!user) {
+    throw new AppError('Usuario no encontrado', 404);
+  }
+
+  console.log(`✅ Perfil actualizado: ${user.email}`);
+
+  // OBTENER PERFIL PÚBLICO ACTUALIZADO
+  const publicProfile = user.getPublicProfile();
+
+  // RESPUESTA EXITOSA
+  res.status(200).json({
+    success: true,
+    message: 'Perfil actualizado exitosamente',
+    user: publicProfile
+  });
 };
 
 // =============================================
@@ -410,7 +410,7 @@ const googleLogin = async (req, res) => {
 
   // 🎫 GENERAR TOKEN JWT
   const token = user.generateAuthToken();
-  
+
   // 📦 OBTENER PERFIL PÚBLICO
   const publicProfile = user.getPublicProfile();
 
@@ -490,7 +490,7 @@ const googleRegister = async (req, res) => {
 
   // 🎫 GENERAR TOKEN JWT
   const token = user.generateAuthToken();
-  
+
   // 📦 OBTENER PERFIL PÚBLICO
   const publicProfile = user.getPublicProfile();
 
@@ -512,22 +512,16 @@ const googleRegister = async (req, res) => {
     user: userResponse
   });
 };
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || "smtp.gmail.com", // ej: smtp.gmail.com
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
 const sendVerificationCodeEmail = async (email, firstName, code) => {
-  const mailOptions = {
-    from: `"FitAiid 💪" <${process.env.EMAIL_USER}>`,
-    to: email,
-    subject: "Código de Verificación - FitAiid",
-    html: `
+  const mailerSend = new MailerSend({ apiKey: process.env.MAILERSEND_API_KEY });
+  const sender = new Sender(process.env.EMAIL_USER, "FitAiid 💪");
+  const recipients = [new Recipient(email, firstName || "usuario")];
+
+  const emailParams = new EmailParams()
+    .setFrom(sender)
+    .setTo(recipients)
+    .setSubject("Código de Verificación - FitAiid")
+    .setHtml(`
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h2 style="color: #333;">¡Bienvenido a FitAiid!</h2>
         <p>Hola ${firstName},</p>
@@ -540,10 +534,11 @@ const sendVerificationCodeEmail = async (email, firstName, code) => {
         <p>Este código expira en <strong>15 minutos</strong>.</p>
         <p style="color: #999; font-size: 14px;">Si no te registraste, ignora este correo.</p>
       </div>
-    `
-  };
+    `)
+    .setText(`Tu código de verificación de FitAiid es: ${code}. Expira en 15 minutos.`);
 
-  await transporter.sendMail(mailOptions);
+  await mailerSend.email.send(emailParams);
+  console.log(`📩 Código enviado exitosamente a: ${email}`);
 };
 
 
@@ -592,30 +587,31 @@ const forgotPassword = async (req, res) => {
   user.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
   await user.save();
 
-  // Configurar email
-  const mailOptions = {
-    from: `"FitAiid 💪" <${process.env.EMAIL_USER}>`,
-    to: user.email,
-    subject: 'Código de Recuperación de Contraseña',
-    html: `
+  // Enviar email con MailerSend
+  const mailerSendFP = new MailerSend({ apiKey: process.env.MAILERSEND_API_KEY });
+  const senderFP = new Sender(process.env.EMAIL_USER, "FitAiid");
+  const recipientsFP = [new Recipient(user.email, user.firstName)];
+  const emailParamsFP = new EmailParams()
+    .setFrom(senderFP)
+    .setTo(recipientsFP)
+    .setSubject("C\u00f3digo de Recuperaci\u00f3n de Contrase\u00f1a - FitAiid")
+    .setHtml(`
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2 style="color: #333;">Código de Recuperación de Contraseña</h2>
+        <h2 style="color: #333;">C\u00f3digo de Recuperaci\u00f3n de Contrase\u00f1a</h2>
         <p>Hola ${user.firstName},</p>
-        <p>Has solicitado restablecer tu contraseña. Tu código de verificación es:</p>
+        <p>Has solicitado restablecer tu contrase\u00f1a. Tu c\u00f3digo de verificaci\u00f3n es:</p>
         <div style="background-color: #f4f4f4; padding: 20px; text-align: center; border-radius: 5px; margin: 20px 0;">
           <h1 style="color: #667eea; font-size: 36px; letter-spacing: 5px; margin: 0;">
             ${resetCode}
           </h1>
         </div>
-        <p>Este código expirará en <strong>15 minutos</strong>.</p>
+        <p>Este c\u00f3digo expirará en <strong>15 minutos</strong>.</p>
         <p style="color: #999; font-size: 14px;">Si no solicitaste este cambio, ignora este correo.</p>
       </div>
-    `
-  };
-
-  // Enviar email
-  await transporter.sendMail(mailOptions);
-  console.log(`✅ Código enviado a: ${email}`);
+    `)
+    .setText(`Tu c\u00f3digo de recuperaci\u00f3n de FitAiid es: ${resetCode}. Expira en 15 minutos.`);
+  await mailerSendFP.email.send(emailParamsFP);
+  console.log(`\u2705 C\u00f3digo enviado a: ${email}`);
 
   logger.audit('PASSWORD_RESET_REQUESTED', {
     userId: user._id,
@@ -812,14 +808,14 @@ const resendVerificationCode = async (req, res) => {
 
   // Generar NUEVO código
   const newCode = Math.floor(100000 + Math.random() * 900000).toString();
-  
+
   // Actualizar código temporal
   await savePendingVerification(email, newCode, verification.userData);
 
   // Enviar nuevo email
   await sendVerificationCodeEmail(
-    email, 
-    verification.userData.firstName, 
+    email,
+    verification.userData.firstName,
     newCode
   );
 
@@ -833,16 +829,16 @@ const resendVerificationCode = async (req, res) => {
 
 
 module.exports = {
-    register,
-    registerWithCode,
-    login,
-    getProfile,
-    updateProfile,
-    googleLogin,
-    googleRegister,
-    verifyRegistrationCode, 
-    forgotPassword,
-    resendVerificationCode,
-    verifyResetCode,
-    resetPassword
+  register,
+  registerWithCode,
+  login,
+  getProfile,
+  updateProfile,
+  googleLogin,
+  googleRegister,
+  verifyRegistrationCode,
+  forgotPassword,
+  resendVerificationCode,
+  verifyResetCode,
+  resetPassword
 };
