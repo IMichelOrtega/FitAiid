@@ -413,7 +413,7 @@ body {
    ============================================= */
 .hero {
   min-height: 100vh;
-  padding: 120px 60px 60px;
+  padding: 40px 40px 40px;
   display: flex;
   align-items: center;
   position: relative;
