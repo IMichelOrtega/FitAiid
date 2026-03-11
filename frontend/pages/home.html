@@ -160,59 +160,111 @@
       z-index: 10001;
     }
 
-    /* Notification Bell */
+    /* ── PULSE NOTIFICATION ICON ── */
     .navbar-header .bell {
-      font-size: 22px;
-      cursor: pointer;
       position: relative;
-      transition: transform 0.2s;
-      background: transparent;
-      border: none;
-      color: white;
-      padding: 8px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #2a1500, #1a1a1a);
+      border: 1.5px solid rgba(255, 106, 0, 0.25);
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      box-shadow: 0 3px 14px rgba(255, 69, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      padding: 0;
+      color: white;
+      flex-shrink: 0;
     }
 
     .navbar-header .bell:hover {
       transform: scale(1.1);
+      border-color: rgba(255, 106, 0, 0.6);
+      box-shadow: 0 5px 22px rgba(255, 69, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
 
-    .navbar-header .bell.pending::after {
-      content: '!';
+    /* Badge compartido */
+    .navbar-header .bell.pending::after,
+    .navbar-header .bell.active::after {
       position: absolute;
-      top: 2px;
-      right: 2px;
-      width: 16px;
-      height: 16px;
-      background: #ff2e00;
+      top: 1px;
+      right: 1px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
-      font-size: 11px;
-      font-weight: bold;
+      border: 2px solid #0c0c0c;
+      font-size: 8px;
+      font-weight: 900;
       display: flex;
       align-items: center;
       justify-content: center;
-      animation: pulse 2s infinite;
+      font-family: 'Oswald', sans-serif;
     }
 
+    /* Pendiente: naranja + animación */
+    .navbar-header .bell.pending::after {
+      content: '!';
+      background: linear-gradient(135deg, #ff4500, #ff8c00);
+      box-shadow: 0 0 8px rgba(255, 69, 0, 0.9);
+      animation: pulseBadge 2s ease-in-out infinite;
+    }
+
+    /* Activo: verde */
     .navbar-header .bell.active::after {
       content: '✓';
       background: #22c55e;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.7);
       animation: none;
     }
 
-    @keyframes pulse {
+    /* Anillos de pulso: visibles solo con .active */
+    .navbar-header .bell.active .pulse-ring {
+      opacity: 1;
+    }
+
+    .pulse-ring {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .pulse-ring-1 {
+      inset: -7px;
+      border: 1.5px solid rgba(255, 106, 0, 0.35);
+      animation: pulseRingOut 2s ease-out infinite;
+    }
+
+    .pulse-ring-2 {
+      inset: -2px;
+      border: 1px solid rgba(255, 106, 0, 0.55);
+      animation: pulseRingOut 2s ease-out infinite 0.4s;
+    }
+
+    @keyframes pulseRingOut {
+      0% {
+        transform: scale(0.88);
+        opacity: 0.9;
+      }
+
+      100% {
+        transform: scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    @keyframes pulseBadge {
 
       0%,
       100% {
-        transform: scale(1);
-        opacity: 1;
+        box-shadow: 0 0 8px rgba(255, 69, 0, 0.9);
       }
 
       50% {
-        transform: scale(1.1);
-        opacity: 0.8;
+        box-shadow: 0 0 16px rgba(255, 69, 0, 1);
       }
     }
 
@@ -363,8 +415,8 @@
       }
 
       .navbar-header .bell {
-        font-size: 20px;
-        padding: 6px;
+        width: 38px;
+        height: 38px;
       }
     }
 
@@ -394,7 +446,8 @@
       }
 
       .navbar-header .bell {
-        font-size: 18px;
+        width: 36px;
+        height: 36px;
       }
 
       .navbar-actions {
@@ -407,7 +460,7 @@
        ============================================ */
     .hero {
       min-height: 100vh;
-      padding: 120px 60px 60px;
+      padding: 50px 50px 50px;
       display: flex;
       align-items: center;
       position: relative;
@@ -3507,7 +3560,22 @@
     </nav>
 
     <div class="navbar-actions">
-      <button id="notificationBell" class="bell">🔔</button>
+      <button id="notificationBell" class="bell"><span class="pulse-ring pulse-ring-1"></span><span
+          class="pulse-ring pulse-ring-2"></span><svg width="30" height="30" viewBox="0 0 26 26" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 11C7 8.24 9.24 6 12 5.4V4.5a1 1 0 0 1 2 0v.9C16.76 6 19 8.24 19 11v4.5l2 2H5l2-2V11z"
+            fill="url(#ecgGrad)" />
+          <defs>
+            <linearGradient id="ecgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff8c00" />
+              <stop offset="100%" stop-color="#ff4500" />
+            </linearGradient>
+          </defs>
+          <path d="M9 12h1.5l1-2 1.5 4 1-2H16" stroke="white" stroke-width="1.2" fill="none" stroke-linecap="round"
+            stroke-linejoin="round" opacity="0.9" />
+          <path d="M10.5 19.5a2.5 2.5 0 0 0 5 0" stroke="#ff6a00" stroke-width="1.5" fill="none"
+            stroke-linecap="round" />
+        </svg></button>
       <button class="navbar-toggle" id="navbar-toggle">☰</button>
     </div>
   </header>
@@ -4178,7 +4246,8 @@
         <h3>Contacto</h3>
         <p><i class="fas fa-location-dot"></i> Colombia</p>
         <p><i class="fas fa-phone"></i> 3202363622</p>
-        <p><i class="fas fa-envelope"></i> contacto@fitaiid.com</p>
+        <p><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__"
+            data-cfemail="36555958425755425976505f42575f5f521855595b">[email&#160;protected]</a></p>
       </div>
     </div>
 
@@ -4247,6 +4316,7 @@
   </div>
 
   <!-- Scripts para cargar datos del usuario y notificaciones push -->
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script src="../scripts/home.js"></script>
   <script src="../scripts/notifications.js"></script>
   <!-- SCRIPTS PRINCIPALES -->
