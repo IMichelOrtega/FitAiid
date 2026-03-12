@@ -21,8 +21,6 @@ const FUENTES = [
   { nombre: 'Healthline Fitness', url: 'https://www.healthline.com/rss/fitness' },
   { nombre: 'Healthline Nutrición', url: 'https://www.healthline.com/rss/nutrition' },
   { nombre: 'Bodybuilding.com', url: 'https://www.bodybuilding.com/rss/articles' },
-  { nombre: "Men's Health", url: 'https://www.menshealth.com/rss/all.xml/' },
-  { nombre: "Runner's World", url: 'https://www.runnersworld.com/rss/all.xml/' },
 ];
 
 // ── FUNCIÓN: obtener artículos de una fuente ──────
@@ -43,8 +41,14 @@ async function obtenerArticulos(fuente) {
 
 function extraerImagen(item) {
   if (item.enclosure?.url) return item.enclosure.url;
-  const match = (item.content || item.summary || '').match(/<img[^>]+src="([^"]+)"/i);
-  return match ? match[1] : 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80';
+  if (item['media:content']?.$?.url) return item['media:content'].$.url;
+  if (item['media:thumbnail']?.$?.url) return item['media:thumbnail'].$.url;
+
+  const html = item['content:encoded'] || item.content || item.summary || '';
+  const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+  if (match) return match[1];
+
+  return null;
 }
 
 // ── ENDPOINT PRINCIPAL ────────────────────────────
