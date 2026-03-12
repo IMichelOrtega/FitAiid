@@ -1487,36 +1487,36 @@
   </script>
 
   <!-- Noticias API -->
-  <!--Scrip noticias-->
   <script>
-    const API_KEY = "69ab3fff67ec43cd93c26393df9abf96"; // ⚠️ Reemplaza esto con tu clave personal de NewsAPI
-    const API_URL = `https://newsapi.org/v2/everything?q=fitness OR deporte OR nutrición OR alimentación OR yoga OR hidratación OR bienestar&language=es&sortBy=publishedAt&pageSize=6&apiKey=${API_KEY}`;
+    // ↓ Cambia esto por tu URL de Railway después de desplegar
+    const FITAIID_API = 'https://hospitable-unity-production-6603.up.railway.app';
 
     async function cargarNoticias() {
+      const contenedor = document.getElementById('contenedor-noticias');
+      contenedor.innerHTML = `<p class="text-gray-400 text-center col-span-3">Cargando noticias...</p>`;
+
       try {
-        const respuesta = await fetch(API_URL);
+        const respuesta = await fetch(`${FITAIID_API}/api/news?pageSize=6`);
         const data = await respuesta.json();
 
-        const contenedor = document.getElementById("contenedor-noticias");
-        contenedor.innerHTML = "";
+        contenedor.innerHTML = '';
 
         if (!data.articles || data.articles.length === 0) {
           contenedor.innerHTML = `<p class="text-gray-400 text-center col-span-3">No se encontraron noticias de fitness en este momento.</p>`;
           return;
         }
 
+        // ↓ Este bloque es idéntico al que tenías — no cambia nada visual
         data.articles.forEach(noticia => {
-          const titulo = noticia.title || "Noticia sin título";
-          const fuente = noticia.source?.name || "Fuente desconocida";
-          const fecha = new Date(noticia.publishedAt).toLocaleDateString("es-ES", {
-            year: "numeric",
-            month: "long",
-            day: "numeric"
+          const titulo = noticia.title || 'Noticia sin título';
+          const fuente = noticia.source?.name || 'Fuente desconocida';
+          const fecha = new Date(noticia.publishedAt).toLocaleDateString('es-ES', {
+            year: 'numeric', month: 'long', day: 'numeric'
           });
           const link = noticia.url;
-          const imagen = noticia.urlToImage || "https://via.placeholder.com/400x250?text=Noticia+Fitness";
+          const imagen = noticia.urlToImage || 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80';
 
-          const card = `
+          contenedor.innerHTML += `
           <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-[1.02] transition-transform duration-300">
             <a href="${link}" target="_blank">
               <img src="${imagen}" alt="${titulo}" class="w-full h-56 object-cover">
@@ -1528,18 +1528,17 @@
             </a>
           </div>
         `;
-          contenedor.innerHTML += card;
         });
+
       } catch (error) {
-        console.error("Error al cargar las noticias:", error);
-        document.getElementById("contenedor-noticias").innerHTML =
-          `<p class="text-gray-400 text-center col-span-3">Error al conectar con el servicio de noticias.</p>`;
+        console.error('Error al cargar las noticias:', error);
+        document.getElementById('contenedor-noticias').innerHTML =
+          `<p class="text-gray-400 text-center col-span-3">Error al cargar noticias.</p>`;
       }
     }
 
     cargarNoticias();
   </script>
-
 
 </body>
 
