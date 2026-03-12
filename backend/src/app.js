@@ -1469,7 +1469,20 @@ app.patch('/api/admin/users/:userId/role', verifyAdmin, async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 });
+// ─── DELETE /api/admin/users/:userId — Eliminar usuario ───────────────────
+app.delete('/api/admin/users/:userId', verifyAdmin, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+    if (user.role === 'admin') return res.status(403).json({ success: false, message: 'No se puede eliminar un administrador' });
 
+    await User.findByIdAndDelete(req.params.userId);
+    console.log(`🗑️ Admin eliminó usuario: ${user.email}`);
+    res.json({ success: true, message: `Usuario ${user.firstName} ${user.lastName} eliminado permanentemente` });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
 console.log('✅ Rutas ADMIN configuradas:');
 console.log('   👥 GET    /api/admin/users           — Listar usuarios');
 console.log('   📊 GET    /api/admin/stats           — KPIs del dashboard');

@@ -885,6 +885,60 @@
       background: rgba(239, 68, 68, .08);
     }
 
+    .btn-toggle-row {
+      padding: 5px 10px;
+      border-radius: 7px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text3);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all .2s;
+      margin-right: 4px;
+    }
+
+    .btn-toggle-row.is-active:hover {
+      border-color: #f59e0b;
+      color: #f59e0b;
+      background: rgba(245, 158, 11, .08);
+    }
+
+    .btn-toggle-row.is-inactive {
+      color: #22c55e;
+      border-color: rgba(34, 197, 94, .35);
+    }
+
+    .btn-toggle-row.is-inactive:hover {
+      background: rgba(34, 197, 94, .1);
+    }
+
+    .btn-confirm-toggle-act {
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
+    }
+
+    .btn-confirm-deactivate {
+      background: rgba(245, 158, 11, .15);
+      border-color: rgba(245, 158, 11, .4) !important;
+      color: #f59e0b;
+    }
+
+    .btn-confirm-deactivate:hover {
+      background: #f59e0b;
+      color: #000;
+    }
+
+    .btn-confirm-activate {
+      background: rgba(34, 197, 94, .15);
+      border-color: rgba(34, 197, 94, .4) !important;
+      color: #22c55e;
+    }
+
+    .btn-confirm-activate:hover {
+      background: #22c55e;
+      color: #fff;
+    }
+
     /* MODAL */
     .modal-overlay {
       display: none;
@@ -1753,6 +1807,25 @@
     </div>
   </div>
 
+  <!-- CONFIRM TOGGLE STATUS -->
+  <div class="confirm-overlay" id="toggle-overlay">
+    <div class="confirm-box" id="toggle-confirm-box" style="border-color:rgba(245,158,11,.4)">
+      <i id="toggle-confirm-icon" class="fas fa-ban"
+        style="font-size:32px;color:#f59e0b;margin-bottom:16px;display:block"></i>
+      <h3 id="toggle-confirm-title" style="color:#f59e0b">Cambiar estado</h3>
+      <p>¿Confirmas <strong id="toggle-confirm-action">desactivar</strong> la cuenta de <strong
+          id="toggle-confirm-name"></strong>?</p>
+      <p class="confirm-warning">El usuario no podrá acceder a la plataforma mientras esté desactivado.</p>
+      <div class="confirm-btns">
+        <button class="btn-cancel-del" onclick="closeToggleConfirm()"><i class="fas fa-times"></i> Cancelar</button>
+        <button id="btn-confirm-toggle" class="btn-confirm-toggle-act btn-confirm-deactivate"
+          onclick="doToggleConfirmed()">
+          <i id="toggle-btn-icon" class="fas fa-ban"></i> Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- SIDEBAR OVERLAY -->
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
@@ -2080,7 +2153,7 @@
     const ago = d => { if (!d) return '—'; const diff = Math.floor((Date.now() - new Date(d)) / 86400000); if (diff === 0) return 'Hoy'; if (diff === 1) return 'Ayer'; return `Hace ${diff}d`; };
     const cop = v => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(v || 0);
 
-    const roleBadge = r => ({ 'admin': '<span class="badge b-admin"><i class="fas fa-crown"></i> Admin</span>', 'moderator': '<span class="badge b-mod"><i class="fas fa-shield-alt"></i> Moderador</span>', 'customer': '<span class="badge b-customer"><i class="fas fa-user"></i> Usuario</span>' }[r] || r);
+    const roleBadge = r => ({ 'admin': '<span class="badge b-admin"><i class="fas fa-crown"></i> Admin</span>', 'moderator': '<span class="badge b-mod"><i class="fas fa-shield-alt"></i> </span>', 'customer': '<span class="badge b-customer"><i class="fas fa-user"></i> Usuario</span>' }[r] || r);
     const statusBadge = a => a ? '<span class="badge b-active"><i class="fas fa-circle" style="font-size:7px"></i> Activo</span>' : '<span class="badge b-inactive"><i class="fas fa-circle" style="font-size:7px"></i> Suspendido</span>';
     const levelHTML = l => ({ 'principiante': '<span class="lv-p">🌱 Principiante</span>', 'intermedio': '<span class="lv-i">⚡ Intermedio</span>', 'avanzado': '<span class="lv-a">🔥 Avanzado</span>' }[l] || '<span class="lv-n">Sin perfil</span>');
     const emailBadge = v => v ? '<span style="color:#22c55e;font-size:12px"><i class="fas fa-check-circle"></i> Verificado</span>' : '<span style="color:#f59e0b;font-size:12px"><i class="fas fa-exclamation-triangle"></i> Pendiente</span>';
@@ -2241,7 +2314,8 @@
       try {
         const data = await apiFetch('/api/admin/users');
         if (!data.success) throw new Error(data.message);
-        ALL_USERS = data.data.users;
+        // Normalizar: asegurarse que cada usuario tenga _id
+        ALL_USERS = data.data.users.map(u => ({ ...u, _id: u._id || u.id }));
         document.getElementById('badge-count').textContent = ALL_USERS.length;
         renderTable(ALL_USERS);
       } catch (e) {
@@ -2259,10 +2333,24 @@
       empty.style.display = 'none';
 
       tbody.innerHTML = list.map(u => {
-        const canDelete = u.role !== 'admin' && u._id !== ADMIN_INFO?.id;
-        const delBtn = canDelete ? `<button class="btn-del-row" onclick="event.stopPropagation();confirmDelete('${u._id}','${u.firstName} ${u.lastName}')"><i class="fas fa-trash-alt"></i></button>` : '';
+        const uid = u._id || u.id;
+        const isAdmin = u.role === 'admin';
+        const toggleBtn = !isAdmin
+          ? `<button class="btn-toggle-row ${u.isActive ? 'is-active' : 'is-inactive'}"
+               title="${u.isActive ? 'Desactivar cuenta' : 'Activar cuenta'}"
+               onclick="event.stopPropagation();confirmToggle('${uid}','${u.firstName} ${u.lastName}',${!u.isActive})">
+               <i class="fas ${u.isActive ? 'fa-ban' : 'fa-check'}"></i>
+             </button>`
+          : '';
+        const delBtn = !isAdmin
+          ? `<button class="btn-del-row"
+               title="Eliminar usuario"
+               onclick="event.stopPropagation();confirmDelete('${uid}','${u.firstName} ${u.lastName}')">
+               <i class="fas fa-trash-alt"></i>
+             </button>`
+          : '';
         return `
-    <tr onclick="openModal('${u._id}')">
+    <tr onclick="openModal('${uid}')">
       <td><div class="u-mini"><div class="u-avatar">${ini(u)}</div><div><div class="u-name">${u.firstName} ${u.lastName}</div><div class="u-email">${u.email}</div></div></div></td>
       <td>${roleBadge(u.role)}</td>
       <td>${statusBadge(u.isActive)}</td>
@@ -2274,7 +2362,7 @@
       </td>
       <td>${emailBadge(u.isEmailVerified)}</td>
       <td style="color:var(--text2);font-size:12px">${ago(u.lastLogin)}</td>
-      <td style="white-space:nowrap"><button class="btn-view">Ver →</button>${delBtn}</td>
+      <td style="white-space:nowrap">${toggleBtn}${delBtn}<button class="btn-view" onclick="event.stopPropagation();openModal('${uid}')">Ver →</button></td>
     </tr>`;
       }).join('');
     }
@@ -2352,8 +2440,8 @@
         btns.push(`<button class="btn-act btn-activate" onclick="doStatus('${u._id}',true)"><i class="fas fa-check"></i> Activar cuenta</button>`);
       }
       if (u.role !== 'admin') {
-        if (u.role === 'customer') btns.push(`<button class="btn-act btn-to-mod"  onclick="doRole('${u._id}','moderator')"><i class="fas fa-shield-alt"></i> Hacer moderador</button>`);
-        if (u.role === 'moderator') btns.push(`<button class="btn-act btn-to-user" onclick="doRole('${u._id}','customer')"><i class="fas fa-user"></i> Quitar moderador</button>`);
+        if (u.role === 'customer') btns.push(`<button class="btn-act btn-to-mod"  onclick="doRole('${u._id}','moderator')"><i class="fas fa-shield-alt"></i> </button>`);
+        if (u.role === 'moderator') btns.push(`<button class="btn-act btn-to-user" onclick="doRole('${u._id}','customer')"><i class="fas fa-user"></i> </button>`);
       }
       if (u.role !== 'admin' && u._id !== ADMIN_INFO?.id) {
         btns.push(`<button class="btn-act btn-delete" onclick="confirmDelete('${u._id}','${u.firstName} ${u.lastName}')"><i class="fas fa-trash-alt"></i> Eliminar usuario</button>`);
@@ -2416,7 +2504,7 @@
       try {
         const data = await apiFetch(`/api/admin/users/${deleteTargetId}`, { method: 'DELETE' });
         if (!data.success) throw new Error(data.message || 'Error al eliminar');
-        ALL_USERS = ALL_USERS.filter(u => u._id !== deleteTargetId);
+        ALL_USERS = ALL_USERS.filter(u => (u._id || u.id) !== deleteTargetId);
         document.getElementById('badge-count').textContent = ALL_USERS.length;
         showToast('Usuario eliminado correctamente');
         closeConfirm();
@@ -2427,6 +2515,60 @@
       } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-trash-alt"></i> Eliminar';
+      }
+    }
+
+    // =============================================
+    // TOGGLE ESTADO (ACTIVAR / DESACTIVAR)
+    // =============================================
+    let toggleTargetId = null;
+    let toggleTargetStatus = null;
+
+    function confirmToggle(id, name, newStatus) {
+      toggleTargetId = id;
+      toggleTargetStatus = newStatus;
+      document.getElementById('toggle-confirm-name').textContent = name;
+      document.getElementById('toggle-confirm-action').textContent = newStatus ? 'activar' : 'desactivar';
+      const color = newStatus ? '#22c55e' : '#f59e0b';
+      const borderColor = newStatus ? 'rgba(34,197,94,.4)' : 'rgba(245,158,11,.4)';
+      const iconClass = newStatus ? 'fa-check' : 'fa-ban';
+      document.getElementById('toggle-confirm-icon').className = `fas ${iconClass}`;
+      document.getElementById('toggle-confirm-icon').style.color = color;
+      document.getElementById('toggle-confirm-title').style.color = color;
+      document.getElementById('toggle-confirm-box').style.borderColor = borderColor;
+      const btn = document.getElementById('btn-confirm-toggle');
+      btn.className = `btn-confirm-toggle-act ${newStatus ? 'btn-confirm-activate' : 'btn-confirm-deactivate'}`;
+      document.getElementById('toggle-btn-icon').className = `fas ${iconClass}`;
+      document.getElementById('toggle-overlay').classList.add('open');
+    }
+
+    function closeToggleConfirm() {
+      toggleTargetId = null;
+      toggleTargetStatus = null;
+      document.getElementById('toggle-overlay').classList.remove('open');
+    }
+
+    async function doToggleConfirmed() {
+      if (toggleTargetId === null) return;
+      const btn = document.getElementById('btn-confirm-toggle');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando…';
+      try {
+        const data = await apiFetch(`/api/admin/users/${toggleTargetId}/status`, {
+          method: 'PATCH',
+          body: JSON.stringify({ isActive: toggleTargetStatus })
+        });
+        if (!data.success) throw new Error(data.message);
+        const u = ALL_USERS.find(x => (x._id || x.id) === toggleTargetId);
+        if (u) u.isActive = toggleTargetStatus;
+        showToast(`Usuario ${toggleTargetStatus ? 'activado' : 'desactivado'} correctamente`);
+        closeToggleConfirm();
+        closeModal();
+        filterUsers();
+      } catch (e) {
+        showToast(e.message, 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-ban"></i> Confirmar';
       }
     }
     // =============================================
