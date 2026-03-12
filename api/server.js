@@ -12,15 +12,17 @@ const app = express();
 const parser = new Parser({ timeout: 10000 });
 const cache = new NodeCache({ stdTTL: 1800 }); // Cache 30 min
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://www.fitaiid.com', 'https://fitaiid.com']
+}));
 
 // ── FUENTES RSS GRATUITAS ─────────────────────────
 const FUENTES = [
-  { nombre: 'Healthline Fitness',  url: 'https://www.healthline.com/rss/fitness' },
+  { nombre: 'Healthline Fitness', url: 'https://www.healthline.com/rss/fitness' },
   { nombre: 'Healthline Nutrición', url: 'https://www.healthline.com/rss/nutrition' },
-  { nombre: 'Bodybuilding.com',    url: 'https://www.bodybuilding.com/rss/articles' },
-  { nombre: "Men's Health",        url: 'https://www.menshealth.com/rss/all.xml/' },
-  { nombre: "Runner's World",      url: 'https://www.runnersworld.com/rss/all.xml/' },
+  { nombre: 'Bodybuilding.com', url: 'https://www.bodybuilding.com/rss/articles' },
+  { nombre: "Men's Health", url: 'https://www.menshealth.com/rss/all.xml/' },
+  { nombre: "Runner's World", url: 'https://www.runnersworld.com/rss/all.xml/' },
 ];
 
 // ── FUNCIÓN: obtener artículos de una fuente ──────
