@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const Parser = require('rss-parser');
 const NodeCache = require('node-cache');
+const fetch = require('node-fetch'); //para traducir noticias
 
 const app = express();
 const parser = new Parser({
@@ -95,17 +96,31 @@ function extraerImagen(item, nombreFuente, index) {
   if (imgs) return imgs[index % imgs.length];
   return 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80';
 }
-
+async function traducirTitulo(titulo) {
+  try {
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(titulo)}&langpair=en|es`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.responseStatus === 200) return data.responseData.translatedText;
+    return titulo; // si falla, devuelve el original
+  } catch {
+    return titulo;
+  }
+}
 async function obtenerArticulos(fuente) {
   try {
     const feed = await parser.parseURL(fuente.url);
-    return feed.items.slice(0, 3).map((item, index) => ({
-      title: item.title || '',
+    const items = feed.items.slice(0, 3);
+
+    const articulos = await Promise.all(items.map(async (item, index) => ({
+      title: await traducirTitulo(item.title || ''),
       source: { name: fuente.nombre },
       publishedAt: item.pubDate || item.isoDate || new Date().toISOString(),
       url: item.link || '',
       urlToImage: extraerImagen(item, fuente.nombre, index),
-    }));
+    })));
+
+    return articulos;
   } catch (err) {
     console.log(`[FAIL] ${fuente.nombre}: ${err.message}`);
     return [];
